@@ -1,0 +1,35 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, rm, stat } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import vm from 'node:vm';
+import { createWorkbench } from '../framework/server.mjs';
+
+test('角色卡服务仅在模块启用后按需启动，页面与资源经工作台同源提供', async t => {
+  const directory = await mkdtemp(join(tmpdir(),'workbench-card-host-'));
+  const app = await createWorkbench({dataDir:directory});
+  t.after(async()=>{await app.close();await rm(directory,{recursive:true,force:true});});
+  const post = path => fetch(app.url+path,{method:'POST',headers:{'content-type':'application/json',origin:app.url},body:'{}'});
+  assert.equal((await post('/api/modules/cards/studio')).status,409);
+  assert.equal((await fetch(app.url+'/card-studio/')).status,409);
+  assert.equal((await post('/api/modules/cards/enable')).status,200);
+  await assert.rejects(stat(join(directory,'card-studio')),{code:'ENOENT'});
+  const response = await post('/api/modules/cards/studio');
+  assert.equal(response.status,200);
+  const info=await response.json();
+  assert.equal(info.url,'/card-studio/');
+  assert.equal(info.workspacePath,join(directory,'card-studio'));
+  const page=await fetch(app.url+info.url);
+  assert.equal(page.status,200);
+  assert.notEqual(page.headers.get('x-frame-options'),'DENY');
+  assert.match(page.headers.get('content-security-policy'),/frame-ancestors 'self'/);
+  const html=await page.text();
+  assert.match(html,/var API_TOKEN = "";/);
+  for(const script of html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(script[1]);
+  assert.deepEqual(await (await fetch(app.url+'/card-studio/api/cards')).json(),[]);
+  const cross=await fetch(app.url+'/card-studio/api/new',{method:'POST',headers:{origin:'https://example.test','content-type':'application/json'},body:JSON.stringify({name:'不应创建'})});
+  assert.equal(cross.status,403);
+  assert.equal((await post('/api/modules/cards/disable')).status,200);
+  assert.equal((await fetch(app.url+'/card-studio/api/cards')).status,409);
+});

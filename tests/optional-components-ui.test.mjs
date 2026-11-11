@@ -1,0 +1,77 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {existsSync} from 'node:fs';
+import {mkdtemp,mkdir,writeFile,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {dirname,join,resolve,sep} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createRequire} from 'node:module';
+import {spawn} from 'node:child_process';
+import {createWorkbench} from '../framework/server.mjs';
+import {createComponentArchive} from '../framework/component-archive.mjs';
+
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const electron=[process.env.AI_FUTURE_ELECTRON,join(root,'node_modules/electron/dist/electron.exe'),'F:\\小汐的研究日志\\node_modules\\electron\\dist\\electron.exe'].filter(Boolean).find(existsSync);
+async function run(){
+  const {app,BrowserWindow}=createRequire(import.meta.url)('electron');
+  app.disableHardwareAcceleration();app.setPath('userData',join(process.env.AI_FUTURE_COMPONENT_UI_DIR,'electron'));app.on('window-all-closed',()=>{});await app.whenReady();
+  const directory=process.env.AI_FUTURE_COMPONENT_UI_DIR,source=join(directory,'source'),archive=join(directory,'training.afcomponent');
+  await mkdir(source);await writeFile(join(source,'runner.py'),'# UI fixture, never executed\n');
+  const descriptor=await createComponentArchive({id:'training',version:'1.0.0',sources:[{from:source}],output:archive});
+  let selected=null;
+  const backend=await createWorkbench({dataDir:join(directory,'data'),choosePath:async()=>selected,componentOptions:{catalog:{format:1,components:{training:descriptor}},candidates:{},sourceDirectories:[]}});
+  const window=new BrowserWindow({show:false,width:1440,height:1000,webPreferences:{offscreen:true,backgroundThrottling:false,nodeIntegration:false,contextIsolation:true}});
+  const errors=[];window.webContents.on('console-message',event=>{if(/Uncaught|TypeError|ReferenceError|SyntaxError/.test(event.message))errors.push(event.message);});
+  const js=source=>window.webContents.executeJavaScript(source),pause=ms=>new Promise(done=>setTimeout(done,ms));
+  const wait=async(label,source)=>{const end=Date.now()+15000;while(Date.now()<end){if(await js(source))return;await pause(50);}throw new Error('等待超时：'+label+'\n'+await js('document.querySelector("#main-content").innerText'));};
+  const click=selector=>js(`document.querySelector(${JSON.stringify(selector)}).click();void 0`);
+  const shot=async name=>{const output=join(root,'artifacts/optional-components-ui');await mkdir(output,{recursive:true});await pause(120);await writeFile(join(output,name+'.png'),(await window.webContents.capturePage(undefined,{stayHidden:true,stayAwake:true})).toPNG());};
+  try{
+    await window.loadURL(backend.url);await wait('工作台加载','document.querySelector("#app-shell").getAttribute("aria-busy")==="false"');
+    await js(`(async()=>{const {mountComponentModule,mountComponentPackages}=await import('/component-packages.js');window.fixture={mountComponentPackages,mounted:0,calls:[],version:1};const f=window.fixture;f.controller=new AbortController();f.ctx={signal:f.controller.signal,get state(){return {version:f.version}},api:()=>{throw new Error('不能使用实例接口管理共享资源')},libraryApi:async(path,options={})=>{f.calls.push(path);const response=await fetch(path,{method:options.method||'GET',headers:{'content-type':'application/json'},...(options.body?{body:JSON.stringify(options.body)}:{})});const value=await response.json();if(!response.ok)throw new Error(value.error);return value;}};mountComponentModule(document.querySelector('#main-content'),f.ctx,'training',(node,ctx)=>{f.mounted++;f.childCtx=ctx;node.innerHTML='<label>待保存草稿<input id="component-draft"></label>';});})()`);
+    await wait('按需安装入口','!!document.querySelector("[data-component-action=import]")');
+    assert.equal(await js('fixture.mounted'),0,'未安装不能挂载业务视图');await shot('missing');
+    await click('[data-component-action="import"]');await wait('选择取消','document.querySelector("[data-component-feedback]").textContent==="已取消选择"');
+    assert.equal(await js('fixture.mounted'),0);
+    selected=archive;await click('[data-component-action="import"]');await wait('本地组件已安装','fixture.mounted===1');
+    await js('document.querySelector("#component-draft").value="保留我的草稿";fixture.version=2;void 0');
+    assert.equal(await js('fixture.childCtx.state.version'),2,'透传实例 state getter，不能保存旧快照');
+    assert.equal(await js('typeof ({...fixture.childCtx}).libraryApi'),'function','MC 环境面板再次展开 ctx 时必须保留共享接口');
+    assert.equal(await js('({ ...fixture.childCtx }).state.version'),2);
+    assert.equal(await js('({ ...fixture.childCtx }).signal===fixture.childCtx.signal'),true);
+    await click('[data-component-action="refresh"]');await pause(200);
+    assert.equal(await js('document.querySelector("#component-draft").value'),'保留我的草稿');assert.equal(await js('fixture.mounted'),1);await shot('installed');
+    const updateArchive=join(directory,'training-update.afcomponent');
+    backend.context.components.catalog.components.training=await createComponentArchive({id:'training',version:'1.0.1',sources:[{from:source}],output:updateArchive});
+    await click('[data-component-action="refresh"]');await wait('更新入口','document.querySelector("[data-component-action=import]")?.textContent==="导入更新包"');
+    selected=updateArchive;await click('[data-component-action="import"]');await wait('更新完成','document.querySelector("[data-component-row=training]").textContent.includes("1.0.1")');
+    assert.equal(await js('document.querySelector("#component-draft").value'),'保留我的草稿','组件更新保留业务草稿');
+    const installedPath=backend.context.components.resolve('training').path;
+    backend.context.components.db.prepare('UPDATE trees SET kind=? WHERE path=?').run('removing',installedPath);
+    await rm(join(installedPath,'.component-owner.json'));await rm(join(installedPath,'.component-manifest.json'));
+    await js(`fixture.controller.abort();fixture.controller=new AbortController();fixture.ctx.signal=fixture.controller.signal;document.querySelector('#main-content').innerHTML='<section id="storage-panel" class="panel glass"></section>';fixture.mountComponentPackages(document.querySelector('#storage-panel'),fixture.ctx,{storage:true});void 0`);
+    await wait('存储入口','!!document.querySelector("[data-component-action=uninstall]")');await shot('storage-light');
+    assert.equal(await js('document.querySelector("[data-component-action=uninstall]").textContent'),'继续卸载');
+    assert.equal(await js('document.querySelector("[data-component-row=training] [data-component-action=install]")'),null);
+    await click('[data-component-action="uninstall"]');await wait('卸载确认','!document.querySelector("[data-storage-confirm]").hidden&&!document.querySelector("[data-component-action=confirm]").disabled');
+    assert.match(await js('document.querySelector("[data-storage-confirm]").textContent'),/角色、聊天、训练产物和外部环境保留/);
+    assert.ok(existsSync(join(installedPath,'runner.py')));
+    await click('[data-component-action="dismiss"]');assert.ok(existsSync(join(installedPath,'runner.py')),'取消不能删除');
+    await click('[data-component-action="uninstall"]');await wait('再次确认','!document.querySelector("[data-storage-confirm]").hidden&&!document.querySelector("[data-component-action=confirm]").disabled');
+    await js('document.documentElement.dataset.theme="dark";void 0');await shot('confirm-dark');
+    await click('[data-component-action="confirm"]');await wait('已卸载','document.querySelector("[data-component-feedback]").textContent.startsWith("已释放")');
+    assert.equal(backend.context.components.resolve('training'),null);
+    await js(`fixture.controller.abort();fixture.controller=new AbortController();fixture.ctx.signal=fixture.controller.signal;fixture.ctx.libraryApi=()=>new Promise(done=>{fixture.finishSource=done});fixture.mountComponentPackages(document.querySelector('#storage-panel'),fixture.ctx);const input=document.querySelector('[data-component-source] input');input.value='https://example.invalid/my-draft/';input.dispatchEvent(new Event('input',{bubbles:true}));fixture.finishSource({components:[],url:'https://example.invalid/saved/'});void 0`);
+    await pause(70);assert.equal(await js("document.querySelector('[data-component-source] input').value"),'https://example.invalid/my-draft/','首次状态迟到也不能覆盖已输入的下载源');
+    await js('fixture.controller.abort();void 0');const count=await js('fixture.calls.length');await pause(4200);assert.equal(await js('fixture.calls.length'),count,'退出界面终止轮询');
+    assert.deepEqual(errors,[]);console.log('OPTIONAL_COMPONENT_UI_RESULT '+JSON.stringify({ok:true}));
+  }finally{window.destroy();await backend.close();}
+}
+if(process.argv.includes('--optional-components-ui-electron'))run().then(()=>createRequire(import.meta.url)('electron').app.exit(0),error=>{console.error(error.stack);createRequire(import.meta.url)('electron').app.exit(1);});
+else test('按需组件桌面入口：本地导入、共享接口、保留草稿、卸载确认和取消轮询',{skip:!electron,timeout:90000},async t=>{
+  const directory=await mkdtemp(join(tmpdir(),'optional-components-ui-')),env={...process.env,AI_FUTURE_COMPONENT_UI_DIR:directory};delete env.ELECTRON_RUN_AS_NODE;
+  const child=spawn(electron,[fileURLToPath(import.meta.url),'--optional-components-ui-electron'],{cwd:root,env,windowsHide:true});
+  t.after(async()=>{if(child.exitCode===null){child.kill();await new Promise(done=>child.once('exit',done));}assert.ok(resolve(directory).startsWith(resolve(tmpdir())+sep));await rm(directory,{recursive:true,force:true,maxRetries:3,retryDelay:100});});
+  let output='';child.stdout.on('data',chunk=>output+=chunk);child.stderr.on('data',chunk=>output+=chunk);
+  const code=await new Promise((done,reject)=>{child.once('error',reject);child.once('exit',done);});assert.equal(code,0,output);assert.match(output,/OPTIONAL_COMPONENT_UI_RESULT/);
+});

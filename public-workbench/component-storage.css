@@ -1,0 +1,18 @@
+.component-storage { margin-block-end: 24px; }
+.component-storage .panel-heading { margin-block-end: 4px; }
+.component-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 18px; border-bottom: 1px solid var(--line); }
+.component-description { flex: 1; min-width: 0; }
+.component-description small { display: block; margin-block-start: 4px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.component-status { color: var(--muted); font-size: 12px; }
+.component-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.component-progress { display: flex; align-items: center; gap: 12px; margin-block-start: 10px; font-variant-numeric: tabular-nums; color: var(--muted); }
+.component-progress progress { accent-color: var(--accent); width: min(240px, 45%); height: 8px; }
+.component-storage .form-feedback:empty { display: none; }
+.component-source { margin-block-start: 16px; }
+.component-source summary { cursor: pointer; color: var(--accent-text); width: fit-content; }
+.component-source form { display: flex; align-items: end; gap: 12px; margin-block-start: 12px; }
+.component-source label { display: grid; gap: 6px; flex: 1; }
+.component-source input { width: 100%; }
+[data-storage-confirm] { margin-block-start: 18px; padding: 18px; background: var(--danger-bg); color: var(--ink); border-radius: 12px; }
+[data-storage-confirm] p { max-width: 70ch; }
+[data-storage-confirm] strong { display: block; margin-block: 8px 14px; font-variant-numeric: tabular-nums; }

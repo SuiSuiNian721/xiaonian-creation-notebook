@@ -1,0 +1,77 @@
+import {app,BrowserWindow} from 'electron';
+import assert from 'node:assert/strict';
+import {existsSync,mkdirSync,writeFileSync} from 'node:fs';
+import {join,resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {minecraftFixture} from './mc-play-fixture.mjs';
+
+const appRoot=resolve(process.env.AI_FUTURE_MC_APP_ROOT||'.');
+const directory=resolve(process.env.AI_FUTURE_MC_QA_DIR||'qa/mc-play-source');
+const bundled=resolve(appRoot,'..','airi-minecraft');
+const integrationRoot=existsSync(join(bundled,'worker.mjs'))?bundled:join(appRoot,'integrations/airi-minecraft');
+const nodePath=existsSync(join(integrationRoot,'runtime/node.exe'))?join(integrationRoot,'runtime/node.exe'):process.env.AI_FUTURE_NODE||'C:\\Program Files\\nodejs\\node.exe';
+mkdirSync(directory,{recursive:true});app.setPath('userData',join(directory,'profile'));
+app.commandLine.appendSwitch('disable-renderer-backgrounding');
+const pause=ms=>new Promise(resolveWait=>setTimeout(resolveWait,ms));
+const checks=[];const errors=[];
+let runtime;let window;let fixture;
+function phase(name){writeFileSync(join(directory,'phase.txt'),name,'utf8');}
+const watchdog=setTimeout(()=>{writeFileSync(join(directory,'timeout.txt'),'GUI 检查超过 90 秒。','utf8');app.exit(1);},90000);
+app.whenReady().then(async()=>{
+  phase('fixture');
+  fixture=await minecraftFixture(integrationRoot);
+  const {createWorkbench}=await import(pathToFileURL(join(appRoot,'framework/server.mjs')));
+  runtime=await createWorkbench({dataDir:join(directory,'data'),minecraftOptions:{runtimeRoot:integrationRoot,nodePath}});
+  phase('window');
+  const api=async(path,method='GET',body)=>{const response=await fetch(runtime.url+path,{method,...(body===undefined?{}:{headers:{'content-type':'application/json'},body:JSON.stringify(body)})});const value=await response.json();assert.equal(response.status,200,JSON.stringify(value));return value;};
+  window=new BrowserWindow({width:1420,height:960,show:false,webPreferences:{offscreen:true,contextIsolation:true,nodeIntegration:false,sandbox:true,backgroundThrottling:false}});
+  window.webContents.on('console-message',event=>{if(/Uncaught|TypeError|ReferenceError/.test(event.message))errors.push(event.message);});
+  phase('configure-ai');
+  const js=code=>window.webContents.executeJavaScript(code);
+  const click=selector=>js(`document.querySelector(${JSON.stringify(selector)}).click();void 0`);
+  const fill=(selector,value)=>js(`(()=>{const input=document.querySelector(${JSON.stringify(selector)});input.value=${JSON.stringify(value)};input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  const text=selector=>js(`document.querySelector(${JSON.stringify(selector)})?.textContent||''`);
+  async function wait(label,predicate,timeout=25000){const end=Date.now()+timeout;while(Date.now()<end){if(await predicate())return;await pause(120);}throw new Error('等待超时：'+label);}
+  async function shot(name){await pause(300);window.webContents.invalidate();writeFileSync(join(directory,name+'.png'),(await window.webContents.capturePage()).toPNG());}
+  async function view(route){await js(`location.hash=${JSON.stringify('/'+route)};void 0`);await wait('路由 '+route,()=>js(`location.hash===${JSON.stringify('#/'+route)}&&document.querySelector('#main-content').getAttribute('aria-busy')==='false'`));await pause(180);}
+  await api('/api/ai/config','PUT',{provider:'openai',enabled:true,baseUrl:fixture.modelUrl,model:'protocol-fixture'});
+  phase('load-page');await window.loadURL(runtime.url);await wait('工作台首页',()=>js(`document.querySelector('h1')?.textContent==='我的工作台'`));
+  window.webContents.debugger.attach('1.3');await window.webContents.debugger.sendCommand('Emulation.setFocusEmulationEnabled',{enabled:true});phase('catalog');
+  await view('catalog');await click('[data-add="mc-play"]');await wait('侧栏添加',()=>js(`Boolean(document.querySelector('[data-module-nav="mc-play"]'))`));
+  await view('module/mc-play');await wait('MC 连接表单',()=>js(`Boolean(document.querySelector('#mc-connect'))`));
+  assert.equal((await api('/api/modules/mc-play/state')).connection.status,'disconnected');
+  assert.equal(await text('#mc-state'),'未连接世界');
+  checks.push('添加与打开模块保持离线，专用连接表单正常显示');
+  await fill('[name="serverHost"]','127.0.0.1');await fill('[name="serverPort"]',String(fixture.gamePort));await fill('[name="playerName"]','WorkbenchBot');await fill('[name="ownerName"]','TestPlayer');
+  await click('#mc-save');await wait('保存配置',async()=>(await api('/api/modules/mc-play/state')).config.playerName==='WorkbenchBot');
+  assert.equal((await api('/api/modules/mc-play/state')).connection.status,'disconnected');
+  await fill('[name="ownerName"]','DraftPlayer');await view('home');await view('module/mc-play');await wait('表单恢复',()=>js(`Boolean(document.querySelector('#mc-owner'))`));
+  assert.equal(await js(`document.querySelector('#mc-owner').value`),'DraftPlayer');await fill('[name="ownerName"]','TestPlayer');
+  checks.push('保存不进服，切换模块保留连接草稿');
+  phase('connect');await shot('connection');await click('#mc-connect');
+  await wait('AIRI 实际连接协议服务',async()=>{const state=await api('/api/modules/mc-play/state');if(state.connection.status==='error')throw new Error(state.connection.error);return await text('#mc-state')==='已进入世界';});
+  assert.equal(await js(`document.querySelector('#mc-host').disabled`),true);
+  assert.equal((await api('/api/modules/mc-play/state')).connection.gameVersion,'1.20.1');
+  await fill('#mc-instruction','请在游戏里确认收到指令。');await click('#mc-send');await wait('游戏收到实际聊天包',()=>fixture.chats.some(value=>value.includes('已收到指令')));
+  await wait('界面显示动作结果',async()=>(await text('#mc-history')).includes('chat · 完成'));
+  checks.push('自动识别协议版本，真实 AIRI 认知调用共用模型并执行游戏聊天动作');
+  phase('controls');
+  await shot('connected');
+  await click('#mc-follow');await wait('缺少目标玩家反馈',async()=>(await text('#mc-feedback')).includes('找不到 TestPlayer'));
+  await click('#mc-pause');await wait('暂停实际确认',async()=>(await text('#mc-ai-state'))==='AI 已暂停');
+  assert.equal(await js(`document.querySelector('#mc-send').disabled`),true);
+  await click('#mc-resume');await wait('恢复实际确认',async()=>(await api('/api/modules/mc-play/state')).connection.paused===false);
+  checks.push('跟随目标不可见时给出实际错误；暂停与恢复由运行端确认');
+  fixture.ending();await click('#mc-disconnect');await wait('断开完成',async()=>(await text('#mc-state'))==='未连接世界');
+  assert.equal(await js(`document.querySelector('#mc-host').disabled`),false);
+  await click('#mc-tab-resources');assert.ok((await text('#module-panel')).includes('运行端已内置'));await click('#mc-tab-play');
+  await click('#theme-toggle');await wait('深色主题',()=>js(`document.documentElement.dataset.theme==='dark'`));await shot('dark');
+  window.setMinimumSize(360,500);window.setContentSize(390,844);await pause(300);assert.equal(await js(`document.documentElement.scrollWidth<=innerWidth`),true);await shot('mobile');
+  window.setContentSize(1420,960);await click('#theme-toggle');await wait('浅色主题',()=>js(`document.documentElement.dataset.theme==='light'`));
+  await js(`document.querySelector('#mc-tab-play').focus();document.querySelector('#mc-tab-play').dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));void 0`);
+  assert.equal(await js(`document.activeElement.id`),'mc-tab-resources');
+  checks.push('断开后可编辑；内置组件说明、明暗主题、390px 和键盘标签页通过');
+  assert.deepEqual(errors,[]);
+  writeFileSync(join(directory,'result.json'),JSON.stringify({ok:true,checks,errors,modelCalls:fixture.calls.length,protocolChats:fixture.chats,realUserWorld:false,modelIsFixture:true,runtimeRoot:integrationRoot},null,2),'utf8');
+  phase('done');clearTimeout(watchdog);await runtime.close();runtime=null;await fixture.close();fixture=null;app.exit(0);
+}).catch(async error=>{console.error(error);clearTimeout(watchdog);writeFileSync(join(directory,'failure.json'),JSON.stringify({error:error.stack||String(error),checks,errors},null,2),'utf8');if(window&&!window.isDestroyed())await window.webContents.capturePage().then(image=>writeFileSync(join(directory,'failure.png'),image.toPNG())).catch(()=>{});await runtime?.close();await fixture?.close();app.exit(1);});

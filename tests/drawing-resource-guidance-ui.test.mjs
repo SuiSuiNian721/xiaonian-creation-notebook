@@ -1,0 +1,102 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdtemp, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { resolve, join, sep } from 'node:path';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import { spawn } from 'node:child_process';
+import { createWorkbench } from '../framework/server.mjs';
+
+const electron=process.env.AI_FUTURE_ELECTRON || 'F:\\小汐的研究日志\\node_modules\\electron\\dist\\electron.exe';
+async function run() {
+  const {app,BrowserWindow}=createRequire(import.meta.url)('electron');
+  app.setPath('userData',join(process.env.DRAWING_RESOURCE_UI_DIR,'profile'));app.on('window-all-closed',()=>{});await app.whenReady();
+  const backend=await createWorkbench({dataDir:join(process.env.DRAWING_RESOURCE_UI_DIR,'data')});
+  const window=new BrowserWindow({show:false,width:1100,height:1000,webPreferences:{offscreen:true,backgroundThrottling:false,contextIsolation:true,nodeIntegration:false}});
+  const errors=[];window.webContents.on('console-message',event=>{if(/Uncaught|TypeError|ReferenceError/.test(event.message))errors.push(event.message);});
+  const js=source=>window.webContents.executeJavaScript(source),pause=ms=>new Promise(done=>setTimeout(done,ms));
+  const wait=async source=>{for(let i=0;i<120;i++){if(await js(`Boolean(${source})`))return;await pause(40);}throw new Error('DOM wait: '+source+'\n'+await js('document.body.innerText'));};
+  const click=selector=>js(`document.querySelector(${JSON.stringify(selector)}).click();void 0`);
+  const capture=async name=>{const output=process.env.DRAWING_RESOURCE_UI_OUTPUT;if(output){await js('new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done)))');await pause(100);mkdirSync(output,{recursive:true});writeFileSync(join(output,name),(await window.webContents.capturePage()).toPNG());}};
+  try {
+    window.webContents.session.webRequest.onBeforeRequest({urls:[backend.url+'/app.js']},(_details,callback)=>callback({cancel:true}));
+    await window.loadURL(backend.url);
+    await js(`(async()=>{
+      const {mount}=await import('/comfyui-view.js');const {Drafts}=await import('/drafts.js');
+      document.body.innerHTML='<main id="resource-test-root" style="padding:28px"></main>';
+      window.resourceController=new AbortController();window.resourceCalls=[];window.resourceUi={moduleTabs:{comfyui:'runtime'},moduleTarget:{tab:'resources',section:'downloads',filename:'MOSS/missing.safetensors',category:'checkpoints'}};
+      window.resourceCtx={instanceId:'ad63115b-b59e-4c87-941c-0ef6a8658c10',signal:resourceController.signal,ui:resourceUi,drafts:new Drafts(),state:{modules:[{id:'drawing',enabled:true,config:{serviceUrl:'https://remote.example.invalid',comfyPath:'C:\\\\FixtureComfy'}}],events:[]},action:async(_button,job)=>job(),notify:(message)=>{throw new Error(message);},navigate:()=>{},navigateModule:async(...args)=>resourceCalls.push({navigation:args}),refresh:async()=>{},api:async(path,options={})=>{
+        resourceCalls.push({path,...options});
+        if(path.endsWith('/manager/state'))return {inventory:null,downloads:[],snapshots:[],tasks:[{id:'565e6d56-e5cc-4e55-8910-fcded6ba43ac',title:'隔离管理任务',status:'completed',log:'fixture'}]};
+        if(path.endsWith('/manager/downloads'))return {id:'fixture-only'};
+        if(path.endsWith('/runtime/logs'))return {text:'fixture',launch:null,canStop:false};
+        if(path.endsWith('/runtime'))return {settings:{},defaults:{},fields:[],command:{available:false,error:'fixture'},previewModels:{status:'missing',decoders:[],detail:'本地未找到解码器'},versions:[]};
+        if(path.endsWith('/preview-options'))return {perPrompt:true,models:{status:'missing',decoders:[]}};
+        if(path.endsWith('/state'))return {connection:{connected:false,url:'https://remote.example.invalid'},workflows:[],jobs:[],defaultPreviewMethod:'taesd'};
+        throw new Error('unexpected fixture request '+path);
+      }};
+      resourceCtx.drafts.write('drawing:download',{url:'https://old.example.invalid/model',category:'loras',filename:'old.pth',sha256:'f'.repeat(64)});
+      await mount(document.querySelector('#resource-test-root'),resourceCtx);
+    })()`);
+    assert.equal(await js('resourceUi.moduleTarget'),undefined);
+    assert.equal(await js("new URL(document.querySelector('#manager-task-list a').href).searchParams.get('instance')"),'ad63115b-b59e-4c87-941c-0ef6a8658c10','管理任务独立日志保留所属实例');
+    assert.equal(await js("document.querySelector('[data-tab=resources]').getAttribute('aria-selected')"),'true');
+    assert.equal(await js("document.querySelector('#model-filename').value"),'missing.safetensors');
+    assert.equal(await js("document.querySelector('#model-category').value"),'checkpoints');
+    assert.equal(await js("document.querySelector('#model-url').value"),'');
+    assert.equal(await js("document.querySelector('#model-sha').value"),'');
+    assert.match(await js("document.querySelector('#manager-requested-file').textContent"),/MOSS\/missing\.safetensors/);
+    assert.match(await js("document.querySelector('#manager-requested-file').textContent"),/子目录/);
+    assert.match(await js("document.querySelector('#manager-local-scope').textContent"),/不会安装到远程 ComfyUI/);
+    assert.match(await js("document.querySelector('#manager-local-scope').textContent"),/https:\/\/remote\.example\.invalid/);
+    assert.equal(await js('document.documentElement.scrollWidth<=innerWidth'),true);
+    await capture('resource-download-light.png');
+    await click('[data-tab=runtime]');await wait("document.querySelector('#runtime-preview-get')");
+    assert.equal(await js("new URL(document.querySelector('#runtime-log-window').href).searchParams.get('instance')"),'ad63115b-b59e-4c87-941c-0ef6a8658c10','服务独立日志保留所属实例');
+    await click('#runtime-preview-get');await wait("document.querySelector('#preview-decoder-picker')?.open");
+    assert.equal(await js("document.querySelector('#preview-decoder-family').value"),'');
+    assert.equal(await js("document.querySelector('#model-url').value"),'');
+    assert.equal(await js("document.querySelector('#model-category').value"),'vae_approx');
+    assert.equal(await js("resourceCalls.filter(call=>call.method==='POST').length"),0,'进入解码器选择不会自动下载');
+    await js("document.querySelector('#preview-decoder-family').value='SDXL';document.querySelector('#preview-decoder-family').dispatchEvent(new Event('change',{bubbles:true}));void 0");
+    assert.equal(await js("document.querySelector('#model-filename').value"),'taesdxl_decoder.pth');
+    assert.equal(await js("document.querySelector('#model-url').value"),'https://raw.githubusercontent.com/madebyollin/taesd/main/taesdxl_decoder.pth');
+    assert.equal(await js("resourceCalls.filter(call=>call.method==='POST').length"),0,'选定家族只预填来源');
+    await js("document.documentElement.dataset.theme='dark';void 0");await capture('preview-decoder-dark.png');
+    await click('#model-download');await wait("resourceCalls.some(call=>call.path?.endsWith('/manager/downloads'))");
+    const submitted=await js("resourceCalls.find(call=>call.path?.endsWith('/manager/downloads')).body");
+    assert.equal(submitted.category,'vae_approx');assert.equal(submitted.filename,'taesdxl_decoder.pth');assert.equal(typeof submitted.requestId,'string');assert.equal('family' in submitted,false);
+    await click('#manager-drawing');assert.deepEqual(await js('resourceCalls.at(-1).navigation'),['drawing']);
+    await js(`(async()=>{resourceController.abort();window.resourceController=new AbortController();resourceCtx.signal=resourceController.signal;resourceUi.moduleTarget={tab:'resources',section:'plugins',query:'Missing<Node>'};const {mount}=await import('/comfyui-view.js');await mount(document.querySelector('#resource-test-root'),resourceCtx);})()`);
+    assert.match(await js("document.querySelector('#manager-plugins').textContent"),/Missing<Node>/);
+    assert.equal(await js("document.querySelector('#plugin-url').value"),'');
+    assert.equal(await js("document.querySelector('#manager-plugins script')"),null);
+    await js(`(async()=>{resourceController.abort();window.resourceController=new AbortController();resourceCtx.signal=resourceController.signal;resourceUi.moduleTabs.drawing='overview';const {mount}=await import('/drawing-view.js');await mount(document.querySelector('#resource-test-root'),resourceCtx);})()`);
+    await wait("document.querySelector('#drawing-preview-notice')?.textContent.includes('未找到')");
+    assert.equal(await js("!!document.querySelector('#open-model-downloads')?.checkVisibility()"),true,'绘图首页直接提供模型与插件入口');
+    const downloadsBefore=await js("resourceCalls.filter(call=>call.path?.endsWith('/manager/downloads')).length");
+    await click('#open-model-downloads');
+    assert.deepEqual(await js('resourceCalls.at(-1).navigation'),['comfyui',{tab:'resources',section:'downloads'}]);
+    assert.equal(await js("resourceCalls.filter(call=>call.path?.endsWith('/manager/downloads')).length"),downloadsBefore,'打开下载页不会新增下载');
+    await capture('drawing-model-entry-dark.png');
+    await js("document.documentElement.dataset.theme='light';void 0");await capture('drawing-model-entry-light.png');
+    assert.equal(await js("!!document.querySelector('#drawing-preview-get') && !document.querySelector('#drawing-preview-get').hidden"),true,'绘图清晰预览缺项旁应有获取入口');
+    await click('#drawing-preview-get');assert.deepEqual(await js('resourceCalls.at(-1).navigation'),['comfyui',{tab:'resources',section:'downloads',previewDecoders:true}]);
+    assert.deepEqual(errors,[]);await js('resourceController.abort();void 0');
+    console.log('DRAWING_RESOURCE_UI_PASS fixture download only; no real model or service touched');
+  } finally {window.destroy();await backend.close();app.quit();}
+}
+if(process.env.DRAWING_RESOURCE_UI_CHILD==='1')run().catch(error=>{console.error(error);process.exit(1);});
+else test('绘图资源目标在真实DOM中消费一次，缺项预填、远端范围和显式decoder下载复用原队列',{skip:!existsSync(electron),timeout:60000},async t=>{
+  const directory=await mkdtemp(join(tmpdir(),'drawing-resource-ui-'));
+  t.after(async()=>{assert.ok(resolve(directory).startsWith(resolve(tmpdir())+sep));await rm(directory,{recursive:true,force:true,maxRetries:5,retryDelay:100});});
+  await new Promise((done,reject)=>{
+    const env={...process.env,DRAWING_RESOURCE_UI_CHILD:'1',DRAWING_RESOURCE_UI_DIR:directory};delete env.ELECTRON_RUN_AS_NODE;
+    const child=spawn(electron,[fileURLToPath(import.meta.url)],{env,windowsHide:true});let output='';
+    child.stdout.on('data',chunk=>output+=chunk);child.stderr.on('data',chunk=>output+=chunk);
+    const timer=setTimeout(()=>{child.kill();reject(new Error('Electron QA 超时\n'+output));},50000);
+    child.once('error',error=>{clearTimeout(timer);reject(error);});child.once('exit',code=>{clearTimeout(timer);code===0 && output.includes('DRAWING_RESOURCE_UI_PASS') ? done() : reject(new Error(output));});
+  });
+});

@@ -1,0 +1,24 @@
+.training-caption-settings{margin:22px 0 26px;min-width:0}
+.training-caption-settings .field{margin:0 0 16px}
+.training-caption-settings>.training-caption-source{max-width:320px}
+.training-caption-model-row{display:flex;align-items:center;gap:10px}
+.training-caption-model-row select{flex:1;min-width:0}
+.training-caption-model-row .button{flex:none;white-space:nowrap}
+.training-caption-download-status{font-size:13px;color:var(--muted);margin:1px 0 0;overflow-wrap:anywhere}
+.training-caption-download-status.error{color:var(--danger)}
+.training-caption-value{display:flex;align-items:center;gap:8px;min-height:43px;color:var(--ink);font-size:14px;font-weight:600}
+.training-caption-value .help-button{vertical-align:middle}
+.training-caption-native,.training-caption-rules{margin:4px 0 0}
+.training-caption-settings summary{width:fit-content;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink);padding:4px 0}
+.training-caption-settings summary:hover{color:var(--accent-text)}
+.training-caption-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 22px;padding-top:18px;align-items:start}
+.training-caption-options .field{margin:0;min-width:0}
+.training-caption-wide{grid-column:1/-1}
+.training-caption-toggles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 22px;grid-column:1/-1}
+.training-caption-toggle{display:flex;align-items:center;gap:4px;min-height:34px;font-size:13px}
+.training-caption-toggle label{display:inline-flex;align-items:center;gap:9px;cursor:pointer}
+.training-caption-toggle input{width:17px;height:17px;margin:0;accent-color:var(--accent);flex:none}
+.training-caption-settings :is(input,select,textarea):disabled,.training-caption-toggle:has(input:disabled){opacity:.6;cursor:not-allowed}
+.training-caption-settings textarea{font-family:inherit;min-height:96px}
+.training-caption-settings textarea::placeholder{opacity:1}
+.training-caption-rules pre{margin:14px 0 0;padding:16px;border-radius:11px;background:var(--field);color:var(--ink);font-family:inherit;font-size:13px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere;max-height:320px;overflow:auto;max-width:75ch}

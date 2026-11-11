@@ -1,0 +1,9 @@
+# 内置资源按原始字节校验，Git 不应转换其换行。
+integrations/xiaoxi/** -text
+integrations/comfy/** -text
+integrations/comfy/LICENSE whitespace=cr-at-eol
+integrations/airi-minecraft/** -text whitespace=cr-at-eol
+integrations/airi-minecraft/LICENSE.Node whitespace=cr-at-eol,-blank-at-eof,-space-before-tab
+integrations/minecraft-pixel-skin/** -text whitespace=cr-at-eol
+integrations/next-trainer/** -text whitespace=cr-at-eol
+resources/companion/** -text whitespace=cr-at-eol,-blank-at-eof

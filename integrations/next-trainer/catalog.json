@@ -1,0 +1,389 @@
+{
+  "training_types": [
+    {
+      "train_type": "ai-toolkit-sdxl-lora",
+      "engine": "ai-toolkit",
+      "variant": "sdxl",
+      "schema_name": "ai-toolkit-sdxl-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "sdxl",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "ai-toolkit-sd15-lora",
+      "engine": "ai-toolkit",
+      "variant": "sd15",
+      "schema_name": "ai-toolkit-sd15-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "sd15",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "ai-toolkit-flux-lora",
+      "engine": "ai-toolkit",
+      "variant": "flux",
+      "schema_name": "ai-toolkit-flux-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "flux",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "klein-4b-lora",
+      "engine": "ai-toolkit",
+      "variant": "klein-4b",
+      "schema_name": "klein-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "klein",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "klein-9b-lora",
+      "engine": "ai-toolkit",
+      "variant": "klein-9b",
+      "schema_name": "klein-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "klein",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "ai-toolkit-krea2-lora",
+      "engine": "ai-toolkit",
+      "variant": "krea2",
+      "schema_name": "ai-toolkit-krea2-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "krea2",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "ai-toolkit-anima-lora",
+      "engine": "ai-toolkit",
+      "variant": "anima",
+      "schema_name": "ai-toolkit-anima-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "anima",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "ai-toolkit-ideogram4-lora",
+      "engine": "ai-toolkit",
+      "variant": "ideogram4",
+      "schema_name": "ai-toolkit-ideogram4-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "ideogram4",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "ai-toolkit-qwen-image-21-lora",
+      "engine": "ai-toolkit",
+      "variant": "qwen-image-21",
+      "schema_name": "ai-toolkit-qwen-image-21-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "qwen-image-21",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "anima-lora-fast",
+      "engine": "anima-fast",
+      "variant": "anima",
+      "schema_name": "anima-lora-fast",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "anima",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "qwen-image-21-lora",
+      "engine": "diffsynth",
+      "variant": "qwen-image-21",
+      "schema_name": "qwen-image-21-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "qwen-image-21",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "sd-lora",
+      "engine": "kohya",
+      "variant": "sd15",
+      "schema_name": "lora-master",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "sd15",
+      "target": "lora",
+      "source_required": false
+    },
+    {
+      "train_type": "sdxl-lora",
+      "engine": "kohya",
+      "variant": "sdxl",
+      "schema_name": "lora-master",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "sdxl",
+      "target": "lora",
+      "source_required": false
+    },
+    {
+      "train_type": "sd-dreambooth",
+      "engine": "kohya",
+      "variant": "sd15",
+      "schema_name": "dreambooth",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "sd15",
+      "target": "finetune",
+      "source_required": false
+    },
+    {
+      "train_type": "sdxl-finetune",
+      "engine": "kohya",
+      "variant": "sdxl",
+      "schema_name": "dreambooth",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "sdxl",
+      "target": "finetune",
+      "source_required": false
+    },
+    {
+      "train_type": "sd3-lora",
+      "engine": "kohya",
+      "variant": "anima",
+      "schema_name": "sd3-lora",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "anima",
+      "target": "lora",
+      "source_required": false
+    },
+    {
+      "train_type": "anima-lora",
+      "engine": "kohya",
+      "variant": "anima",
+      "schema_name": "sd3-lora",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "anima",
+      "target": "lora",
+      "source_required": false
+    },
+    {
+      "train_type": "anima-finetune",
+      "engine": "kohya",
+      "variant": "anima",
+      "schema_name": "anima-finetune",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "anima",
+      "target": "finetune",
+      "source_required": false
+    },
+    {
+      "train_type": "flux-lora",
+      "engine": "kohya",
+      "variant": "flux",
+      "schema_name": "flux-lora",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "flux",
+      "target": "lora",
+      "source_required": false
+    },
+    {
+      "train_type": "flux-finetune",
+      "engine": "kohya",
+      "variant": "flux",
+      "schema_name": null,
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "flux",
+      "target": "finetune",
+      "source_required": false
+    },
+    {
+      "train_type": "lumina-lora",
+      "engine": "kohya",
+      "variant": "lumina",
+      "schema_name": "lumina2-lora",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "lumina",
+      "target": "lora",
+      "source_required": false
+    },
+    {
+      "train_type": "moss-image-lora",
+      "engine": "kohya",
+      "variant": "moss-image",
+      "schema_name": "moss-image-lora",
+      "bundled": true,
+      "supported": true,
+      "control_supported": true,
+      "family": "moss-image",
+      "target": "lora",
+      "source_required": false
+    },
+    {
+      "train_type": "moss-image-anima-lora",
+      "engine": "moss",
+      "variant": "moss-image",
+      "schema_name": "moss-image-anima-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "moss-image",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "krea2-lora",
+      "engine": "musubi",
+      "variant": "krea2",
+      "schema_name": "krea2-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "krea2",
+      "target": "lora",
+      "source_required": true
+    },
+    {
+      "train_type": "ideogram4-lora",
+      "engine": "musubi",
+      "variant": "ideogram4",
+      "schema_name": "ideogram4-lora",
+      "bundled": false,
+      "supported": true,
+      "control_supported": true,
+      "family": "ideogram4",
+      "target": "lora",
+      "source_required": true
+    }
+  ],
+  "matrix_revision": "05185eb14fb7f32dddc0d4afb3d02cdeba30d1ac679e79138b08d5e56aa9b3d5",
+  "families": [
+    "moss-image",
+    "qwen-image-21",
+    "anima",
+    "sdxl",
+    "sd15",
+    "flux",
+    "lumina",
+    "krea2",
+    "ideogram4",
+    "klein"
+  ],
+  "engines": [
+    {
+      "id": "kohya",
+      "control_supported": true,
+      "source_bundled": true
+    },
+    {
+      "id": "anima-fast",
+      "control_supported": true,
+      "source_bundled": false
+    },
+    {
+      "id": "musubi",
+      "control_supported": true,
+      "source_bundled": false
+    },
+    {
+      "id": "ai-toolkit",
+      "control_supported": true,
+      "source_bundled": false
+    },
+    {
+      "id": "diffsynth",
+      "control_supported": true,
+      "source_bundled": false
+    },
+    {
+      "id": "moss",
+      "control_supported": true,
+      "source_bundled": false
+    }
+  ],
+  "engine_preference": {
+    "anima": [
+      "anima-fast",
+      "kohya"
+    ],
+    "sd15": [
+      "kohya",
+      "ai-toolkit"
+    ],
+    "sdxl": [
+      "kohya",
+      "ai-toolkit"
+    ],
+    "flux": [
+      "kohya",
+      "ai-toolkit"
+    ],
+    "lumina": [
+      "kohya"
+    ],
+    "krea2": [
+      "musubi",
+      "ai-toolkit"
+    ],
+    "ideogram4": [
+      "musubi",
+      "ai-toolkit"
+    ],
+    "klein": [
+      "ai-toolkit"
+    ],
+    "qwen-image-21": [
+      "diffsynth",
+      "ai-toolkit"
+    ],
+    "moss-image": [
+      "kohya",
+      "moss"
+    ]
+  }
+}

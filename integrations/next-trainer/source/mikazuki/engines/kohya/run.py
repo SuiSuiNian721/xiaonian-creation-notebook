@@ -1,0 +1,160 @@
+"""kohya builtin /api/run handler: straight pass-through to trainer_mapping.
+
+The training pipeline itself is untouched — this is the same code that used to
+be the fall-through branch of ``/api/run`` in ``mikazuki.app.api``.
+"""
+
+import os
+
+from mikazuki.app.models import APIResponseFail
+from mikazuki.app.train_submit import (
+    _missing_standard_train_field,
+    apply_anima_training_defaults,
+    apply_sdxl_prediction_type,
+    apply_tokenizer_cache_dir,
+    get_sample_prompts,
+    sanitize_config,
+    should_generate_sample_prompts,
+    toml,
+)
+from mikazuki.engines.runner import RunContext
+from mikazuki.log import log
+from mikazuki.utils import train_utils
+
+import mikazuki.process as process
+
+TRAINER_MAPPING = {
+    "sd-lora": "./scripts/stable/train_network.py",
+    "sdxl-lora": "./vendor/sd-scripts/sdxl_train_network.py",
+
+    "sd-dreambooth": "./scripts/stable/train_db.py",
+    "sdxl-finetune": "./scripts/stable/sdxl_train.py",
+
+    "sd3-lora": "./scripts/dev/anima_train_network.py",
+    "anima-lora": "./scripts/dev/anima_train_network.py",
+    "anima-finetune": "./scripts/dev/anima_train.py",
+    "flux-lora": "./scripts/dev/flux_train_network.py",
+    "flux-finetune": "./scripts/dev/flux_train.py",
+    "lumina-lora": "./scripts/dev/lumina_train_network.py",
+    "moss-image-lora": "./scripts/dev/moss_image_train_network.py",
+}
+
+
+def handle_run(config: dict, ctx: RunContext):
+    from .settings import runtime
+    from .extension_state import read_status
+
+    rt = runtime()
+    status = read_status(rt)
+    if status["state"] != "ready":
+        return APIResponseFail(message="kohya (sd-scripts) 训练环境未就绪，请到训练引擎管理中安装或修复。")
+
+    model_train_type = ctx.model_train_type
+    toml_file = os.path.join(ctx.autosave_dir, f"{ctx.timestamp}.toml")
+    is_moss_image = model_train_type == "moss-image-lora"
+
+    if is_moss_image:
+        config.setdefault("network_module", "networks.lora_generic")
+        config.setdefault("network_train_unet_only", True)
+        config.setdefault("caption_extension", ".txt")
+        config.setdefault("cache_latents", True)
+        config.setdefault("cache_latents_to_disk", True)
+        config.setdefault("cache_text_encoder_outputs", True)
+        config.setdefault("cache_text_encoder_outputs_to_disk", True)
+
+    train_data_dir = str(config.get("train_data_dir") or "").strip()
+    if not train_data_dir:
+        return _missing_standard_train_field("train_data_dir", "训练数据集路径")
+    config["train_data_dir"] = train_data_dir
+
+    pretrained_model = str(config.get("pretrained_model_name_or_path") or "").strip()
+    if not pretrained_model:
+        return _missing_standard_train_field("pretrained_model_name_or_path", "底模路径")
+    config["pretrained_model_name_or_path"] = pretrained_model
+
+    if is_moss_image:
+        for field, label in (
+            ("text_encoder", "Qwen3.5 文本编码器路径"),
+            ("vae", "FLUX.2 VAE 路径"),
+            ("tokenizer_cache_dir", "Tokenizer 目录"),
+        ):
+            value = str(config.get(field) or "").strip()
+            if not value:
+                return _missing_standard_train_field(field, label)
+            if not os.path.exists(value):
+                return APIResponseFail(message=f"{label}不存在：{value}")
+            config[field] = value
+        if not os.path.exists(pretrained_model):
+            return APIResponseFail(message=f"MOSS-Image DiT 路径不存在：{pretrained_model}")
+
+    suggest_cpu_threads = 8 if len(train_utils.get_total_images(train_data_dir, limit=200)) >= 200 else 2
+    trainer_file = TRAINER_MAPPING[model_train_type]
+    apply_sdxl_prediction_type(config, model_train_type)
+    apply_anima_training_defaults(config, model_train_type)
+
+    dataset_config = str(config.get("dataset_config") or "").strip()
+    if dataset_config:
+        config["dataset_config"] = dataset_config
+
+    if model_train_type != "sdxl-finetune":
+        # A dataset_config owns the dataset layout, so validate_data_dir must not
+        # reorganize train_data_dir underneath it: moving loose images into a
+        # generated N_xxx subdir leaves every image_dir in the toml pointing at an
+        # emptied directory, and sd-scripts only warns before skipping the subset.
+        if not train_utils.validate_data_dir(train_data_dir, auto_organize=not dataset_config):
+            return APIResponseFail(message="训练数据集路径不存在或没有图片，请检查目录。")
+
+    if dataset_config:
+        dataset_ok, dataset_message = train_utils.validate_dataset_config(dataset_config)
+        if not dataset_ok:
+            return APIResponseFail(message=dataset_message)
+
+    if not is_moss_image:
+        validated, message = train_utils.validate_model(pretrained_model, model_train_type)
+        if not validated:
+            return APIResponseFail(message=message)
+
+    if "prompt_file" in config and config["prompt_file"].strip() != "":
+        prompt_file = config["prompt_file"].strip()
+        if not os.path.exists(prompt_file):
+            return APIResponseFail(message=f"Prompt 文件 {prompt_file} 不存在，请检查路径。")
+        config["sample_prompts"] = prompt_file
+        train_utils.normalize_sample_prompt_file(prompt_file)
+    elif should_generate_sample_prompts(config):
+        try:
+            positive_prompt, sample_prompts_arg = get_sample_prompts(config=config, model_train_type=model_train_type)
+
+            if positive_prompt is not None and train_utils.is_promopt_like(sample_prompts_arg):
+                sample_prompts_file = os.path.join(ctx.autosave_dir, f"{ctx.timestamp}-promopt.txt")
+                with open(sample_prompts_file, "w", encoding="utf-8", newline="\n") as f:
+                    f.write(sample_prompts_arg + "\n")
+                config["sample_prompts"] = sample_prompts_file
+                log.info(f"Wrote prompts to file {sample_prompts_file}")
+
+        except ValueError as e:
+            log.error(f"Error while processing prompts: {e}")
+            return APIResponseFail(message=str(e))
+    else:
+        train_utils.strip_disabled_preview_fields(config)
+
+    if config.get("sample_prompts"):
+        train_utils.normalize_sample_prompt_file(str(config["sample_prompts"]))
+
+    apply_anima_training_defaults(config, model_train_type)
+    apply_tokenizer_cache_dir(config, model_train_type)
+    sanitize_config(config)
+
+    if not config.get("sample_prompts"):
+        config.pop("sample_at_first", None)
+        config.pop("sample_every_n_epochs", None)
+        config.pop("sample_every_n_steps", None)
+
+    with open(toml_file, "w", encoding="utf-8") as f:
+        f.write(toml.dumps(config))
+
+    result = process.run_train(toml_file, trainer_file, ctx.gpu_ids, suggest_cpu_threads,
+                               metadata={"train_type": model_train_type,
+                                         "output_name": config.get("output_name")},
+                               python_executable=str(rt.python))
+
+    return result

@@ -1,0 +1,809 @@
+{
+  "repository": "https://github.com/moeru-ai/airi",
+  "ref": "v0.15.1",
+  "commit": "89ec1e953f2e3b6f529d1f387d19bf5678ec6814",
+  "sourceDirectory": "integrations/minecraft",
+  "license": "MIT",
+  "files": [
+    {
+      "path": "upstream/package.json",
+      "bytes": 1958,
+      "sha256": "50a5be16f5764b4c6a19f10417b064f575a66f7e7730dd78c978a7360e19b2ee"
+    },
+    {
+      "path": "upstream/README.md",
+      "bytes": 9679,
+      "sha256": "c825f145fa8ee87287582919b35dae74ef31ab432a815b2629d4ed89dc6261b9"
+    },
+    {
+      "path": "upstream/src/main.ts",
+      "bytes": 7310,
+      "sha256": "821af1b9c2df9eecf262b79ba16a7c5045241b06965f6952f64dd0f92f3cb971"
+    },
+    {
+      "path": "upstream/src/minecraft-bot-runtime.ts",
+      "bytes": 2392,
+      "sha256": "4955451493fc622b5aa214a40fdcd63d4180ac85646477f9bd716b5aee274233"
+    },
+    {
+      "path": "upstream/src/airi/airi-bridge.test.ts",
+      "bytes": 4264,
+      "sha256": "bb41948816ee6cf18ff2c80b70d828d0488cf91dc7c64161cf42ce5c75978170"
+    },
+    {
+      "path": "upstream/src/airi/airi-bridge.ts",
+      "bytes": 9523,
+      "sha256": "72b5a48f6fe3fbeb2af9c5fb9dd99d9014aba995fc9a27e6b2c5ada60000881d"
+    },
+    {
+      "path": "upstream/src/airi/minecraft-context-service.test.ts",
+      "bytes": 4077,
+      "sha256": "bc6df2de38cba0c635693e0ec8cdbc62c444e0f7463653f33561b7fad832720d"
+    },
+    {
+      "path": "upstream/src/airi/minecraft-context-service.ts",
+      "bytes": 7823,
+      "sha256": "486c8ac4cffb9674bc7a4fa329128716b276bad90109143b8dc678af7c5b6ae4"
+    },
+    {
+      "path": "upstream/src/airi/start-background-client.test.ts",
+      "bytes": 6447,
+      "sha256": "877f16cdda769ddcb6039e8ce1fc4c71d21b151fa19ec499f88d803d406871aa"
+    },
+    {
+      "path": "upstream/src/airi/start-background-client.ts",
+      "bytes": 2470,
+      "sha256": "93fe74e00de02589968b074aad053dc5d802a1b1a902908618cce1d3e847d811"
+    },
+    {
+      "path": "upstream/src/cognitive/container.ts",
+      "bytes": 4815,
+      "sha256": "4176cf09b3c65c5be607e9bb4c8885315e76db51d08e26d5c6122a5e2520c094"
+    },
+    {
+      "path": "upstream/src/cognitive/event-bus.test.ts",
+      "bytes": 6048,
+      "sha256": "6081402fab4d9a87cd7a3121621fc7a6ca9c95d38850395ec1a4531347a51ad8"
+    },
+    {
+      "path": "upstream/src/cognitive/event-bus.ts",
+      "bytes": 5238,
+      "sha256": "bcbb786965902a57019199baeca52fe9614249c05d26b2b299f5c61fdd8b9fcd"
+    },
+    {
+      "path": "upstream/src/cognitive/index.ts",
+      "bytes": 6258,
+      "sha256": "18ac082b8b8c815342ec23d3e817550d53da69fd9759d07edc15fe29d418a6eb"
+    },
+    {
+      "path": "upstream/src/cognitive/types.ts",
+      "bytes": 31,
+      "sha256": "d8b24fff19a7d3c76d68cc48d2552ac242c0969acea39039f66c420af269276a"
+    },
+    {
+      "path": "upstream/src/cognitive/action/action-registry.ts",
+      "bytes": 1885,
+      "sha256": "3bb957ff2120f522439b554ecafb4d5a82792cf7fb30167e0c368a3bceaebb26"
+    },
+    {
+      "path": "upstream/src/cognitive/action/llm-actions.test.ts",
+      "bytes": 2328,
+      "sha256": "1440aaccbb7f485ea6d6dba09b43785e64bade59eb2dfde73c36fc74528e25dd"
+    },
+    {
+      "path": "upstream/src/cognitive/action/llm-actions.ts",
+      "bytes": 17275,
+      "sha256": "2c3122a07a86095df5d0c8eb3c500aba4444b2d716a5bae37ad68efdc11a7d78"
+    },
+    {
+      "path": "upstream/src/cognitive/action/task-executor.ts",
+      "bytes": 2725,
+      "sha256": "ad6947d004b2e45d48b835a701cbc73078949e0df23b105762d745718863bd74"
+    },
+    {
+      "path": "upstream/src/cognitive/action/types.ts",
+      "bytes": 31,
+      "sha256": "d8b24fff19a7d3c76d68cc48d2552ac242c0969acea39039f66c420af269276a"
+    },
+    {
+      "path": "upstream/src/cognitive/action/types/index.ts",
+      "bytes": 398,
+      "sha256": "0ead7a8867e413a9b91108fcd8740b5556e6dc44d74b61453f159edfce5668d3"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/brain.test.ts",
+      "bytes": 26856,
+      "sha256": "7df058b094abebf5514a1dbe8923ae7b9629bc369c13a5806826768fe8580493"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/brain.ts",
+      "bytes": 82096,
+      "sha256": "f4f16cffed1312e9da5488eeb0d5de970a84d97224bd472507ae9b980dd2766b"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/context-view.ts",
+      "bytes": 1201,
+      "sha256": "a72a7c2bc68966f06a89b428957a194b7a710e22117d7c1c9532c7987e957c29"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/history-query.ts",
+      "bytes": 5005,
+      "sha256": "41a5fed4cf3f579e27bd13c0fe091c5b96e802798a076cdc9993d2a4c35571ff"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/js-planner-sandbox-protocol.ts",
+      "bytes": 4530,
+      "sha256": "e7238112d5b18970b267ddd8da30c2aba46f04416ed4522658f89377a2c3f012"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/js-planner-sandbox-runner.ts",
+      "bytes": 6072,
+      "sha256": "224ef1ade84b2f1f5e32c54c8cd752e9154c50c7876d6fc660a1c50b175d5f2e"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/js-planner-worker.ts",
+      "bytes": 9472,
+      "sha256": "f25117430b1c95c73215d68452bfce2fb8898373357f1b5c2de9fe228693b599"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/js-planner.test.ts",
+      "bytes": 24852,
+      "sha256": "74cd85b6294bb4ae7c5e906f627b98c35f2efe8fb80fcf19124169c751306cfb"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/js-planner.ts",
+      "bytes": 55103,
+      "sha256": "7c56aaed790f54aac40953fae7f46a06c25337524f246b998262a5761a4a7374"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/llm-agent.ts",
+      "bytes": 3273,
+      "sha256": "b344b93ad5cfc0e8f997730e0bf516c9856c3b85a26120a2330ab4a2410955b3"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/llm-log.test.ts",
+      "bytes": 1772,
+      "sha256": "66871451411cae7623e05682bd5ff85bc1d3c03944bca137465e8a5c03996dd8"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/llm-log.ts",
+      "bytes": 3924,
+      "sha256": "d870fd4c0bd2b1ea345fc59bf5290e23aba96e82cf3e0f18ad81db9550f06918"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/llmlogic.ts",
+      "bytes": 5815,
+      "sha256": "90fc5e6bc95b9317c4ad926bcb9aa5233f0bcc013039088ee0663459b1f7845c"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/map-renderer.test.ts",
+      "bytes": 7968,
+      "sha256": "2f08cd3d40c1190248d7a64fbc6589d7c7b53231acf84803bca06187fcebdc55"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/map-renderer.ts",
+      "bytes": 16230,
+      "sha256": "0952a913c9b36f41864409a32a959b4ae68a1d4448291bd0804d93852546d61a"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/query-dsl.test.ts",
+      "bytes": 5016,
+      "sha256": "0605ff3e8267bd67ebf89674d01cdb1e7f988f4dc74b2e30584febaa43730e0b"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/query-dsl.ts",
+      "bytes": 15972,
+      "sha256": "ecd9e9460396fcbb190163e2723783f1caa453e076e787bff5b586584c956ca2"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/repl-code-normalizer.test.ts",
+      "bytes": 1427,
+      "sha256": "c661230169768c43c3d29f7ee265d1d824b924c0570be1c35534bc580c7e4ac3"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/repl-code-normalizer.ts",
+      "bytes": 3014,
+      "sha256": "be0f4a18c686026014438b3d9dbb1c232c8b4a437974d0dec59a697091be0b0c"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/task-state.ts",
+      "bytes": 864,
+      "sha256": "6efe81b0b47252ddcd8f398f2bb7015356583b34de2dc9fe8f8d74f7a9f02483"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/patterns/catalog.ts",
+      "bytes": 5533,
+      "sha256": "f611c808fef25691906e1f8386a0e05c6ba27ebb2f7a0df8d9e96711fe43edc7"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/patterns/runtime.test.ts",
+      "bytes": 2226,
+      "sha256": "ae5af7aa31e95bbaecc9a74c8d73baa244daefb302af8289b2a98f4cf0f5c6ea"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/patterns/runtime.ts",
+      "bytes": 3280,
+      "sha256": "faa8a8da4327a0a06f3b124337dc3d390707449aa5aef90f93d88ce2e00d69c1"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/patterns/types.ts",
+      "bytes": 390,
+      "sha256": "173dd6aa4e93e711a0934167ed241899b7dfb0cc82bd1903e527d04af307e648"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/prompts/brain-prompt.md",
+      "bytes": 32567,
+      "sha256": "8093b58d0b2bd41f865aab2e7db6fd4f9d612e76b2070986141e00c17b84fb0e"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/prompts/brain-prompt.test.ts",
+      "bytes": 3270,
+      "sha256": "1e21f5a7faf2dcedd77209aa22ee82ef63d35e4a446d2c26a1dcd35c9ce7c089"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/prompts/brain-prompt.ts",
+      "bytes": 7803,
+      "sha256": "92f15a5a14e518d3032b32e1c014969ec42ff4d6d34a332de3d3cef83f2b882c"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/gaze.test.ts",
+      "bytes": 1405,
+      "sha256": "570123ab0a9798b9294255aeeb68ed22143ab834820aad230aac0abf3fc9636b"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/gaze.ts",
+      "bytes": 3782,
+      "sha256": "80d7ef24291c7e212275010708b69963d7520ee687af56b4248e173307c39ad2"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/pipeline.ts",
+      "bytes": 1380,
+      "sha256": "d905c23aa6372ac79abea63bc346ca74a1c87c019950da6ba72c81412aaa25b7"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/index.ts",
+      "bytes": 3678,
+      "sha256": "3efbcefa4ae2a729c9ebed2b0d9e0e012a610b16406a974dd8a4f4822b6ecfb6"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/types.ts",
+      "bytes": 996,
+      "sha256": "ed00a9f07d5bb20724fdad60ee5c86ec326116bc58708129a02e9ab995b392a9"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/arm-swing.ts",
+      "bytes": 895,
+      "sha256": "202e8d111b1c84443e9f3b92eb469699e2afa0750e412a8998f1fe8f7120300a"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/attacker-tracker.test.ts",
+      "bytes": 3650,
+      "sha256": "a9c6d28c37a5e0f1d3d4628508d8776bb4f1ca74dcb77f3e5a5b3d010d0199ae"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/attacker-tracker.ts",
+      "bytes": 2611,
+      "sha256": "e8c79e8d8c940235b9207563a2f71a2a9e9f7abf2d46ef1ccdf0cb8ae17f2078"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/damage-taken.ts",
+      "bytes": 5264,
+      "sha256": "0cdbcc71051c7cdeea3da87fb04d142c22c46314a7ba282ba1466dada05719c3"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/entity-moved.ts",
+      "bytes": 951,
+      "sha256": "8d50881798913daa490fba2b18ccb7a798971eec4fa69ef8ca305832a17a9ccf"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/fall-tracker.test.ts",
+      "bytes": 6366,
+      "sha256": "971f3caf64b3cfc714f25ec8d46646f80a9334709eb0d75ba485ee461b9749d4"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/fall-tracker.ts",
+      "bytes": 5468,
+      "sha256": "b5582b3aa6ee6dc5f98da7d2ebba00957b0790f40c9c3d94f80a13b23b573dfd"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/index.ts",
+      "bytes": 806,
+      "sha256": "6563747852f286a4984005db3a6001fd3aa27a351f11a715e00d411d6fd7fa3d"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/low-health.test.ts",
+      "bytes": 2437,
+      "sha256": "e80eba0ef8262be0db57dd50e6c100033bbf9c9bbb6e24718339ae9c506ddac0"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/low-health.ts",
+      "bytes": 2072,
+      "sha256": "5d623e854c97ee32765bc0e8c56b951f8ff65bc72ca62f81be4d141e4d5a703a"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/sneak-toggle.ts",
+      "bytes": 1728,
+      "sha256": "068448d93c2d497912c1651001c36bb48c3e291676f126219da28734822ab8ef"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/events/definitions/system-message.ts",
+      "bytes": 428,
+      "sha256": "e78eadbf1dcff106f0b3db553548ada5113134de1be99a3624e987fbf5b78d83"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/engine.ts",
+      "bytes": 11142,
+      "sha256": "5bc01a5ae7da7aaea232260166a19852226b14a99ade5e7e8e52454a634d6fc0"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/index.ts",
+      "bytes": 1038,
+      "sha256": "e207ba3a1985a2d60127d9ed8fed465114a980b3689c09f8f522c9c6a8675f04"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/loader.ts",
+      "bytes": 3397,
+      "sha256": "4818963e48b5529ba3f1157649a76adf90dd5495c3d5a5c99ea7d8db72794c4b"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/matcher.ts",
+      "bytes": 4408,
+      "sha256": "540aafc15cb9fc8d71017c1d5de4115ac316a79e200d61015f75c17e78f98a08"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/rules.test.ts",
+      "bytes": 20673,
+      "sha256": "399af363730ca1689d7009b9f77ac9f72e126ff608623e15b5d4b66785051faf"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/system-message.yaml",
+      "bytes": 294,
+      "sha256": "62686983aa3f4f1cb72f9ad5251db7e28db5ac7328a596560cf92f4bb9a48796"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/temporal-detector.ts",
+      "bytes": 6790,
+      "sha256": "771708b31c592df81a9db8a9202c90258bce486de6c370431315db44e3d99ae1"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/types.ts",
+      "bytes": 6668,
+      "sha256": "0e90a261bafc50d2ddace73ea4cc5c0434f38bd33d432c3e42154432e803c99e"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/attention/movement.yaml",
+      "bytes": 429,
+      "sha256": "13161f89aca51f8f0346e096d85b7a85d9b424ad116b7c8b2715330c8df0da91"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/attention/punch.yaml",
+      "bytes": 474,
+      "sha256": "7154a24479a17576aad0395064994aa49472d8f688d186bf77b3147832ab4d1f"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/danger/damage.yaml",
+      "bytes": 486,
+      "sha256": "c2117d82cad2e451cdbb1f5b384a152960dd88a4fdd4cb1d62433c3be3ac2c0b"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/danger/low-health.yaml",
+      "bytes": 676,
+      "sha256": "32a023c5fec93b8ae89cbbdb42f2e4cc115563f8b337e56a8cc7dcf34bd79621"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/rules/social/teabag.yaml",
+      "bytes": 461,
+      "sha256": "5848066e8a39f032758c6f4aaca474687329db46581e05a89508cfd490c8806e"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/types/raw-events.ts",
+      "bytes": 338,
+      "sha256": "ec1b60977fc1401b4ad96b6ced3631ce20bce7e53ac0e222a16e92215f8da846"
+    },
+    {
+      "path": "upstream/src/cognitive/perception/types/signals.ts",
+      "bytes": 832,
+      "sha256": "89fe54e27500abec2d0d9c35938e2cd779531eaeb2883a4a229d7c2f4a57553f"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/context.ts",
+      "bytes": 4699,
+      "sha256": "312935c6427bdf4bb9dcd737326a2a3023189e99e8294436637e5fb2ca49c6fd"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/modes.ts",
+      "bytes": 382,
+      "sha256": "c5c283ddb5c6316c0e63213ae3e6837d906494e919fe24de51bfb20078fd08e5"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/reflex-manager.test.ts",
+      "bytes": 1671,
+      "sha256": "d5fad07bc09ab21d96e61ef91a92e0637b29af00c4fdd74685988ba4e7d333cf"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/reflex-manager.ts",
+      "bytes": 7665,
+      "sha256": "628e64b0e5c9badfea4259fc508b80c5e621bf4ce89a6114c194cba220cf3bad"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/runtime.test.ts",
+      "bytes": 6331,
+      "sha256": "00f5c4a581d5031d68600e667f664b98c1c3396261b9a1cfd1c5b141d0b84da1"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/runtime.ts",
+      "bytes": 13457,
+      "sha256": "f60a5843c3a75209ec4af09b7c91801b1569a7582ec064eb2d84f5635c66d02b"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/behaviors/auto-eat.test.ts",
+      "bytes": 3499,
+      "sha256": "aa17741e75d2539c3af1c7bd377f4ee6039a90a87177de3f7751aa1d708c249b"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/behaviors/auto-eat.ts",
+      "bytes": 2861,
+      "sha256": "fb29227ac3e979e6f434c54f2ec70bbffe654ad484901fb81e4b52f641975ac0"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/behaviors/defend.test.ts",
+      "bytes": 1672,
+      "sha256": "c32f4f23c52c577a57fd3f3c0d1734038e419b4f3bda335488135abd4c99cbd6"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/behaviors/defend.ts",
+      "bytes": 3539,
+      "sha256": "758be6f60a5882626f4a8aee918f46f0cc4ba1712077ddf96cb812532c6f2ade"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/behaviors/escape-hazard.test.ts",
+      "bytes": 3202,
+      "sha256": "e54aa4126117faeae529e1dff2a1445670e921cea30dc5fbcc51556cfcb042fc"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/behaviors/escape-hazard.ts",
+      "bytes": 5518,
+      "sha256": "d237d3aa85488cad35430bb356f549aa48fe74cf5d2394e9b6c6cd3182d2e923"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/behaviors/idle-gaze.ts",
+      "bytes": 5577,
+      "sha256": "0eb4c9d776e3cb6746e8bfbc3fad9dc47d759e767a8917184c0f44d3b7c9531d"
+    },
+    {
+      "path": "upstream/src/cognitive/reflex/types/behavior.ts",
+      "bytes": 627,
+      "sha256": "4fa023f2e18b139c7a24f5d66096ddc1ae8af1de578496c414d9d49981b520e4"
+    },
+    {
+      "path": "upstream/src/cognitive/types/index.ts",
+      "bytes": 978,
+      "sha256": "81d96efa3703d43b1fb20af2e6b8bcc4569620b64741ca89ce9d2f281ae65f84"
+    },
+    {
+      "path": "upstream/src/composables/bot.ts",
+      "bytes": 837,
+      "sha256": "17a7e9fd1e8016de5066cd1349725656620549eac7f69990aae38296b2d58563"
+    },
+    {
+      "path": "upstream/src/composables/config.ts",
+      "bytes": 5234,
+      "sha256": "14b1631230caf9474315759c33c1d568bc8f168f83032216abbe6a7a094843a7"
+    },
+    {
+      "path": "upstream/src/composables/runtime-config.ts",
+      "bytes": 5498,
+      "sha256": "329944639500c4cce1cd14602b9b2077dfd27b100905c6effced6278e2b2a6cb"
+    },
+    {
+      "path": "upstream/src/debug/debug-service.ts",
+      "bytes": 6270,
+      "sha256": "fc286cb58304ed2df37583486ced4a97ee582e0b70307005765cc3540271d088"
+    },
+    {
+      "path": "upstream/src/debug/index.ts",
+      "bytes": 263,
+      "sha256": "eef1a52d1395a9a7469080ed5986787c1910289c74a2f58ab372976672f81b2d"
+    },
+    {
+      "path": "upstream/src/debug/mcp-repl-server.test.ts",
+      "bytes": 8186,
+      "sha256": "d7c6402a9b291c6c852892a81fb87717e46a85d466abbeb526a52de0a0f08579"
+    },
+    {
+      "path": "upstream/src/debug/mcp-repl-server.ts",
+      "bytes": 11314,
+      "sha256": "926d131f0b49ff1baebf3e812a7eb978b6e30b639fd0808cdefdca8503776cb0"
+    },
+    {
+      "path": "upstream/src/debug/mineflayer-viewer.ts",
+      "bytes": 1372,
+      "sha256": "880718fc971628a8e76192a0c99b4c5e20bb3e0d912fe19d175d4b1ed340e960"
+    },
+    {
+      "path": "upstream/src/debug/server.ts",
+      "bytes": 13220,
+      "sha256": "39646abb930eb7d43adb575b7f8b748bcbf1a9e995d7b58c39e7a15f80bfc402"
+    },
+    {
+      "path": "upstream/src/debug/tool-executor.ts",
+      "bytes": 5867,
+      "sha256": "b078518701a71f60587436a0029a160840ef8f872fcb96cb86d9155e335adbd5"
+    },
+    {
+      "path": "upstream/src/debug/types.ts",
+      "bytes": 10180,
+      "sha256": "3890225b0a02b75f1cc469f00d9ec75cecc1103d5ad9414f78b4ee6faf092cc2"
+    },
+    {
+      "path": "upstream/src/debug/web/app.js",
+      "bytes": 55806,
+      "sha256": "de4efdc75527de867ca3b94314111eb8ee8b12169d0982b8505ee20448f0b4a2"
+    },
+    {
+      "path": "upstream/src/debug/web/conversation.css",
+      "bytes": 9979,
+      "sha256": "6a58bfedbba069b82f3fb9957777985b1e791c49cf0aa26f7d710373e46991b0"
+    },
+    {
+      "path": "upstream/src/debug/web/index.html",
+      "bytes": 10713,
+      "sha256": "1c7ac3b52b9b793bb17cedd79e571189cfe028f86ed0e7c72f50fa6c12a441fa"
+    },
+    {
+      "path": "upstream/src/debug/web/styles.css",
+      "bytes": 18866,
+      "sha256": "ba7b5edd22c206f023374d79953a7905bc75edee371ac8de6d4fc68f5db57176"
+    },
+    {
+      "path": "upstream/src/debug/web/tools.css",
+      "bytes": 3185,
+      "sha256": "9755ae6c346d0ba3ca99d80da5571893c0b02e96e3fc58ce6846fe9106c2a64e"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/action.ts",
+      "bytes": 451,
+      "sha256": "3c1bde6b8b78aec72c65cf4f2bc29b41aef05c99ede69d40da404a12f2055c61"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/base-agent.ts",
+      "bytes": 3669,
+      "sha256": "6109a04b3f012eebbc54b10381e86f7038a6fe8ac969b72c0f33d42e47817df3"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/command.ts",
+      "bytes": 378,
+      "sha256": "96ea2bb512eb9ea73cf531007b75c8bf3ef308012bc2b9a84cff116c8e78d88f"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/components.ts",
+      "bytes": 668,
+      "sha256": "34bb964d3a6d66aa8d34e9a05478e93d4ebe87cdf0b49b14f2b120513759721d"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/connection-supervisor.ts",
+      "bytes": 4291,
+      "sha256": "fa8563f3ce79922f68fb46f1fb52c4b358c73b582dd7045e7a8a91a341688ae3"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/core.ts",
+      "bytes": 12150,
+      "sha256": "f6b1ce604188f3b09f4fc4e66859ada6661380689fbe3e1295e12ba70f41da39"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/foods.test.ts",
+      "bytes": 2305,
+      "sha256": "969fa5af4cc4344679477c6bbc8b46168c2b9003113d835a3d7ae49270253cc9"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/foods.ts",
+      "bytes": 2994,
+      "sha256": "aa628808958ed82c1e963cb0a51f751e45761a0c9967c1b6880352317fb25daf"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/health.ts",
+      "bytes": 166,
+      "sha256": "8cc8e6e737cc8e16597c1ba2190e52b84220a450ddb1225e9657649617b0f451"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/index.ts",
+      "bytes": 364,
+      "sha256": "31a96c671acb494bbc33662f57d6312cb789a01c06ad0055409a0ffcee96b02b"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/memory.ts",
+      "bytes": 257,
+      "sha256": "f222dc8d58342b3e1c5090bd656dcbe737ed237f785619d45e8c87b81ca03d7f"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/message.ts",
+      "bytes": 1261,
+      "sha256": "66dd0d38aabec18f883f5dfbbb056e7cea8384e5b05c47ba047b7c7b8f4f1d2d"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/plugin-runtime.ts",
+      "bytes": 6920,
+      "sha256": "cce04cc87955e9a8e582b75480615d3762ccc4019301b0659694f7eb7b2ac098"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/plugin.ts",
+      "bytes": 538,
+      "sha256": "34e2a7f66bf9797b6d67b913d1061a844294baf57f837d6114f50181c99817e0"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/status.ts",
+      "bytes": 1339,
+      "sha256": "65d700cb52873fd3c065f1032d7b8a3e5591e6ee46f0a3a0eadb65411b8a7695"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/ticker.ts",
+      "bytes": 2089,
+      "sha256": "286bf885f70a5c22f7a5925f1993cca8060214ddf7eb6e84f62c43d2557c27ba"
+    },
+    {
+      "path": "upstream/src/libs/mineflayer/types.ts",
+      "bytes": 646,
+      "sha256": "97d0a89c97c2ac64b3729fe73704e692805e328c49ef93205b39a22eb3cfcedb"
+    },
+    {
+      "path": "upstream/src/plugins/echo.ts",
+      "bytes": 707,
+      "sha256": "e03b36efb1fe0b2faad8b37c86e43aae230ff158257357cfc18c523047630ff8"
+    },
+    {
+      "path": "upstream/src/plugins/follow.ts",
+      "bytes": 1821,
+      "sha256": "f9d1ff5520a778b040cf3b00a048bd283e9076a2ffc947b0432a22a0f2890808"
+    },
+    {
+      "path": "upstream/src/plugins/pathfinder.ts",
+      "bytes": 1251,
+      "sha256": "86d8cfea87c43745bfd4103814ecf975dd1d6a8150b7a25d0ade069a714b275d"
+    },
+    {
+      "path": "upstream/src/plugins/status.ts",
+      "bytes": 466,
+      "sha256": "feaabe2fe011a7b4ae037f9e4ce1d1c8d357e55c4e1e0fa3601278729b092188"
+    },
+    {
+      "path": "upstream/src/skills/base.ts",
+      "bytes": 559,
+      "sha256": "de8df8c00237ac03e88559ef7ae5cf678c03fbb279415d1650367f090e190eb9"
+    },
+    {
+      "path": "upstream/src/skills/blocks.ts",
+      "bytes": 16882,
+      "sha256": "f60d684a584d638dc3f41bbd0fe6b9a60d7c3004a16b16e74de39050835d7876"
+    },
+    {
+      "path": "upstream/src/skills/combat.test.ts",
+      "bytes": 1748,
+      "sha256": "723f049e9d049d4adb7a014ffc53a182ddd60af3c8d710e24030046f2adf16cc"
+    },
+    {
+      "path": "upstream/src/skills/combat.ts",
+      "bytes": 7427,
+      "sha256": "f7cd5b0c7c50488438471a3c6da8822d9892ffcbb1abb54bc2a2e2ffe8927fe9"
+    },
+    {
+      "path": "upstream/src/skills/containers.ts",
+      "bytes": 1447,
+      "sha256": "46607c4d4afd3f02a34c8364de980013afa073683f63fb9d2ed13f64488faa5f"
+    },
+    {
+      "path": "upstream/src/skills/crafting.test.ts",
+      "bytes": 2885,
+      "sha256": "3c879b4ef46d1b963c9c8e4fd144b9c482e5e5c42cd29e9ee36abf6d47943fbb"
+    },
+    {
+      "path": "upstream/src/skills/crafting.ts",
+      "bytes": 12764,
+      "sha256": "663d180c99c32585f78e10cf2b3b91023d42ef9e8998c4e96cab7a97b369aa0a"
+    },
+    {
+      "path": "upstream/src/skills/index.ts",
+      "bytes": 161,
+      "sha256": "1a9094dc3630835b0f67462b020966a7995831f4f08931dc7b9c366a03738fea"
+    },
+    {
+      "path": "upstream/src/skills/inventory.test.ts",
+      "bytes": 5918,
+      "sha256": "f088247a641a6a8e7ce49de3bb0ad224aab903cb900e5ae3c003bc9b82809ad9"
+    },
+    {
+      "path": "upstream/src/skills/inventory.ts",
+      "bytes": 7541,
+      "sha256": "40a98109b934cb43fba68a3971e7cc66a999d52fdddb6ce01f141a7290ecf4c3"
+    },
+    {
+      "path": "upstream/src/skills/movement.test.ts",
+      "bytes": 2536,
+      "sha256": "085d064a14d1a6a0a6f2d5ef8084f33f1d6484f79463372580321e12713931a1"
+    },
+    {
+      "path": "upstream/src/skills/movement.ts",
+      "bytes": 10441,
+      "sha256": "fa05c1bd3bd6f1aee594bed783d56e0b87b06f0a4f34ba2f1883b791c28c981c"
+    },
+    {
+      "path": "upstream/src/skills/patched-goto.test.ts",
+      "bytes": 1824,
+      "sha256": "7caa753bdc7683123f2303a6027d931cd625bd6a082a6a9f4f190df6ccd2f83e"
+    },
+    {
+      "path": "upstream/src/skills/patched-goto.ts",
+      "bytes": 11522,
+      "sha256": "896b0d00d9756daa2b3faa848cce9ce92dea953d3e77ddfd02a77902cf545c41"
+    },
+    {
+      "path": "upstream/src/skills/world.ts",
+      "bytes": 8204,
+      "sha256": "18bc0f1cd99a02a989bfc516e91006148cce435598b4c14db7ed33c1d3416d3a"
+    },
+    {
+      "path": "upstream/src/skills/actions/block-type-normalizer.test.ts",
+      "bytes": 2651,
+      "sha256": "8f15ab45a76be29aa70fe75167c1a373e289046f4f9f08133d77f6eda260f5cc"
+    },
+    {
+      "path": "upstream/src/skills/actions/block-type-normalizer.ts",
+      "bytes": 1947,
+      "sha256": "87e502119ce905920a8998532cbbf11ebbf8d2f8ff2d33792f0d807a807a8878"
+    },
+    {
+      "path": "upstream/src/skills/actions/collect-block.ts",
+      "bytes": 5745,
+      "sha256": "f10947a61a1526e266bf1d55eb99f3208f52085d60eb89ab208035a776e91d16"
+    },
+    {
+      "path": "upstream/src/skills/actions/ensure.ts",
+      "bytes": 14644,
+      "sha256": "aaef8fad254dc264014dedb8735ec909975e61378811e62d736352ddfab14dee"
+    },
+    {
+      "path": "upstream/src/skills/actions/gather-wood.ts",
+      "bytes": 3176,
+      "sha256": "6b5ca8005a370fe13c6c0a717d8abf6a57e29fb8d8e8028a0f9dd8611675d5f8"
+    },
+    {
+      "path": "upstream/src/skills/actions/inventory.test.ts",
+      "bytes": 14548,
+      "sha256": "c250674404fcf7b0a0be159cf1b75e4c86210d20f845d6a993fd5e44be268866"
+    },
+    {
+      "path": "upstream/src/skills/actions/inventory.ts",
+      "bytes": 12859,
+      "sha256": "3afcb9fc468220549aaca42acca9f21bc6bd9b59fe1425578aaacebc8dc14869"
+    },
+    {
+      "path": "upstream/src/skills/actions/world-interactions.ts",
+      "bytes": 16499,
+      "sha256": "757d09060dc7c2d5a5995565926efb431b401ccd7691684407f1882234926991"
+    },
+    {
+      "path": "upstream/src/utils/error-message.ts",
+      "bytes": 480,
+      "sha256": "34cde7f7629ece29bce6779c22f068f66aabad2f24e2ebe43ff1970c1b4446fa"
+    },
+    {
+      "path": "upstream/src/utils/errors.ts",
+      "bytes": 765,
+      "sha256": "33016b5d5cb9627f48e22fc62a42feaa6f93f129a2c21df626e02644ee0cdc18"
+    },
+    {
+      "path": "upstream/src/utils/logger.ts",
+      "bytes": 3348,
+      "sha256": "bb72dc2641b939e2a73eeabfbbde382cbd899e65751df33a89389f4771ec163f"
+    },
+    {
+      "path": "upstream/src/utils/mcdata.ts",
+      "bytes": 7016,
+      "sha256": "4839b5e9bb7e8d203b33cba76875de889c5761bd3537f7caab6e0bad6ce54e73"
+    },
+    {
+      "path": "upstream/src/utils/recipe-planner.ts",
+      "bytes": 11618,
+      "sha256": "3604221a90868cee9a346871bce8893de4d7e89778b9cae4b30de1dbff113a0c"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "sourceRoot": "F:\\codex\\skills\\minecraft-pixel-skin",
+  "generatedAtUtc": "2026-11-05T15:36:41.3116699Z",
+  "files": [
+    {
+      "path": "agents/openai.yaml",
+      "sha256": "e6784d7a735b9b0fee10a28ac6af772ce99a426d66f639d9d3dac73de4cb0ee8"
+    },
+    {
+      "path": "assets/fixtures/character-eyes-review-project.json",
+      "sha256": "8a7428e8a7223dc5376e3bb3741e17b113b2077ca5923f21c5cda608a1bb462d"
+    },
+    {
+      "path": "assets/fixtures/guide-a-hair.json",
+      "sha256": "a8f71dce09b0877cb92d648f22d9d8018597efd9b9e58cffa86653f870340182"
+    },
+    {
+      "path": "assets/fixtures/guide-bc-hair.json",
+      "sha256": "b7b255ffd88aab7c9a978acf5734377052fdfef669365f75890fde66c57c8c8d"
+    },
+    {
+      "path": "assets/fixtures/neutral-head.json",
+      "sha256": "2471677ca06d56d715c1919bf5e205339096981ceb106f7734a6610f37690d34"
+    },
+    {
+      "path": "assets/review-template.html",
+      "sha256": "a92adefcd5f94db3b200e59a3dd76263a3b7d04899da7b57c793328fb05d6f8a"
+    },
+    {
+      "path": "assets/sources/guide-bc-detail.png",
+      "sha256": "cdf2c1482169f573d54d79892a1137de425716ffbee0bf9fadd8e91c2b1ddf58"
+    },
+    {
+      "path": "assets/sources/guide-eyelashes-detail.png",
+      "sha256": "c7bc9e79f491a8722fd7130fe5f7cf4be961faadf788d4801d4b285a17c33abc"
+    },
+    {
+      "path": "assets/sources/guide-eyes.png",
+      "sha256": "492c568ea647c7ae539df382b77bdf2e7e42742814e1eb8291172f41a4c008ea"
+    },
+    {
+      "path": "assets/sources/guide.png",
+      "sha256": "0558fdaf385729beb5f3e47ddb13bc0aed276db7d20f0c8210a292805a635560"
+    },
+    {
+      "path": "assets/sources/reference_xiaoli.png",
+      "sha256": "0cfc6ed71dce5f2ecaa15cd34c14803549dbec3708d88ecd8fed0334c78ad362"
+    },
+    {
+      "path": "assets/templates/eye_A/template.json",
+      "sha256": "cd1e128333f8b42802e564b2f424f1c94a2e322b7a7ed5637d48636dfd9cac9f"
+    },
+    {
+      "path": "assets/templates/eye_A/versions/1.0.0.json",
+      "sha256": "596daa0f943e15faaaea6f7f8586822fd86f5cb1d98328ae6f623bc917dde8fc"
+    },
+    {
+      "path": "assets/templates/eye_B/template.json",
+      "sha256": "83d312ede89724c22a25fab4c9c83a4a68332febe5ef8ee764a8c69d476e659a"
+    },
+    {
+      "path": "assets/templates/eye_B/versions/1.0.0.json",
+      "sha256": "02fe4432083f3204b5db756f32f71010de0b84f3290b926dcc028ee6a5ce7b05"
+    },
+    {
+      "path": "assets/templates/index.json",
+      "sha256": "8374f2812769013346007135a7578abc984b6c2402e0dd1ac053d56f285b2806"
+    },
+    {
+      "path": "assets/templates/reference_xiaoli_front/template.json",
+      "sha256": "9ac12703d0cbef338f0848e4d2a0ee4e6f62525506ccbac2b9bba2ba65604e26"
+    },
+    {
+      "path": "assets/vendor/skinview3d-LICENSE.txt",
+      "sha256": "7eb7128de2e4de70932ce370c2c602136b4d7648fce9fc4a50c93fc59be94d94"
+    },
+    {
+      "path": "assets/vendor/skinview3d.bundle.js",
+      "sha256": "e2a60ce607f2169e24b18bfd6e5214113b66f30d92e23f9a021ebbd4b21c08d3"
+    },
+    {
+      "path": "references/character-production.md",
+      "sha256": "73265dcb0c59f1cdf1dfa4b242798d5f35906931535777f2c7b12d2f1c2b35e6"
+    },
+    {
+      "path": "references/template-authoring.md",
+      "sha256": "896bd2fa1dce1a1d0b750099e243550fd167622f925d84ed1ff9328a6249b5b4"
+    },
+    {
+      "path": "references/tools-and-validation.md",
+      "sha256": "616e5db4a5d63d3c5837274886f1e46157e2e2186ba28d742312b8c549c947f0"
+    },
+    {
+      "path": "scripts/capture_review.cjs",
+      "sha256": "df36805d9a7d79d4b683d973169c223b7d7bc6e51ff4977134c5843f9570a9ca"
+    },
+    {
+      "path": "scripts/render_review.py",
+      "sha256": "2716974368e8dc598dcce87651cf312b9ed70d8aa0287f5e690e8992faf1377f"
+    },
+    {
+      "path": "scripts/skin_tools.py",
+      "sha256": "b558d028e78d3f420fbd7feec4adf5f5e38bec5259c91e88e2592d9c52824643"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "857475b1caf13c3923b8e8b80745368381650b328869caf10f54549162132bc5"
+    },
+    {
+      "path": "tests/test_skin_tools.py",
+      "sha256": "0fbd5d1f0203462b2ad461ef355025e406c0b1345b97123c568448fdfec22b05"
+    }
+  ]
+}

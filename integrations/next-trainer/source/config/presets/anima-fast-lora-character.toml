@@ -1,0 +1,30 @@
+[metadata]
+name = "Anima Fast LoRA - 角色通用"
+version = "1.0"
+author = "SD-Trainer Next"
+train_type = "anima-lora-fast"
+description = "适合需要更快训练的角色 LoRA。默认使用兼容性更好的 AdamW。"
+
+[data]
+fast_variant = "lora"
+method = "lora"
+network_module = "networks.lora_anima"
+network_dim = 16
+network_alpha = 16
+
+resolution = "1024,1024"
+enable_bucket = true
+train_batch_size = 1
+gradient_checkpointing = true
+
+optimizer_type = "AdamW"
+learning_rate = 0.0001
+
+mixed_precision = "bf16"
+use_vae_cache = false
+use_text_cache = false
+skip_cache_check = true
+
+torch_compile = true
+compile_dynamic_seq = true
+attn_mode = "flash"

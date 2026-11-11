@@ -1,0 +1,963 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "name": "xiaoxi-research-log",
+    "version": "0.1.29",
+    "root": "F:\\小汐的研究日志",
+    "packageSha256": "ddc8d1d8cf32506e56203500a494c792b3dd964dfbaef4cb3d83b408b7c1d9ea"
+  },
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "sourcePath": "desktop/workspace-AGENTS.md",
+      "sha256": "6bc3bdfb082ea870b363539d642fd496f6402075b2b11da0b7015702f5a9ecb2",
+      "size": 3849,
+      "sourceSha256": "fcf5412795e0809ce2c7b57bbe4287b5046b84c5f6181012c7ea2013d3984d48",
+      "sourceSize": 3833,
+      "adapted": true
+    },
+    {
+      "path": "assets/avatars/momo.png",
+      "sourcePath": "assets/avatars/momo.png",
+      "sha256": "174fd19335c54e261d4a3c459f310dd5128b04d21491a9d72af32b9ad2e62c9f",
+      "size": 2064704
+    },
+    {
+      "path": "assets/fonts/NotoSans-Bold.woff2",
+      "sourcePath": "assets/fonts/NotoSans-Bold.woff2",
+      "sha256": "d6a12be5bedf1cad11b417abd682254afa4fb8c0225cdb37032a0b1f8cc64065",
+      "size": 183200
+    },
+    {
+      "path": "assets/fonts/NotoSans-Medium.woff2",
+      "sourcePath": "assets/fonts/NotoSans-Medium.woff2",
+      "sha256": "100a153905af3869ea4895d6ae9472518a50a89f242c840114cabdd2ec040ebf",
+      "size": 190680
+    },
+    {
+      "path": "assets/fonts/NotoSans-Regular.woff2",
+      "sourcePath": "assets/fonts/NotoSans-Regular.woff2",
+      "sha256": "f42f6ff2acaad6368f0614599ec11b975f0ae0d2c596bab155a6dc24432f1b33",
+      "size": 185652
+    },
+    {
+      "path": "assets/fonts/OFL.txt",
+      "sourcePath": "assets/fonts/OFL.txt",
+      "sha256": "3a579abd469a5b75b779f244e4cebcb74451e32154503fce2c8e004d15bc7e98",
+      "size": 4357
+    },
+    {
+      "path": "assets/fonts/README.md",
+      "sourcePath": "assets/fonts/README.md",
+      "sha256": "01c5bb45ab7e8b50c2c481f4ff390d2124e0c866c35a0f5e0568a4ed9fcbeda4",
+      "size": 1269
+    },
+    {
+      "path": "docs/写作参考/00-引导.md",
+      "sourcePath": "docs/写作参考/00-引导.md",
+      "sha256": "af72664d4d4380fd84a25e85bfd41c0dfd5da3bc56ba8aaddd61af10acdc8034",
+      "size": 2768,
+      "sourceSha256": "64bad64705cc97530968835813decd19a9ace044e58cdfe19f460a84b6f0fc17",
+      "sourceSize": 2768,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/世界观卡/01-世界总设.md",
+      "sourcePath": "docs/写作参考/世界观卡/01-世界总设.md",
+      "sha256": "b981568d72fd19e1d110d3792b5dbbe5755b7789c1bc4fceb473deec5d2b1f15",
+      "size": 2127,
+      "sourceSha256": "17abc2a8455c2980432e64d40ea174223fc35a91e1a3611f983ec643543c5cb7",
+      "sourceSize": 2127,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/世界观卡/02-运转规则.md",
+      "sourcePath": "docs/写作参考/世界观卡/02-运转规则.md",
+      "sha256": "0c3ad686982e9404c0233f59be72f48f47d7152850de18da7446dc85b40dbdbc",
+      "size": 1584,
+      "sourceSha256": "f4153e45bc1419c702e2664e3b1887e83870130de151f7eb56e6e0d043d66b9e",
+      "sourceSize": 1584,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/世界观卡/03-社会与阶层.md",
+      "sourcePath": "docs/写作参考/世界观卡/03-社会与阶层.md",
+      "sha256": "1758822fb2e163aa00780b8e32ecb1d08ef6edf905a7eb0d33ea9f438389c58b",
+      "size": 1774,
+      "sourceSha256": "2ff9fa8d9041ba6974d0e1ead0ab60942d90a6b75746be9412058ecd721ed005",
+      "sourceSize": 1774,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/世界观卡/04-经济与资源.md",
+      "sourcePath": "docs/写作参考/世界观卡/04-经济与资源.md",
+      "sha256": "5648ee84e25dbc060a895d9f6e1eb35565b3b81174a17b492d9b9fec37c7ee6b",
+      "size": 1753,
+      "sourceSha256": "12ac67c31889c4c202b60855ed898a928949904603151a2b4a9b7f61fd3b39f8",
+      "sourceSize": 1753,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/世界观卡/05-日常生活.md",
+      "sourcePath": "docs/写作参考/世界观卡/05-日常生活.md",
+      "sha256": "181d7e4ae6b6908790df894d2616b564a55970160aba446a1e2125cc9a28cc30",
+      "size": 1603,
+      "sourceSha256": "86fd67cf662f72b5ed764b3948bb2a3a1ee87992b3c533a37471f768441cf2cc",
+      "sourceSize": 1603,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/世界观卡/06-角色与NPC.md",
+      "sourcePath": "docs/写作参考/世界观卡/06-角色与NPC.md",
+      "sha256": "7e4bfe1349aee2b12472a1803be1f30bc5865fd6910a897729133020d1125df7",
+      "size": 1560,
+      "sourceSha256": "f77c2c7e7c8c1127ffb538a2d64ee3a2e9ea85a1d75436494cdec31b9913a7c0",
+      "sourceSize": 1560,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/世界观卡/07-开场白.md",
+      "sourcePath": "docs/写作参考/世界观卡/07-开场白.md",
+      "sha256": "a5c8fa3283a2101e17761b7dde04a8aae61b0eae64d40e6d9d983731421e0111",
+      "size": 2047,
+      "sourceSha256": "cf9e83d269655ec0c0872bbf4c8c9fc8e9a8799598301795c62feacf45d5dcc4",
+      "sourceSize": 2047,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/共用/EJS条件加载与多阶段.md",
+      "sourcePath": "docs/写作参考/共用/EJS条件加载与多阶段.md",
+      "sha256": "a658b6c612b370cb1dd7bac0112fe23f1380dae6147b520a8ea2f36379bf1119",
+      "size": 1839,
+      "sourceSha256": "f2c74b98a8d04d47f1bd249dc41cf848f74257f9006d06b4fef8c99108a8fc88",
+      "sourceSize": 1839,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/共用/MVU初始变量.md",
+      "sourcePath": "docs/写作参考/共用/MVU初始变量.md",
+      "sha256": "b1f5bc8d5f027b28da046bebf9829b30ebb5a22b541e978b36a3bb0624816e00",
+      "size": 1783,
+      "sourceSha256": "c103e490c4cd777c5b9a2847adba619a1ad16226c8af3a4cb79f9d4ff5e6771a",
+      "sourceSize": 1783,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/共用/MVU变量列表.md",
+      "sourcePath": "docs/写作参考/共用/MVU变量列表.md",
+      "sha256": "58ea7a743d843d39acfe8bece2ac65d6025c8c1539ca2654322e1ef489958cea",
+      "size": 1780,
+      "sourceSha256": "c23a94004d962359c716c1a83dc3bcaf5ad9f376f28029b5089e14fa01ab2ed0",
+      "sourceSize": 1780,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/共用/MVU变量更新规则.md",
+      "sourcePath": "docs/写作参考/共用/MVU变量更新规则.md",
+      "sha256": "a9cb9e2c28c4b466dd70f107e626a38d448f83ff5611887fae8b654b51a60452",
+      "size": 1660,
+      "sourceSha256": "67c9da45e35396551d2ffeefb8456b9b97cc7af1946a39d3fa7183bb6c1d6222",
+      "sourceSize": 1660,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/共用/MVU变量结构脚本.md",
+      "sourcePath": "docs/写作参考/共用/MVU变量结构脚本.md",
+      "sha256": "443a132dd6ccea1fed286c4a266dd0e17997b2b0a3bcaf2e45c5d24d402e4efb",
+      "size": 1836,
+      "sourceSha256": "d35852af8b6903b8cb26f9c0b028f4f5d6bb9f57d6777a905892e1e51f38107b",
+      "sourceSize": 1836,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/共用/MVU变量输出格式与更新强调.md",
+      "sourcePath": "docs/写作参考/共用/MVU变量输出格式与更新强调.md",
+      "sha256": "b99b50586738e57902be56e28e56027b9a71072bdaa38a197837b5d43b878426",
+      "size": 1835,
+      "sourceSha256": "11d8dcb87d75f0e5e51f2fc97910f5e44a37e0e71d2bdf2dc9f74a1c860198bd",
+      "sourceSize": 1835,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/共用/前端状态栏与出图注入.md",
+      "sourcePath": "docs/写作参考/共用/前端状态栏与出图注入.md",
+      "sha256": "e45f0f30840797a6f84a979c90b8d08a4de2e491a57c8ba48c2f91d623c45202",
+      "size": 1640,
+      "sourceSha256": "c39421ee54ac8c8259f564a43df15c0c6782e027f08f0e46014336997264a61a",
+      "sourceSize": 1640,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/共用/小手机与图鉴解锁.md",
+      "sourcePath": "docs/写作参考/共用/小手机与图鉴解锁.md",
+      "sha256": "f1090506dabcd20431c5c03a48e0502440dfc14758765a810d01fb76993a6ee5",
+      "size": 1753,
+      "sourceSha256": "e29367334b2a7af6c064fe4d4fa6f96c7f50fdf1ee56f9c5daaf333398bfa0a6",
+      "sourceSize": 1753,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/共用/打包.md",
+      "sourcePath": "docs/写作参考/共用/打包.md",
+      "sha256": "a20765c4bc800143529db514183348fbc173ef9dc16e0930d85f626d369dbb4b",
+      "size": 1872
+    },
+    {
+      "path": "docs/写作参考/共用/质检.md",
+      "sourcePath": "docs/写作参考/共用/质检.md",
+      "sha256": "a328c1e5840c382efec8b09dfa7df80033c0f842d025b4445055e2337fcd1bc4",
+      "size": 1825
+    },
+    {
+      "path": "docs/写作参考/共用/重型同层UI.md",
+      "sourcePath": "docs/写作参考/共用/重型同层UI.md",
+      "sha256": "2ec6b096825c8a30f8625faa9d56e7f546f6501fe6a96d415e77f40674d924fb",
+      "size": 1593,
+      "sourceSha256": "09b192b48a337fb24cf8c6df31a5220f9445ca0bc707e8aa2f89551cdd9794d4",
+      "sourceSize": 1593,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/角色卡/01-世界观.md",
+      "sourcePath": "docs/写作参考/角色卡/01-世界观.md",
+      "sha256": "5cbeb444552087b28b099d54e5399fbbcd70c26eb921218647642ef48659cbc9",
+      "size": 3016,
+      "sourceSha256": "66d28f5d42b74e81a820a84dde9cf390e05edddc00710a0e4282e28d730d1aec",
+      "sourceSize": 3016,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/角色卡/02-角色.md",
+      "sourcePath": "docs/写作参考/角色卡/02-角色.md",
+      "sha256": "129c56e9dad65831bd67874228f50e2d7b4c1cb111804f310011275bf493b6d3",
+      "size": 7432,
+      "sourceSha256": "255800ea1d9b85d05b97178b75ae4b8c4a633b4ecae9918622ef236553207adc",
+      "sourceSize": 7432,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/角色卡/03-NPC.md",
+      "sourcePath": "docs/写作参考/角色卡/03-NPC.md",
+      "sha256": "87fffa827209946e448881170e0db3f845827de5b61846f85a4fd007aec68172",
+      "size": 2297,
+      "sourceSha256": "8df27d87346848c8cab6a8a52ed1b72deff8f6ea7c0c976abd0682d827076bd4",
+      "sourceSize": 2297,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/角色卡/04-角色速览.md",
+      "sourcePath": "docs/写作参考/角色卡/04-角色速览.md",
+      "sha256": "ef9f78eef68ba503c93e530d0f24796872b67408be62aefcd71055cdf63a9129",
+      "size": 1768,
+      "sourceSha256": "56327ee3b4f32d529ef8b81b2c80d659e88b4219bebf6ee54227243492b1b90a",
+      "sourceSize": 1768,
+      "adapted": true
+    },
+    {
+      "path": "docs/写作参考/角色卡/05-开场白.md",
+      "sourcePath": "docs/写作参考/角色卡/05-开场白.md",
+      "sha256": "0d2d1dec2e95365c2476e0fcdf720de7b9c8ff9ed7e688f39cceab0b6841842d",
+      "size": 2512,
+      "sourceSha256": "353dae412e98f3920c488b7f9af086de22ed32d8a80d0279fdba2638846d1b1b",
+      "sourceSize": 2512,
+      "adapted": true
+    },
+    {
+      "path": "docs/角色卡制作流程.md",
+      "sourcePath": "docs/角色卡制作流程.md",
+      "sha256": "a1c9cbdf5ce532870d32254e97d640cef31e5158d1cb609dcf56304a902581d2",
+      "size": 6914,
+      "sourceSha256": "25407f0e3bc306960617d26cbe1c3f7d2443647b18c8ff4d7b26888548b1618f",
+      "sourceSize": 6875,
+      "adapted": true
+    },
+    {
+      "path": "personas/茉茉.md",
+      "sourcePath": "personas/茉茉.md",
+      "sha256": "0e0a073e1358e55981e9db1a5ca52ae46ad3f85f2b5df60bad0650718e5ee13d",
+      "size": 3614
+    },
+    {
+      "path": "templates/MVU-schema.md",
+      "sourcePath": "templates/MVU-schema.md",
+      "sha256": "131a0268481332c8ceb1c10436507b76f08c512c3c45d4d39353d17c865d8c72",
+      "size": 1375
+    },
+    {
+      "path": "templates/世界书条目.md",
+      "sourcePath": "templates/世界书条目.md",
+      "sha256": "4a479d1a02f6f2d00a16d278d1538757d5acf703cf9c9c62ac6a303ce0ced4c2",
+      "size": 1731
+    },
+    {
+      "path": "templates/写作手法.md",
+      "sourcePath": "templates/写作手法.md",
+      "sha256": "987bde9abcaac41287982fd9c96de95e97b3bf6d2067c4c21cf21b1cb977bcae",
+      "size": 1251
+    },
+    {
+      "path": "templates/对话示例.md",
+      "sourcePath": "templates/对话示例.md",
+      "sha256": "3515fb9244514d9b57a18666a460e4492fea7e865b69c31465a99d61842c4ee6",
+      "size": 960
+    },
+    {
+      "path": "templates/开场白.md",
+      "sourcePath": "templates/开场白.md",
+      "sha256": "7d02c4253fd28ac7329357d18bc28ea2e1081f5a6898a1e2e5c81003bb099ad8",
+      "size": 1036
+    },
+    {
+      "path": "templates/角色描述.md",
+      "sourcePath": "templates/角色描述.md",
+      "sha256": "7a280d6a693bdf44d87e105c27a4460fc54b157715cd2003b32fa97f50e51841",
+      "size": 1200
+    },
+    {
+      "path": "tools/artifact-files.mjs",
+      "sourcePath": "tools/artifact-files.mjs",
+      "sha256": "15ca0c286e6d8914453fda6a032fde21a4d31b301e11452a8a80dad04fe12a3f",
+      "size": 3898
+    },
+    {
+      "path": "tools/artifact-ui.mjs",
+      "sourcePath": "tools/artifact-ui.mjs",
+      "sha256": "a1b1c3fc7657cbfb3f25da381c5ac3516349a7a61c1a850470712e1926511c90",
+      "size": 10505,
+      "sourceSha256": "9818f6ceb7605229b7509dc9dc798b4efbf6214e8ea7bf84880b0838515b73e3",
+      "sourceSize": 8741,
+      "adapted": true
+    },
+    {
+      "path": "tools/bagua-rules.mjs",
+      "sourcePath": "tools/bagua-rules.mjs",
+      "sha256": "96a75e6f2a3ef6686eae4dfa85169450295cf99b2249219e8939e7262031d13e",
+      "size": 4768
+    },
+    {
+      "path": "tools/bridge-messages.mjs",
+      "sourcePath": "tools/bridge-messages.mjs",
+      "sha256": "6ba7a790eb582d6c9b8cfbc245c30b8934c0277da30c1ab41f835535be46365a",
+      "size": 7233,
+      "sourceSha256": "376aee08a34d116102b0ba496c4df12220c3d1efa964b432e8e5e1229eb70fc2",
+      "sourceSize": 2622,
+      "adapted": true
+    },
+    {
+      "path": "tools/bridge.mjs",
+      "sourcePath": "tools/bridge.mjs",
+      "sha256": "0af2c3345d9a3ae86fb220d4a70137a7ae15b8c548abaf8f847c1fa0813ffb83",
+      "size": 8746,
+      "sourceSha256": "eee9ef109d973ac660cb8975359dd641e60693aea7a501433d97496236ba9428",
+      "sourceSize": 7464,
+      "adapted": true
+    },
+    {
+      "path": "tools/card.mjs",
+      "sourcePath": "tools/card.mjs",
+      "sha256": "87ee5de24f0ca78787e218b8802ce85b885c06c2c44004f474eb207553a35022",
+      "size": 28058
+    },
+    {
+      "path": "tools/chat-actions.mjs",
+      "sourcePath": "tools/chat-actions.mjs",
+      "sha256": "d9b8be61bbaaf0ff625638f96474bf4e97e21617a3485dce3dc5cbc2b0a4c28a",
+      "size": 21788,
+      "sourceSha256": "62b78a02ed9cb3c48be93c12e7f85e0d5b52d65df1034aee41a3e47484bc7f60",
+      "sourceSize": 21699,
+      "adapted": true
+    },
+    {
+      "path": "tools/chat-avatars.mjs",
+      "sourcePath": "tools/chat-avatars.mjs",
+      "sha256": "fd35e5fcafa6594c13a5a1ef62d0c99d964f10bb47dac62114a9b1e9fdd2aeed",
+      "size": 7776,
+      "sourceSha256": "53c70497c1bca1469b92a25e5e4e253e53448bf8ed364b8944ee387029290316",
+      "sourceSize": 6357,
+      "adapted": true
+    },
+    {
+      "path": "tools/chat-edits.mjs",
+      "sourcePath": "tools/chat-edits.mjs",
+      "sha256": "7eb7b63931118dafb8dfb9b3bfbe52a63dd4b38175588b4fd3947dd70a941167",
+      "size": 7722
+    },
+    {
+      "path": "tools/chat-events.mjs",
+      "sourcePath": "tools/chat-events.mjs",
+      "sha256": "7e8b4e9809d686649493ae76ca1156f8faf0cbbb0a8d43b2379c98ea14696ef5",
+      "size": 3420
+    },
+    {
+      "path": "tools/chat-presentation.mjs",
+      "sourcePath": "tools/chat-presentation.mjs",
+      "sha256": "6e4ff51a9015edecb029050e27340fbe12b8b758b96519800e85ae975de39c62",
+      "size": 3157
+    },
+    {
+      "path": "tools/chat-recovery-ui.mjs",
+      "sourcePath": "tools/chat-recovery-ui.mjs",
+      "sha256": "85a6e1f543a87bc6199c66f463d2f0fdc2405cb11bbd8ef5efb601ccccda0aec",
+      "size": 13448,
+      "sourceSha256": "c3f7378414cdbf7f3eb1b31b841cde54883ea56b810bb65bf6424ba2e420724f",
+      "sourceSize": 11757,
+      "adapted": true
+    },
+    {
+      "path": "tools/chat-retries.mjs",
+      "sourcePath": "tools/chat-retries.mjs",
+      "sha256": "952fb6388ab7ed3efc042f81f686d947b3a2cc7f9f77bff40a9100829e5856cc",
+      "size": 8039,
+      "sourceSha256": "2aefcfec9c0135180a4d7d677a4896557a35f8806e515f2918e916d20348ca0b",
+      "sourceSize": 7903,
+      "adapted": true
+    },
+    {
+      "path": "tools/chat-stream-ui.mjs",
+      "sourcePath": "tools/chat-stream-ui.mjs",
+      "sha256": "5a2b58327d1b6180825a3618f48117e20e26617f2b26a3c3b0bfd9eb20ff5376",
+      "size": 4510,
+      "adapted": true
+    },
+    {
+      "path": "tools/codex-app-server.mjs",
+      "sourcePath": "tools/codex-app-server.mjs",
+      "sha256": "dda9c1ccfd61fab3ce9cf8322f2798cf39e996e250cfeb41ec8bb9c4c5b0bb6f",
+      "size": 35190,
+      "sourceSha256": "222b0115be7a5cb9c7d65b92677b64b380e79cea6345af99074559c37cdedf8a",
+      "sourceSize": 32134,
+      "adapted": true
+    },
+    {
+      "path": "tools/codex-bridge.mjs",
+      "sourcePath": "tools/codex-bridge.mjs",
+      "sha256": "5568da1df4f20636a5f968cdb2d38d7b0a43b030699331980147a71960594e73",
+      "size": 49755,
+      "sourceSha256": "c07814ffa9c8e3f0886e138d93cf7cd1c064143975f350fd4f4e92a99e91008f",
+      "sourceSize": 49153,
+      "adapted": true
+    },
+    {
+      "path": "tools/codex-conversations.mjs",
+      "sourcePath": "tools/codex-conversations.mjs",
+      "sha256": "1bfe7fa0fddcb0a7abf7f4054af1f3cf20a76640a10c02b53a1bce248793ae14",
+      "size": 13333
+    },
+    {
+      "path": "tools/codex-network.mjs",
+      "sourcePath": "tools/codex-network.mjs",
+      "sha256": "c550c82bee3679cd3f2651f80957fc54b1470d4279e5544f728bbc497b8fdbcb",
+      "size": 8403
+    },
+    {
+      "path": "tools/conversation-history.mjs",
+      "sourcePath": "tools/conversation-history.mjs",
+      "sha256": "8f17d6a3118cc82c156532f622e936f4f7104f0742da38d0bc0cb03880ce5918",
+      "size": 7327,
+      "sourceSha256": "6fb7a7eb90489031668d9fe268a711595563b2acc6bcedd8f5eacbb102e92b76",
+      "sourceSize": 7195,
+      "adapted": true
+    },
+    {
+      "path": "tools/conversation-memory.mjs",
+      "sourcePath": "tools/conversation-memory.mjs",
+      "sha256": "04fe2694072b31cfb5b76da04b694f47c4bc619ddf255cda23b3ad49d2a093f1",
+      "size": 17600,
+      "sourceSha256": "14a9b6efb3ee1884121a5006ef7b20a5c6e66926bb4170b0d1119b8e9ab9d0fd",
+      "sourceSize": 17494,
+      "adapted": true
+    },
+    {
+      "path": "tools/conversation-ui.mjs",
+      "sourcePath": "tools/conversation-ui.mjs",
+      "sha256": "63c3344df258b1d1071ff207ec9446e233a02efa88029711ccd996017c98829c",
+      "size": 11578
+    },
+    {
+      "path": "tools/conversations.mjs",
+      "sourcePath": "tools/conversations.mjs",
+      "sha256": "bb397a53a027102ebd1dad127563b5015af85f5ea24db5a40025826cf7d9e804",
+      "size": 7145
+    },
+    {
+      "path": "tools/diagnose.mjs",
+      "sourcePath": "tools/diagnose.mjs",
+      "sha256": "3e8f7549d85d86c127a7eb9ce4513e217b67c80271bca2ce43012a46d146c227",
+      "size": 25173
+    },
+    {
+      "path": "tools/ejs.mjs",
+      "sourcePath": "tools/ejs.mjs",
+      "sha256": "0a81504c843722ec13bd797cd20c31c6a1258acc2a216104f438515ef2aee3f0",
+      "size": 14095
+    },
+    {
+      "path": "tools/mvu.mjs",
+      "sourcePath": "tools/mvu.mjs",
+      "sha256": "39bc0cdad8743eeb60c8a601a3ebc041993fe6ff14ffe633e2a5d82d9111a2ee",
+      "size": 24420,
+      "sourceSha256": "284c51dbdfe4564ed76dddcc2c9ccaaad7537b579e98b88aab412a848ae780eb",
+      "sourceSize": 24430,
+      "adapted": true
+    },
+    {
+      "path": "tools/persona-ui.mjs",
+      "sourcePath": null,
+      "sha256": "54f4d6a8f373d3054d0dc34435e43906f42345e50c4e1464879c3761d9bc5965",
+      "size": 6649,
+      "origin": "workbench",
+      "adapted": true,
+      "sourceSha256": "59f3dd0d093410475e0f5eeb51a68ed010a645d4809a575fdc99406d879ddca4",
+      "sourceSize": 6564
+    },
+    {
+      "path": "tools/personas.mjs",
+      "sourcePath": "tools/personas.mjs",
+      "sha256": "8ac397a0bce9600b0eefd8a5436ca0661fdc4cbd8b0665d0d4d36947a3302d92",
+      "size": 10150,
+      "sourceSha256": "b49c2d59db7f7b7f2fa03ac852d6a6211330525f8b0d9c896e273e9d0bb14c0d",
+      "sourceSize": 3634,
+      "adapted": true
+    },
+    {
+      "path": "tools/presets.mjs",
+      "sourcePath": "tools/presets.mjs",
+      "sha256": "0eebf83eb6a25ccc2802eb681b13d3a976cddd5619eaa4ddf04a8e281dc7de90",
+      "size": 10515
+    },
+    {
+      "path": "tools/studio-directive.mjs",
+      "sourcePath": "tools/studio-directive.mjs",
+      "sha256": "851a6001c4d785023ff9c83c6b1e3ce9d4a9be96f0458ad5bee772742699d1d9",
+      "size": 1113
+    },
+    {
+      "path": "tools/studio.mjs",
+      "sourcePath": "tools/studio.mjs",
+      "sha256": "557ae436367f2891870bb2e318c191f8277779ac081a29b699cfdc33f0d83b4f",
+      "size": 319406,
+      "sourceSha256": "e70744c283dc6b86ae798a4372b6b2bf752c3b7b182ef1b686e988e7136d313a",
+      "sourceSize": 302866,
+      "adapted": true
+    },
+    {
+      "path": "tools/ui-drafts.mjs",
+      "sourcePath": "tools/ui-drafts.mjs",
+      "sha256": "0a7b6be12b07627ff92ac69085ed224be85f3d9370770b874083545a6fbd387b",
+      "size": 6761
+    },
+    {
+      "path": "tools/user-profile.mjs",
+      "sourcePath": "tools/user-profile.mjs",
+      "sha256": "468f5f4c0531302f4e531477774d1c4a582615cc06edce14ace3fd1d399552a2",
+      "size": 2676,
+      "sourceSha256": "36230aa14dc2f639e22034f78cfd6186ef0da4001084896ccbd251e3b40d66fd",
+      "sourceSize": 1593,
+      "adapted": true
+    },
+    {
+      "path": "tools/workflow-write-intent.mjs",
+      "sourcePath": "tools/workflow-write-intent.mjs",
+      "sha256": "3df8ab4e37858a2553636d2b975662aa858403a07903db3cace72f8ff1ae7502",
+      "size": 2493,
+      "sourceSha256": "60c1aa8d3aecb4fca522269a59556926c77fd95afca6c295237ca8f388cc9726",
+      "sourceSize": 2502,
+      "adapted": true
+    },
+    {
+      "path": "tools/worldbooks.mjs",
+      "sourcePath": "tools/worldbooks.mjs",
+      "sha256": "37122af338351e6fc30d3a1bd80498f04f5410b63f8dbc250bfcdc2570ceef47",
+      "size": 9996
+    },
+    {
+      "path": "workflow/00-引导.md",
+      "sourcePath": "workflow/00-引导.md",
+      "sha256": "d926682ea0f8d5e2aa977b8c3b0c2d2eb3392fe1808d009535237640a5164401",
+      "size": 6403,
+      "sourceSha256": "2014018d3f17a1720c913d45e63790310628080fe8007647b408d2cb64011009",
+      "sourceSize": 6403,
+      "adapted": true
+    },
+    {
+      "path": "workflow/MVU共用规范.md",
+      "sourcePath": "workflow/MVU共用规范.md",
+      "sha256": "83f01e431b89bf1136bc26d1e13e7976fa4f24eeedc2253a623b4104e9b97202",
+      "size": 5160
+    },
+    {
+      "path": "workflow/世界书写入指南.md",
+      "sourcePath": "workflow/世界书写入指南.md",
+      "sha256": "9ce5f93ed3a02ad17d7044bc3f23dfc8d7d5e8d78192260c8f06a79a73d1fb06",
+      "size": 9666
+    },
+    {
+      "path": "workflow/世界观卡/01-世界总设.md",
+      "sourcePath": "workflow/世界观卡/01-世界总设.md",
+      "sha256": "32e272dc397dbc01910ae2f575ab25f7abb08a92e06db0385d457cfe0ecbb7e3",
+      "size": 3296,
+      "sourceSha256": "2185780c585ff3e31e3831c2f630c576809816c90e04d66f84fe3ffb08ceba8c",
+      "sourceSize": 3296,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/02-运转规则.md",
+      "sourcePath": "workflow/世界观卡/02-运转规则.md",
+      "sha256": "542d531ee1ab8e71169a6e37921f38eccf0c397304071b7cdd2d15dcfb5925aa",
+      "size": 3079,
+      "sourceSha256": "bf9dc2483517b037c026f1313fb5f989f3727f6bf78813a5900565febac7711a",
+      "sourceSize": 3079,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/03-社会与阶层.md",
+      "sourcePath": "workflow/世界观卡/03-社会与阶层.md",
+      "sha256": "a5743018436d361b41b89a94f30503254f617eef4179d8d8c70ec6bcd0429eb4",
+      "size": 3155,
+      "sourceSha256": "b12a818e1ff82f561764488a49ea6cfeb10096baedab3b23864837f2845fd27a",
+      "sourceSize": 3155,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/04-经济与资源.md",
+      "sourcePath": "workflow/世界观卡/04-经济与资源.md",
+      "sha256": "f6cf8e86b145c04b650a93195b11c7fd8b4549ce2f65d0dae8ae3689711a1cce",
+      "size": 3065,
+      "sourceSha256": "74c435183248ec74767584832a9d350d1777a85336489dfbfa24f217e9ac302f",
+      "sourceSize": 3065,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/05-日常生活.md",
+      "sourcePath": "workflow/世界观卡/05-日常生活.md",
+      "sha256": "17af6f3e806ae13c6eb14004d7343608f4ff2fdbd5f0fa0b93ca176e6827329e",
+      "size": 3089,
+      "sourceSha256": "f4104ef03674dae70ce8cf32adc06807c4c526bf708fbab21d6257e6f319053a",
+      "sourceSize": 3089,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/06-角色与NPC.md",
+      "sourcePath": "workflow/世界观卡/06-角色与NPC.md",
+      "sha256": "1b7a5ecb6edc27c874549e1b75139e1ff40fab046dfebe724b70b7321d3b247e",
+      "size": 2977,
+      "sourceSha256": "76d5aa34d279c5414a489f608b7cd357a99eb061c69de48342ef341b559abea4",
+      "sourceSize": 2977,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/07-开场白.md",
+      "sourcePath": "workflow/世界观卡/07-开场白.md",
+      "sha256": "357b1b1d7216ef41fc06dbf3008a66e281829e98f29eaa3e12d5ef8ad8c2e49a",
+      "size": 3528,
+      "sourceSha256": "e085c8a807ab4e8bd84e3933ff01bf823b7f1f548a514edd3bb6aebd59511f89",
+      "sourceSize": 3528,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/08-MVU变量结构脚本.md",
+      "sourcePath": "workflow/世界观卡/08-MVU变量结构脚本.md",
+      "sha256": "c63a05bce0c1ea1bb54f1913c4cff13303e805014d8df7e77ef48b29a4d09aa0",
+      "size": 3334,
+      "sourceSha256": "a669401349aa050b3ad9ad37b63ac45ccd594a41bd0c5f2f92ce72ff95643998",
+      "sourceSize": 3334,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/09-MVU初始变量.md",
+      "sourcePath": "workflow/世界观卡/09-MVU初始变量.md",
+      "sha256": "eaa646be97b66c4cc45339c6ec1c3685a92b656ba856a32a0b843e21b9961465",
+      "size": 3053,
+      "sourceSha256": "da59235a24d8a0f96a3eeacef7230c1a6ebedfe35f1155d1bb2eb7dd28bfe262",
+      "sourceSize": 3053,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/10-MVU变量更新规则.md",
+      "sourcePath": "workflow/世界观卡/10-MVU变量更新规则.md",
+      "sha256": "1e105156f8ddac0e3e87c727995160b25a77fd3c7bca7f0f517c26df6ef6faf0",
+      "size": 3087,
+      "sourceSha256": "f5bf673c9117672b3cc9fa97566c037fbd7a5d0c03049b7a728d08ab4c9a295e",
+      "sourceSize": 3087,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/11-MVU变量列表.md",
+      "sourcePath": "workflow/世界观卡/11-MVU变量列表.md",
+      "sha256": "e9d9f02e1b299a737cec64e7e59d28e1935619bb8f40a961202adbab63293cac",
+      "size": 3124,
+      "sourceSha256": "5eb135e662a79faa48251f92dde11593073c2e9f0700c8532144a6a7c964ba65",
+      "sourceSize": 3124,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/12-MVU变量输出格式与更新强调.md",
+      "sourcePath": "workflow/世界观卡/12-MVU变量输出格式与更新强调.md",
+      "sha256": "e05eb4165b839537f0c81bd6c96137a73d135ebb133a22c80506cff443c1a178",
+      "size": 3136,
+      "sourceSha256": "86ea6a931b369504959361d93c3cd26642ff35fb28f5ffa458d446f97b5ed1a5",
+      "sourceSize": 3136,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/13-前端状态栏与出图注入.md",
+      "sourcePath": "workflow/世界观卡/13-前端状态栏与出图注入.md",
+      "sha256": "8dfe04ce3f8c5023ccd028b59a296d3d931314bedcc6a008242c5faafebbb6b5",
+      "size": 3723,
+      "sourceSha256": "dfde911b41549fdf1e3ba89ddd9bafc331d773ae21331e0a4bbff2d5b368e8bf",
+      "sourceSize": 3723,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/14-EJS条件加载与多阶段.md",
+      "sourcePath": "workflow/世界观卡/14-EJS条件加载与多阶段.md",
+      "sha256": "2992c0f73947f05b3098c8f995f640dea592a1fc7587ebac66b41e84975ebfc7",
+      "size": 3680,
+      "sourceSha256": "4e6e623ba1a9bd7d4d2f52a5471b7d246a40448600f198c8de46b83a7821fb4d",
+      "sourceSize": 3680,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/15-小手机与图鉴解锁.md",
+      "sourcePath": "workflow/世界观卡/15-小手机与图鉴解锁.md",
+      "sha256": "d66cb6a1817069caf5333d8699f4d46e58659439267b6f07f091d196726ceaa9",
+      "size": 3493,
+      "sourceSha256": "524cd62ab1e0302337a61fdea7991f52dc0bd1400874cddf679ecc9cf0254f8a",
+      "sourceSize": 3493,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/16-重型同层UI.md",
+      "sourcePath": "workflow/世界观卡/16-重型同层UI.md",
+      "sha256": "517202ac21240d1e00b5d3d5903d14193e5f2498f67c22f7d93cabe3da4c160e",
+      "size": 3630
+    },
+    {
+      "path": "workflow/世界观卡/17-质检.md",
+      "sourcePath": "workflow/世界观卡/17-质检.md",
+      "sha256": "61a2eb0cd4f2c062e94a8657e3843be069caa53be31627bb3deb9eb0ee5c0e28",
+      "size": 2018,
+      "sourceSha256": "e8bbc2719dacb34221bc987813a7dbc2322820f081d4d9ee3ec05d3e7c1f0bb7",
+      "sourceSize": 2018,
+      "adapted": true
+    },
+    {
+      "path": "workflow/世界观卡/18-打包.md",
+      "sourcePath": "workflow/世界观卡/18-打包.md",
+      "sha256": "29dc680f78ac0dfcd84dfefb0224bd6425d087d268ef525bce64e98b5cb761b9",
+      "size": 1602,
+      "sourceSha256": "22e7dee7bbefe4c77cb2918ffa4d6c10476e58aeb48b8bbb7a866c4b1d25787d",
+      "sourceSize": 1602,
+      "adapted": true
+    },
+    {
+      "path": "workflow/助手共用规则.md",
+      "sourcePath": null,
+      "sha256": "18100b5703c20e85288f81a3c78ef898a2a6c4834660b618c18fa4021a82316f",
+      "size": 4006,
+      "origin": "workbench",
+      "sourceSha256": "8804a7599a65670252ad98335862b2cf676713e6a1e8eb88629431edb071449b",
+      "sourceSize": 1717,
+      "adapted": true
+    },
+    {
+      "path": "workflow/小汐.md",
+      "sourcePath": "workflow/小汐.md",
+      "sha256": "e6a8754c8ac60870ca11e29a2cc1141c9c2486b007b293723c70b4de2ad4fea1",
+      "size": 2501,
+      "sourceSha256": "67f4e5023fb1c1ffbec488ed78c69db5358090ae85f95b3356916ff9adbda45d",
+      "sourceSize": 4309,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/01-世界观.md",
+      "sourcePath": "workflow/角色卡/01-世界观.md",
+      "sha256": "47d8da2505f741ea6ec7e72266a04adaf571765ffcfc637a146df1e420d5aea8",
+      "size": 4322,
+      "sourceSha256": "97edf889c24f94df15857d0d355d9e9052cbe5624031f34a8042719e3c98f00b",
+      "sourceSize": 4322,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/02-角色.md",
+      "sourcePath": "workflow/角色卡/02-角色.md",
+      "sha256": "eb1fcd5a07438434588d15c725c03f73cbe22f9525e5f801e4a938c59f650fec",
+      "size": 10987,
+      "sourceSha256": "18c3308efd642d3b9e71a1d04004ad228556a74998ac115ca4272ec3276dc643",
+      "sourceSize": 10987,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/03-NPC.md",
+      "sourcePath": "workflow/角色卡/03-NPC.md",
+      "sha256": "1839bd9e178e69e320ae109303c3eceeaf6c7881e0dbc1f46071aef05a69665c",
+      "size": 3114,
+      "sourceSha256": "92ba6ad9305a9cf97d6d035c71436de00622c1b07c335d15c5a83d73a21b3161",
+      "sourceSize": 3114,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/04-角色速览.md",
+      "sourcePath": "workflow/角色卡/04-角色速览.md",
+      "sha256": "1176e68677cd7ddf03de792b8ad961edd8434b1ab8969867740aeb1576171019",
+      "size": 2938
+    },
+    {
+      "path": "workflow/角色卡/05-开场白.md",
+      "sourcePath": "workflow/角色卡/05-开场白.md",
+      "sha256": "ee4fa2edb35a92bb444bfdae4f59b3b1f1cf8c5f9cd22218b415847679dcd528",
+      "size": 3793,
+      "sourceSha256": "180fb1d74caf0b0b280b7adfa0ed1acab4715bfcc3fb1dc85c9168c6db33b6bc",
+      "sourceSize": 3793,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/06-MVU变量结构脚本.md",
+      "sourcePath": "workflow/角色卡/06-MVU变量结构脚本.md",
+      "sha256": "eaa49ccec9e3c073423cdd3d99c75b678dfc5653ec498be3a34b8c079c3d454d",
+      "size": 3706,
+      "sourceSha256": "133daafc7e191889d8ed0834b566fb09c5320a04d5938d58d5b99a7423f43432",
+      "sourceSize": 3706,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/07-MVU初始变量.md",
+      "sourcePath": "workflow/角色卡/07-MVU初始变量.md",
+      "sha256": "d906bd95bad9b54432c2601dd44bd5522ef8a68a5ea32a81155d01444baaf0fd",
+      "size": 3103,
+      "sourceSha256": "3fc3651d45ffd79eba804fd25f080f313b3e47af692743c89f7c81a8a267d435",
+      "sourceSize": 3103,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/08-MVU变量更新规则.md",
+      "sourcePath": "workflow/角色卡/08-MVU变量更新规则.md",
+      "sha256": "d7884787d5f1b3c7f93f99ed8be738e3918b566ac47b04e2add6fdc79d7bc1fa",
+      "size": 3353,
+      "sourceSha256": "a54e629d36d99bbb92b6b5905a4615eb5d89509e5adf7600f00ecd5ac1c9622a",
+      "sourceSize": 3353,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/09-MVU变量列表.md",
+      "sourcePath": "workflow/角色卡/09-MVU变量列表.md",
+      "sha256": "594e0960b754e44c89ed6311da39c353889a9b8d1492003b1c9549d31e096b78",
+      "size": 3327,
+      "sourceSha256": "3583ed698d52829baf23755f5940e919190d1e0d54595a26a39f375d437674e7",
+      "sourceSize": 3327,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/10-MVU变量输出格式与更新强调.md",
+      "sourcePath": "workflow/角色卡/10-MVU变量输出格式与更新强调.md",
+      "sha256": "1520b103caae843caf193b4cf20ebb78ad9908eca3f2d190616b36566decdd47",
+      "size": 3241,
+      "sourceSha256": "246fb27c1ab2e730ca80292613a665a748cffbeef9c6c349508798541ec5c27c",
+      "sourceSize": 3241,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/11-前端状态栏与出图注入.md",
+      "sourcePath": "workflow/角色卡/11-前端状态栏与出图注入.md",
+      "sha256": "712ea1d9744da46267ecde46d9137dd549002141c23d65950dfeec5c6a4114cd",
+      "size": 4961,
+      "sourceSha256": "8ac0d78c3718362c4a057c74e3c5803ca6059d2a498464b8784797e917d292e4",
+      "sourceSize": 4961,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/12-EJS条件加载与多阶段.md",
+      "sourcePath": "workflow/角色卡/12-EJS条件加载与多阶段.md",
+      "sha256": "b2cb9ee43bd3e2369cee1ae5e37de4269c41fa08fb467223f786fc85b31dc3af",
+      "size": 4538,
+      "sourceSha256": "a3d22ebbc0485231cca490249b8f7a7dbbdfa46358886d55a5858dc9b71165f0",
+      "sourceSize": 4538,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/13-小手机与图鉴解锁.md",
+      "sourcePath": "workflow/角色卡/13-小手机与图鉴解锁.md",
+      "sha256": "c8457f7b87018c8e00ec90caae6536a84d8bdeaceb1eb4e08ddc97422e56aa8d",
+      "size": 5353,
+      "sourceSha256": "eeb1997a18a192b2bb7d51b2f1691854035ed5147a183557331bc5ff1479202f",
+      "sourceSize": 5353,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/14-重型同层UI.md",
+      "sourcePath": "workflow/角色卡/14-重型同层UI.md",
+      "sha256": "29585592bc91f1a6fa928f401c57f482b0558565cf3ef5510d0bf6824eb25482",
+      "size": 4656,
+      "sourceSha256": "65ea1d18c4a594201c76b03f17a670e88d0d3390c151b1ca53a51fcaa982584f",
+      "sourceSize": 4656,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/15-质检.md",
+      "sourcePath": "workflow/角色卡/15-质检.md",
+      "sha256": "a62245e9ec51609444977ac5012bf7213a62ed93e45989a57660787e87edbb28",
+      "size": 3185,
+      "sourceSha256": "9e4abb1ad9f5ba45fd7c18721c7f2c9a436fa86adcf09c9b98bdd20b23f0145a",
+      "sourceSize": 3185,
+      "adapted": true
+    },
+    {
+      "path": "workflow/角色卡/16-打包.md",
+      "sourcePath": "workflow/角色卡/16-打包.md",
+      "sha256": "00d29bfb474efd9c965f687a254e7987c1c178f46160b3ac8ae92bc85a717baa",
+      "size": 2444,
+      "sourceSha256": "3271ac15a7059c9983d89691031349da52ca1fd4be4918c078d92d8564ba487d",
+      "sourceSize": 2444,
+      "adapted": true
+    },
+    {
+      "path": "workflow/说明.md",
+      "sourcePath": "workflow/说明.md",
+      "sha256": "d80b26228d012231e42e41edc7e800fc67dc74c47f481608c737ddeae255aa7f",
+      "size": 8619,
+      "sourceSha256": "4e10bfc275d647a7d9da45eba6d222d8cd1227d55fe6ad8ce916ec3d20346d68",
+      "sourceSize": 8547,
+      "adapted": true
+    },
+    {
+      "path": "workflow/预设制作规则.md",
+      "sourcePath": "workflow/预设制作规则.md",
+      "sha256": "20479548837941b736a8e3edee6becf4e565c9bfb54894a80eaf492f8d3411ba",
+      "size": 3943
+    },
+    {
+      "path": "tools/card-tools.mjs",
+      "sourcePath": "tools/card-tools.mjs",
+      "adapted": true,
+      "sha256": "83d68d6fff2546714e8cef535f9c0b1ed06efa060416e778ee20d37a7f3312e8",
+      "size": 14456
+    },
+    {
+      "path": "tools/model-response.mjs",
+      "sourcePath": "tools/model-response.mjs",
+      "sha256": "4b1c9687867c3ad45ede6c224ebd0d89f2baf48b98c40c5e196e8af715a43f4c",
+      "size": 5370,
+      "adapted": true
+    }
+  ],
+  "excluded": [
+    "cards",
+    "work",
+    "imports",
+    "dist",
+    "presets",
+    "worldbooks",
+    "上传资料",
+    "node_modules",
+    "release"
+  ],
+  "adaptation": {
+    "name": "AI-Future-Workbench",
+    "version": "0.4.1",
+    "features": [
+      "neutral-default",
+      "custom-personas",
+      "shared-workflow-rules"
+    ]
+  }
+}

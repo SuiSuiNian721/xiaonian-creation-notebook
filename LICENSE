@@ -1,0 +1,86 @@
+小念的创作笔记 · 署名—非商业使用许可证 1.0
+Xiaonian Creation Notebook Attribution–NonCommercial License 1.0
+SPDX-License-Identifier: LicenseRef-Xiaonian-Attribution-NonCommercial-1.0
+
+Copyright (c) 2026 念念（GitHub: SuiSuiNian721）及相应贡献者。
+项目：https://github.com/SuiSuiNian721/xiaonian-creation-notebook
+
+1. 适用范围
+
+本许可证适用于著作权人有权许可且未另行标注许可证的本项目原创源代码、
+应用程序、文档及原创资源（以下合称“本软件”）。第三方代码、依赖、字体、
+模型、素材和其他另有许可声明的内容不适用本许可证，继续适用其原许可证。
+第三方许可清单见 THIRD_PARTY_NOTICES.md 和 LICENSING.md。
+
+2. 非商业许可
+
+在遵守本许可证全部条件的前提下，免费允许任何人出于非商业目的使用、
+阅读、运行、复制、研究、修改、翻译、制作衍生作品，并以源代码或可执行
+形式非商业地再发布本软件及其修改版本。许可不要求公开不含本软件的独立
+作品，也不因作品仅由本软件生成就主张该作品的著作权。
+
+3. 禁止一切商业用途
+
+本许可证不授予任何商业用途的权利。商业用途包括直接或间接以取得商业
+利益、收入、报酬或竞争优势为目的的使用、复制、修改、部署、分发或服务。
+禁止事项包括但不限于：
+
+（a）出售、出租、付费下载、收费分发本软件或其修改版本；
+（b）把本软件或其修改版本纳入收费产品、商业套件、付费课程或付费服务；
+（c）提供付费托管、SaaS、API、代部署、代操作、商业定制或其他收费服务；
+（d）在广告变现、商业推广、获客、引流、订阅、会员、付费解锁或以购买为
+     条件的赠品中使用本软件；
+（e）在企业或其他经营活动中用于内部生产、运营、研发、商业项目或客户交付；
+（f）使用本软件生成、加工或交付以商业为目的的内容、资产或服务。
+
+是否免费提供、是否仅收取成本、使用者是否为非营利组织，均不单独构成
+商业用途的豁免。未附带访问、功能、服务、推广或其他对价的自愿赠与，
+本身不视为销售；其所支持的实际使用仍须满足非商业目的。
+
+4. 署名与再发布条件
+
+使用者分发本软件或其修改版本时，必须：
+
+（a）完整保留本许可证、NOTICE、原有著作权和第三方许可声明；
+（b）在随附说明、仓库首页或其他用户容易找到的位置写明：
+     “基于《小念的创作笔记》，原作者：念念（SuiSuiNian721）”，
+     并提供原项目链接；可执行应用还应在随附文档或“关于”页面提供署名；
+（c）清楚标明修改者、修改日期和主要修改内容，不把修改版本冒充原版，
+     不暗示原作者认可或担保该修改版本；
+（d）告知接收者本软件及其所含原创部分仅限非商业使用。不得通过再许可、
+     删除声明、改名、换壳或与其他产品合并来移除这些限制。
+
+对本软件的修改和衍生部分，凡使用本软件所需获得的本许可证授权，仍以
+本许可证的非商业与署名条件为前提。不得授予超出自己实际拥有的权利。
+
+5. 未授予的权利
+
+除上述明确许可外，其他权利保留。本许可证不授予商标、姓名、肖像或其他
+人格权的使用许可，不允许冒充官方、虚假背书或把原作者列作修改版本的作者。
+法律直接允许且不能通过合同限制的合理使用或其他法定权利不受影响。
+
+6. 终止
+
+不遵守本许可证条件时，本许可证授予的权利自动终止。终止后须停止未经
+授权的使用和分发。恢复授权须取得相关著作权人的明确许可；停止侵权并
+不当然消除已经发生的责任。
+
+7. 无担保与责任限制
+
+在适用法律允许的最大范围内，本软件按“现状”提供，不作任何明示或默示
+担保，包括适销性、特定用途适用性和不侵权担保。著作权人及贡献者不对
+使用或无法使用本软件产生的损失承担责任，但法律不允许排除的责任除外。
+
+8. 语言与效力
+
+本许可证以中文正文为准。以下英文摘要仅供理解，不能扩大或替代中文许可。
+某项条款依法不能执行时，其他条款在法律允许的范围内继续有效。
+
+English summary (the Chinese terms above control):
+Noncommercial use, study, modification and redistribution are permitted with
+attribution to 念念 / SuiSuiNian721 and a link to the original repository.
+All commercial use is prohibited, including paid distribution, paid services,
+commercial internal use and use to create commercial deliverables. Preserve
+this license, NOTICE and third-party notices; identify modifications clearly.
+Separately licensed third-party components keep their own licenses. This is
+a source-available license, not an OSI-approved open-source license.

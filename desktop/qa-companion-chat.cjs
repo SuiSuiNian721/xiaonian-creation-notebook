@@ -1,0 +1,132 @@
+require('./process-stdio.cjs').installStdioGuards();
+const electron=require('electron');
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const os=require('node:os');
+const {pathToFileURL}=require('node:url');
+const {createServer}=require('node:http');
+const {CompanionHost}=require('./companion-host.cjs');
+const output=path.resolve(process.env.AI_FUTURE_CHAT_QA_DIR||path.join(__dirname,'../artifacts/companion-chat-ui'));
+const profile=fs.mkdtempSync(path.join(os.tmpdir(),'ai-future-chat-'));
+fs.mkdirSync(output,{recursive:true});electron.app.setPath('userData',path.join(profile,'profile'));
+const report={checks:[],errors:[],output};
+const write=(name,value)=>fs.writeFileSync(path.join(output,name),typeof value==='string'||Buffer.isBuffer(value)?value:JSON.stringify(value,null,2),'utf8');
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function wait(label,predicate){const end=Date.now()+30000;while(Date.now()<end){if(await predicate())return;await pause(80);}throw new Error('等待超时：'+label);}
+let root,host,modelServer,contents,fixtureMode='normal';
+const pinia="document.querySelector('#app').__vue_app__.config.globalProperties.$pinia._s";
+const avatar='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=';
+const deadline=setTimeout(()=>{report.errors.push('聊天界面检查超时');write('result.json',report);electron.app.exit(1);},150000);
+const js=code=>contents.executeJavaScript(code,true);
+const capture=async name=>{await pause(350);await js('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');write(name,(await contents.capturePage(undefined,{stayHidden:true,stayAwake:true})).toPNG());};
+electron.app.whenReady().then(async()=>{
+  const {inspectAiriInstall}=await import(pathToFileURL(path.join(__dirname,'../framework/companion-source.mjs')).href);
+  const install=inspectAiriInstall();assert.equal(install.available,true,install.reason);
+  modelServer=createServer(async(req,res)=>{
+    if(req.url.endsWith('/models')){res.setHeader('content-type','application/json');res.end(JSON.stringify({data:[{id:'chat-qa'}]}));return;}
+    const chunks=[];for await(const chunk of req)chunks.push(chunk);const body=JSON.parse(Buffer.concat(chunks).toString()||'{}');
+    report.requests??=[];report.requests.push({path:req.url,stream:body.stream,messages:body.messages?.length,hasImage:body.messages?.some(message=>Array.isArray(message.content)&&message.content.some(part=>part.type==='image_url'))});
+    if(fixtureMode==='error'){res.writeHead(500,{'content-type':'application/json'});res.end(JSON.stringify({error:{message:'本地验收：服务暂时不可用'}}));return;}
+    const reply='好呀，我们可以从今天最想完成的一件小事开始。\n\n先把想法记下来，再一起慢慢理清。';
+    if(body.stream){res.writeHead(200,{'content-type':'text/event-stream'});res.write(`data: ${JSON.stringify({id:'qa',object:'chat.completion.chunk',choices:[{index:0,delta:{role:'assistant',content:reply.slice(0,15)},finish_reason:null}]})}\n\n`);await pause(900);res.end(`data: ${JSON.stringify({id:'qa',object:'chat.completion.chunk',choices:[{index:0,delta:{content:reply.slice(15)},finish_reason:null}]})}\n\ndata: ${JSON.stringify({id:'qa',object:'chat.completion.chunk',choices:[{index:0,delta:{},finish_reason:'stop'}]})}\n\ndata: [DONE]\n\n`);}
+    else{res.setHeader('content-type','application/json');res.end(JSON.stringify({choices:[{message:{role:'assistant',content:reply}}]}));}
+  });await new Promise(resolve=>modelServer.listen(0,'127.0.0.1',resolve));
+  root=new electron.BrowserWindow({show:false,width:1590,height:900,webPreferences:{offscreen:true,contextIsolation:true,sandbox:true}});
+  await root.loadURL('data:text/html,<html><body>Native chat UI QA</body></html>');
+  host=new CompanionHost({instanceId:'chat-ui-qa',getWindow:()=>root,qa:true,onError:error=>report.errors.push(String(error)),onContents:contents=>{
+    contents.session.webRequest.onBeforeRequest({urls:['http://*/*','https://*/*','ws://*/*','wss://*/*']},(details,callback)=>callback({cancel:!['127.0.0.1','localhost'].includes(new URL(details.url).hostname)}));
+  }});
+  await host.start({install,dataDir:path.join(profile,'data'),bootstrap:{baseUrl:`http://127.0.0.1:${modelServer.address().port}/v1`,token:'local-fixture',model:'chat-qa',theme:'light',character:null}});
+  await host.syncCharacter({id:'chat-ui-character',name:'小汐',avatar,description:'用于聊天布局验收的合成角色',raw:{}});
+  await host.syncUserProfile({displayName:'头像验收',avatar,identity:'',preferences:''});
+  await host.open('chat');host.viewport({visible:true,x:0,y:0,width:1590,height:787});contents=host.activeWindow.webContents;
+  await wait('输入框',()=>js('Boolean(document.querySelector("textarea"))'));await pause(300);
+  write('native-dom.html',await js('document.documentElement.outerHTML'));
+  write('native-structure.json',await js(`(()=>{const p=document.querySelector('#app').__vue_app__.config.globalProperties.$pinia;return {stores:[...p._s].map(([id,s])=>({id,keys:Object.keys(s).filter(k=>!k.startsWith('$')&&!k.startsWith('_'))})),buttons:[...document.querySelectorAll('button')].map(n=>({text:n.textContent,title:n.title,aria:n.getAttribute('aria-label'),html:n.outerHTML.slice(0,1300)}))};})()`));
+  await capture(process.env.AI_FUTURE_CHAT_PROBE==='1'?'before-empty.png':'chat-empty.png');
+  if(process.env.AI_FUTURE_CHAT_PROBE==='1'){report.ok=true;return;}
+  assert.equal(await js('Boolean(document.querySelector("[data-wb-chat-send]"))'),true,'聊天页应有明确的发送主操作');
+  const type=async text=>{await js(`(()=>{const t=document.querySelector('[data-wb-chat-input]');t.value=${JSON.stringify(text)};t.dispatchEvent(new Event('input',{bubbles:true}));})()`);await pause(100);};
+  const click=selector=>js(`document.querySelector(${JSON.stringify(selector)}).click()`);
+  const sending=()=>js(`${pinia}.get('chat').sending`);
+  const finished=()=>wait('回复完成',async()=>!await sending());
+  const sendMessage=async text=>{const count=report.requests?.length||0;await type(text);await click('[data-wb-chat-send]');await wait('本地模型请求',()=>report.requests?.length>count);await finished();};
+  const rect=selector=>js(`(()=>{const n=document.querySelector(${JSON.stringify(selector)}),r=n.getBoundingClientRect(),s=getComputedStyle(n);return {x:r.x,y:r.y,width:r.width,height:r.height,font:s.fontFamily,display:s.display};})()`);
+  report.layout={send:await rect('[data-wb-chat-send]'),composer:await rect('[data-wb-chat-composer]'),header:await rect('[data-wb-chat-heading]')};
+  assert.ok(report.layout.send.height>=32&&report.layout.send.y+report.layout.send.height<=787,'发送按钮完整可见');
+  assert.equal(await js('document.querySelector("[data-wb-chat-send]").disabled'),true);
+  await pause(1500);
+  await js(`globalThis.qaHearing=new BroadcastChannel('airi-hearing-input');qaHearing.postMessage({operation:'replace',sourceId:'qa-hearing',text:'语音转写检查'});`);
+  await wait('语音转写到输入框',()=>js('document.querySelector("[data-wb-chat-input]").value.includes("语音转写检查")'));await pause(150);
+  assert.equal(await js('document.querySelector("[data-wb-chat-send]").disabled'),false,'语音转写后发送按钮应启用');
+  await js(`qaHearing.postMessage({operation:'clear',sourceId:'qa-hearing'});qaHearing.close();`);
+  await wait('清除临时转写',()=>js('document.querySelector("[data-wb-chat-input]").value===""'));
+  report.checks.push('语音广播转写自动同步发送状态');
+  await type('小汐，今天想和你一起整理几个新想法。');
+  await js(`document.querySelector('[data-wb-chat-input]').dispatchEvent(new CompositionEvent('compositionstart',{bubbles:true}))`);
+  await click('[data-wb-chat-send]');assert.equal(report.requests?.length||0,0,'输入法组字期间不得发送');
+  await js(`document.querySelector('[data-wb-chat-input]').dispatchEvent(new CompositionEvent('compositionend',{bubbles:true}))`);await pause(100);
+  await click('[data-wb-chat-send]');await wait('流式请求',()=>report.requests?.length>0);
+  assert.equal(await js('document.querySelector("[data-wb-chat-send]").disabled'),true);
+  await finished();write('after-send-dom.html',await js('document.documentElement.outerHTML'));await wait('消息气泡',()=>js('document.querySelectorAll("[data-wb-message-role=assistant]").length>0'));
+  await wait('双方头像与名字',()=>js(`document.querySelector('[data-wb-message-role=user] [data-wb-chat-avatar] img')?.complete&&document.querySelector('[data-wb-message-role=assistant] [data-wb-chat-avatar] img')?.complete&&document.querySelector('[data-wb-message-role=user] [data-wb-chat-name]')?.textContent==='头像验收'`));
+  await type('头像变化时保留这份草稿');
+  await host.syncUserProfile({displayName:'新名字',avatar:'',identity:'',preferences:''});
+  await wait('运行中姓名与头像回退',()=>js(`document.querySelector('[data-wb-message-role=user] [data-wb-chat-name]')?.textContent==='新名字'&&document.querySelector('[data-wb-message-role=user] [data-wb-chat-avatar]')?.textContent==='新名'&&!document.querySelector('[data-wb-message-role=user] [data-wb-chat-avatar] img')`));
+  assert.equal(await js('document.querySelector("[data-wb-chat-input]").value'),'头像变化时保留这份草稿');
+  await host.syncUserProfile({displayName:'',avatar:'',identity:'',preferences:''});
+  await wait('空用户名回退',()=>js(`document.querySelector('[data-wb-message-role=user] [data-wb-chat-name]')?.textContent==='我'`));
+  await host.syncUserProfile({displayName:'头像验收',avatar,identity:'',preferences:''});await type('');
+  report.checks.push('双方头像及姓名显示；运行中刷新保留草稿；清空头像与用户名回退');
+  await capture('chat-conversation-light.png');write('conversation-dom.html',await js('document.documentElement.outerHTML'));
+  report.checks.push('发送按钮可见；输入法组字不发送；真实输入触发本地流式回复');
+  await js("document.documentElement.classList.add('dark')");await capture('chat-conversation-dark.png');
+  report.darkStyle=await js(`(()=>{const n=document.querySelector('[data-wb-chat-input]'),s=getComputedStyle(n,'::placeholder');return {color:s.color,opacity:s.opacity,muted:getComputedStyle(document.documentElement).getPropertyValue('--chat-muted'),background:getComputedStyle(n.parentElement).backgroundColor};})()`);
+  await js("document.documentElement.classList.remove('dark')");
+  for(const mode of ['ctrl-enter','double-enter']){
+    await click('[title="发送方式"]');await wait('发送方式菜单',()=>js('document.querySelectorAll("[role=menuitem]").length===3'));
+    await js(`document.querySelectorAll('[role=menuitem]')[${mode==='ctrl-enter'?1:2}].click()`);await pause(150);
+    await sendMessage('检查发送方式：'+mode);
+  }
+  report.checks.push('按钮兼容 Ctrl+Enter 与双回车发送设置');
+  await js(`(()=>{const data=new DataTransfer();data.items.add(new File([Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII='),c=>c.charCodeAt(0))],'fixture.png',{type:'image/png'}));const f=document.querySelector('input[type=file]');f.files=data.files;f.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+  await wait('附件预览',()=>js('Boolean(document.querySelector("[data-testid=chat-composer-previews] img"))'));await capture('chat-attachment.png');
+  await sendMessage('这张图也一起看看。');assert.ok(report.requests.some(request=>request.hasImage));
+  report.checks.push('原生图片选择、预览和图片消息传递');
+  await click('[data-wb-chat-clear]');await wait('清空确认',()=>js('Boolean(document.querySelector("dialog[open]"))'));
+  await capture('chat-clear-confirm.png');await click('dialog button[value=cancel]');
+  assert.ok(await js(`${pinia}.get('chat-session').messages.some(m=>m.role==='user')`));
+  report.checks.push('清空显示不可撤销后果；取消保留消息');
+  const firstSession=await js(`${pinia}.get('chat-session').activeSessionId`);
+  await click('[data-testid=conversation-selector-button]');
+  await wait('会话列表',()=>js('Boolean(document.querySelector("[role=dialog]"))'));await capture('chat-sessions.png');
+  write('session-dialog.html',await js('document.querySelector("[role=dialog]").outerHTML'));
+  await js(`(()=>{const button=[...document.querySelectorAll('[role=dialog] button')].find(n=>/新建|新对话/.test(n.textContent));if(!button)throw new Error('未找到新建会话');button.click();})()`);
+  await wait('新会话',()=>js(`${pinia}.get('chat-session').activeSessionId!==${JSON.stringify(firstSession)}`));
+  await js(`${pinia}.get('chat-session').setActiveSession(${JSON.stringify(firstSession)})`);
+  assert.ok(await js(`${pinia}.get('chat-session').messages.some(m=>m.role==='user')`));report.checks.push('原生会话入口、新建与切回原会话保留消息');
+  host.viewport({visible:true,x:0,y:0,width:960,height:650});await pause(200);
+  await wait('窄桌面消息可见',()=>js(`(()=>{const viewport=document.querySelector('.chat-history-list').getBoundingClientRect();return [...document.querySelectorAll('.chat-message-item')].some(n=>{const r=n.getBoundingClientRect();return n.textContent.trim()&&getComputedStyle(n).opacity==='1'&&r.bottom>viewport.top&&r.top<viewport.bottom;});})()`));
+  await capture('chat-desktop-960.png');
+  const narrow=await rect('[data-wb-chat-send]');assert.ok(narrow.x>=0&&narrow.x+narrow.width<=960&&narrow.y+narrow.height<=650);report.checks.push('960px 桌面输入区和主操作未溢出');
+  fixtureMode='error';await sendMessage('这条用来验证服务失败后还能继续编辑。');
+  assert.ok(await js(`document.querySelector('[data-wb-chat-input]').value.includes('验证服务失败')`));
+  report.checks.push('服务失败保留草稿并恢复发送');
+  fixtureMode='normal';await type('');await click('[data-wb-chat-clear]');await click('[data-wb-confirm-clear]');
+  await wait('清空完成',()=>js(`!${pinia}.get('chat-session').messages.some(m=>m.role==='user')`));report.checks.push('确认清空仅清理当前会话');
+  const journalId=await js(`${pinia}.get('background-entries').addBackground('journal',new Blob([Uint8Array.from(atob('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII='),c=>c.charCodeAt(0))],{type:'image/png'}),'历史相册验收','')`);
+  await wait('历史相册缩略图',()=>js('Boolean(document.querySelector("[data-testid=chat-composer-previews] img[src^=blob]"))'));
+  assert.equal(await js('document.querySelector("[data-wb-chat-send]").disabled'),true,'历史相册不应被当成待发送附件');
+  assert.deepEqual(await js(`(()=>{const s=getComputedStyle(document.querySelector('[data-testid=chat-composer-previews] button'));return {color:s.color,background:s.backgroundColor};})()`),{color:'rgb(255, 255, 255)',background:'rgb(61, 48, 78)'});
+  await js(`${pinia}.get('background-entries').removeBackground(${JSON.stringify(journalId)})`);
+  report.checks.push('历史相册不误启用发送；图片覆盖按钮保持深底白字');
+  const chatRoute=await js('location.hash');await click('[title="相册"]');
+  await wait('相册路由',()=>js('location.hash.includes("/settings/airi-card")&&!document.documentElement.hasAttribute("data-wb-chat")'));
+  await js(`location.hash=${JSON.stringify(chatRoute)}`);
+  await wait('返回聊天',()=>js('Boolean(document.querySelector("[data-wb-chat-send]"))&&document.documentElement.hasAttribute("data-wb-chat")'));
+  report.checks.push('相册路由不残留聊天样式；返回后聊天布局恢复');report.ok=true;
+}).catch(async error=>{report.ok=false;report.errors.push(error.stack);console.error(error);if(contents&&!contents.isDestroyed()){write('failure-dom.html',await js('document.documentElement.outerHTML'));write('failure-state.json',await js(`(()=>{const s=${pinia};return JSON.stringify({messages:s.get('chat-session').messages,sending:s.get('chat').sending,mode:localStorage.getItem('ui/chat/settings/send-mode'),roles:[...document.querySelectorAll('.chat-message-item-container')].map(n=>({html:n.outerHTML.slice(0,600),parent:n.parentElement.outerHTML.slice(0,600),hasVue:!!n.__vueParentComponent}))});})()`));await capture('failure.png');}}).finally(async()=>{
+  clearTimeout(deadline);await host?.close().catch(error=>{report.ok=false;report.errors.push(String(error));});
+  if(root&&!root.isDestroyed())root.destroy();await new Promise(resolve=>modelServer?modelServer.close(resolve):resolve());write('result.json',report);console.log(JSON.stringify(report));electron.app.exit(report.ok?0:1);
+});

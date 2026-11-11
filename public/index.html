@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f6f5f0">
+  <title>AI-未来 · 角色工作台</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主要内容</a>
+  <div id="app-shell" class="app-shell" aria-busy="true">
+    <aside class="sidebar" aria-label="工作台导航">
+      <a class="brand" href="#chat" aria-label="AI-未来，角色工作台">
+        <span class="brand-mark" aria-hidden="true">未</span>
+        <span class="brand-copy"><strong>AI-未来</strong><span>角色工作台</span></span>
+      </a>
+      <nav class="primary-nav" aria-label="主要页面">
+        <button type="button" class="nav-item is-active" data-view="chat" aria-current="page" title="聊天">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18.5 3.5 21v-6.2A8.4 8.4 0 0 1 3 12C3 7 7 3 12 3s9 4 9 9-4 9-9 9a9 9 0 0 1-7-2.5Z"/><path d="M8 10h8M8 14h5"/></svg><span>聊天</span>
+        </button>
+        <button type="button" class="nav-item" data-view="memories" title="记忆">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h11a2 2 0 0 1 2 2v16H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm0 0v13m-3 2a2 2 0 0 1 2-2h14M9 7h6M9 10h4"/></svg><span>记忆</span>
+        </button>
+        <button type="button" class="nav-item" data-view="connections" title="连接">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v5m8-5v5M6 8h12v3a6 6 0 0 1-12 0V8Zm6 9v4"/></svg><span>连接</span>
+        </button>
+        <button type="button" class="nav-item" data-view="events" title="运行记录">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l4 4v14H4V3h4Zm7 0v5h5M8 12h8M8 16h6"/></svg><span>运行记录</span>
+        </button>
+        <button type="button" class="nav-item" data-view="stage" title="AIRI 舞台">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v14H3V4Zm5 17h8m-4-3v3M8 8l-2 3 2 3m8-6 2 3-2 3"/></svg><span>AIRI 舞台</span>
+        </button>
+      </nav>
+      <div class="session-section">
+        <div class="session-heading"><h2>会话</h2><span id="conversation-count" class="subtle">—</span></div>
+        <button id="new-conversation" type="button" class="button button-new" title="新建会话">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>新建会话</span>
+        </button>
+        <div id="conversation-list" class="conversation-list" aria-label="会话列表"><p class="sidebar-empty">正在读取会话…</p></div>
+      </div>
+      <div class="sidebar-footer"><span id="service-dot" class="status-dot neutral" aria-hidden="true"></span><span id="service-label">正在连接本地服务</span><span class="desktop-label">Windows Demo</span></div>
+    </aside>
+
+    <main id="main-content" class="main-content" tabindex="-1">
+      <div id="service-error" class="service-error" role="alert" hidden><span id="service-error-text"></span><button id="retry-state" type="button" class="text-button">重新连接</button></div>
+      <header class="workspace-header">
+        <div class="workspace-title"><span id="workspace-name">聊天</span><span id="mode-status" class="status-label neutral">读取状态…</span></div>
+        <button id="toggle-inspector" type="button" class="button button-quiet profile-toggle" aria-controls="inspector" aria-expanded="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v18M3 3h18v18H3V3Zm14 5h1m-1 4h1"/></svg><span>角色档案</span></button>
+      </header>
+
+      <section id="view-chat" class="view chat-view" aria-labelledby="chat-title">
+        <div class="chat-heading">
+          <div><h1 id="chat-title">开始一段对话</h1><p id="chat-subtitle">在这里，慢慢完善属于你的角色。</p></div>
+          <label class="mobile-session"><span class="sr-only">切换会话</span><select id="conversation-select"><option value="">选择会话</option></select></label>
+        </div>
+        <div id="chat-messages" class="chat-messages" role="log" aria-label="聊天记录" aria-live="polite" aria-relevant="additions text"></div>
+        <div class="composer-area">
+          <p id="qq-compose-note" class="inline-note" hidden>这里生成的回复仅保存在本地，不会主动发送到 QQ。</p>
+          <div id="composer-error" class="inline-error" role="alert" hidden><span id="composer-error-text"></span><button id="retry-send" type="button" class="text-button">重试发送</button></div>
+          <form id="chat-form" class="composer">
+            <label class="sr-only" for="message-input">给角色的消息</label>
+            <textarea id="message-input" name="message" rows="3" maxlength="8000" placeholder="写下你想说的话…" required></textarea>
+            <div class="composer-toolbar"><span id="composer-hint">Enter 发送 · Shift + Enter 换行</span><button id="send-message" type="submit" class="button button-primary"><span id="send-label">发送</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 7-7 7 7M12 5v14"/></svg></button></div>
+          </form>
+          <p id="mode-explanation" class="composer-footnote">正在读取模型配置。</p>
+        </div>
+      </section>
+
+      <section id="view-memories" class="view scroll-view" aria-labelledby="memories-title" hidden>
+        <div class="page-heading"><h1 id="memories-title">让重要的事留下来</h1><p>记忆由你明确保存。可以查看、修正内容，也可以随时删除。</p></div>
+        <form id="memory-form" class="memory-editor">
+          <label for="memory-content">新记忆</label>
+          <textarea id="memory-content" rows="3" maxlength="4000" required placeholder="例如：角色对你的称呼、共同经历，或希望她记住的偏好。"></textarea>
+          <div class="field memory-scope-field"><label for="memory-scope">使用范围</label><select id="memory-scope" aria-describedby="memory-scope-help"><option value="">正在读取会话…</option></select><small id="memory-scope-help">读取会话后确定这条记忆的使用范围。</small></div>
+          <div class="form-actions"><span id="memory-source" class="subtle"></span><button id="save-memory" class="button button-primary" type="submit">保存记忆</button></div>
+          <p id="memory-message" class="form-message" role="status"></p>
+        </form>
+        <div class="section-heading"><h2>已保存的记忆</h2><span id="memory-count" class="subtle">—</span></div>
+        <div id="memory-list" class="memory-list"></div>
+      </section>
+
+      <section id="view-connections" class="view scroll-view" aria-labelledby="connections-title" hidden>
+        <div class="page-heading"><h1 id="connections-title">连接角色的能力</h1><p>分别保存模型、声音和 QQ 配置。配置保存与实际连接的结果会单独显示。</p></div>
+        <section class="settings-section" aria-labelledby="llm-title">
+          <div class="settings-heading"><div><h2 id="llm-title">对话模型</h2><p>兼容 OpenAI Chat Completions 的服务。</p></div><span id="llm-status" class="status-label neutral">读取中</span></div>
+          <form id="llm-form">
+            <div class="field"><label for="llm-base">API 地址</label><input id="llm-base" type="url" autocomplete="url" placeholder="https://api.example.com/v1"><small>填写服务提供的基础地址，通常以 /v1 结尾。</small></div>
+            <div class="field"><label for="llm-model">模型标识</label><input id="llm-model" type="text" placeholder="输入服务支持的模型标识" autocomplete="off"></div>
+            <div class="field"><label for="llm-key">API 密钥</label><input id="llm-key" type="password" autocomplete="new-password" placeholder="输入新密钥，留空保留原密钥"><small id="llm-key-hint">尚未读取密钥状态。</small></div>
+            <label class="checkbox-field"><input id="llm-clear-key" type="checkbox">清除已保存密钥</label>
+            <div class="form-actions"><p id="llm-message" class="form-message" role="status"></p><button type="submit" class="button button-primary">保存模型配置</button></div>
+          </form>
+        </section>
+        <section class="settings-section" aria-labelledby="tts-title">
+          <div class="settings-heading"><div><h2 id="tts-title">角色声音</h2><p>兼容 OpenAI Speech 的语音服务。生成音频后由你点击播放。</p></div><span id="tts-status" class="status-label neutral">读取中</span></div>
+          <form id="tts-form">
+            <div class="field"><label for="tts-base">API 地址</label><input id="tts-base" type="url" autocomplete="url" placeholder="https://api.example.com/v1"></div>
+            <div class="field-row"><div class="field"><label for="tts-model">语音模型</label><input id="tts-model" type="text" autocomplete="off" placeholder="模型标识"></div><div class="field"><label for="tts-voice">音色</label><input id="tts-voice" type="text" autocomplete="off" placeholder="服务支持的音色标识"></div></div>
+            <div class="field"><label for="tts-key">API 密钥</label><input id="tts-key" type="password" autocomplete="new-password" placeholder="输入新密钥，留空保留原密钥"><small id="tts-key-hint">尚未读取密钥状态。</small></div>
+            <label class="checkbox-field"><input id="tts-clear-key" type="checkbox">清除已保存密钥</label>
+            <div class="form-actions"><p id="tts-message" class="form-message" role="status"></p><button type="submit" class="button button-primary">保存语音配置</button></div>
+          </form>
+        </section>
+        <section class="settings-section" aria-labelledby="qq-title">
+          <div class="settings-heading"><div><h2 id="qq-title">QQ 交流</h2><p>使用 OneBot 正向 WebSocket。只接收白名单内的私聊与群消息。</p></div><span id="qq-status" class="status-label neutral">读取中</span></div>
+          <form id="qq-form">
+            <div class="field"><label for="qq-url">WebSocket 地址</label><input id="qq-url" type="url" autocomplete="off" placeholder="ws://127.0.0.1:端口"></div>
+            <div class="field"><label for="qq-token">访问令牌</label><input id="qq-token" type="password" autocomplete="new-password" placeholder="输入新令牌，留空保留原令牌"><small id="qq-key-hint">尚未读取令牌状态。</small></div>
+            <label class="checkbox-field"><input id="qq-clear-key" type="checkbox">清除已保存令牌</label>
+            <div class="field-row"><div class="field"><label for="qq-private-allow">私聊白名单</label><textarea id="qq-private-allow" rows="2" placeholder="QQ 号，多个用逗号或换行分隔"></textarea></div><div class="field"><label for="qq-group-allow">群白名单</label><textarea id="qq-group-allow" rows="2" placeholder="群号，多个用逗号或换行分隔"></textarea></div></div>
+            <label class="checkbox-field"><input id="qq-mention" type="checkbox" checked>群聊仅在 @ 角色时回复</label>
+            <div class="form-actions"><p id="qq-message" class="form-message" role="status"></p><button type="submit" class="button button-primary">保存 QQ 配置</button></div>
+          </form>
+          <div class="connection-actions"><span class="subtle">连接使用已保存的配置。</span><div><button id="qq-disconnect" type="button" class="button button-quiet" disabled>断开连接</button><button id="qq-connect" type="button" class="button button-secondary" disabled>连接 QQ</button></div></div>
+        </section>
+        <section class="settings-section sandbox-section" aria-labelledby="sandbox-title">
+          <div class="settings-heading"><div><h2 id="sandbox-title">QQ 消息沙盒</h2><p>检查白名单和 @ 规则。沙盒结果只保存在本机，不向 QQ 发送消息。</p></div><span class="status-label neutral">本地测试</span></div>
+          <form id="sandbox-form">
+            <div class="field-row"><div class="field"><label for="sandbox-channel">消息类型</label><select id="sandbox-channel"><option value="qq-private">私聊</option><option value="qq-group">群聊</option></select></div><div class="field"><label id="sandbox-peer-label" for="sandbox-peer">对方 QQ 号</label><input id="sandbox-peer" type="text" inputmode="numeric" autocomplete="off" required></div></div>
+            <div class="field" id="sandbox-user-field" hidden><label for="sandbox-user">发送者 QQ 号</label><input id="sandbox-user" type="text" inputmode="numeric" autocomplete="off"></div>
+            <label id="sandbox-mention-field" class="checkbox-field" hidden><input id="sandbox-mentioned" type="checkbox" checked>消息包含 @ 角色</label>
+            <div class="field"><label for="sandbox-text">测试消息</label><textarea id="sandbox-text" rows="3" maxlength="8000" required placeholder="输入一条模拟收到的消息"></textarea></div>
+            <div class="form-actions"><p id="sandbox-message" class="form-message" role="status"></p><button type="submit" class="button button-secondary">运行沙盒消息</button></div>
+            <button id="sandbox-open" type="button" class="text-button" hidden>查看沙盒会话</button>
+          </form>
+        </section>
+      </section>
+
+      <section id="view-events" class="view scroll-view" aria-labelledby="events-title" hidden>
+        <div class="page-heading"><h1 id="events-title">运行记录</h1><p>从实际请求中核对生成、连接与发送的结果。</p></div>
+        <div class="event-toolbar"><label for="event-filter">显示<select id="event-filter"><option value="all">全部记录</option><option value="error">错误</option><option value="warn">提醒</option><option value="info">一般</option></select></label><button id="refresh-events" type="button" class="button button-quiet">刷新记录</button></div>
+        <p id="events-updated" class="subtle update-note">正在读取记录…</p>
+        <ol id="event-list" class="event-list"></ol>
+      </section>
+
+      <section id="view-stage" class="view stage-view" aria-labelledby="stage-title" hidden>
+        <div class="page-heading"><div class="stage-heading"><h1 id="stage-title">AIRI 舞台</h1><button id="reload-stage" type="button" class="button button-quiet" hidden>重新载入</button></div><p id="stage-description">读取本机 AIRI 舞台资源与兼容状态。</p></div>
+        <div id="stage-status" class="stage-status" role="status"><span id="stage-state-dot" class="status-dot neutral" aria-hidden="true"></span><span id="stage-state-text">正在检查可用性…</span></div>
+        <div id="stage-surface" class="stage-surface"><div id="stage-placeholder" class="stage-placeholder"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v14H3V4Zm5 17h8m-4-3v3"/></svg><h2 id="stage-placeholder-title">等待本地舞台</h2><p id="stage-placeholder-note">舞台可用后，会在这里载入。</p></div></div>
+        <p class="stage-boundary">当前接入为示例形象的静音待机舞台。自定义形象、口型，以及工作台对话与声音同步仍需单独接入。</p>
+      </section>
+    </main>
+
+    <button id="inspector-backdrop" class="inspector-backdrop" type="button" aria-label="关闭角色档案" hidden></button>
+    <aside id="inspector" class="inspector" aria-label="角色档案">
+      <div class="inspector-heading"><h2>角色档案</h2><button id="close-inspector" class="icon-button" type="button" aria-label="收起角色档案"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+      <div class="character-summary"><div id="character-avatar" class="character-avatar" aria-hidden="true">未</div><div><h3 id="character-display-name">读取角色…</h3><p>同一个角色，多种交流入口。</p></div></div>
+      <form id="character-form">
+        <div class="field"><label for="character-name">角色名称</label><input id="character-name" type="text" maxlength="80" required autocomplete="off"></div>
+        <div class="field"><label for="character-description">角色简介</label><textarea id="character-description" rows="3" maxlength="2000" placeholder="你希望她是怎样的人？"></textarea></div>
+        <div class="field"><label for="character-system">角色设定</label><textarea id="character-system" rows="6" maxlength="16000" placeholder="性格、说话方式、与你的关系…"></textarea><small>设定用于后续模型回复，历史消息会保留。</small></div>
+        <div class="form-actions"><button id="reset-character" type="button" class="text-button">还原</button><button type="submit" class="button button-primary">保存角色</button></div>
+        <p id="character-message" class="form-message" role="status"></p>
+      </form>
+      <section class="connection-summary" aria-labelledby="summary-title"><div class="section-heading"><h2 id="summary-title">连接概览</h2><button id="manage-connections" type="button" class="text-button">管理</button></div><dl><div><dt>对话模型</dt><dd id="summary-model">读取中</dd></div><div><dt>角色声音</dt><dd id="summary-tts">读取中</dd></div><div><dt>QQ</dt><dd id="summary-qq">读取中</dd></div><div><dt>AIRI 舞台</dt><dd id="summary-airi">读取中</dd></div></dl></section>
+    </aside>
+  </div>
+  <div id="notice" class="notice" role="status" hidden></div>
+</body>
+</html>

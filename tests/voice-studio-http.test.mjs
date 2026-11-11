@@ -1,0 +1,32 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,rm,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createWorkbench} from '../framework/server.mjs';
+
+test('两个声音模块通过 HTTP 创建、保存并合成共享音色，拒绝无效操作',async t=>{
+  const directory=await mkdtemp(join(tmpdir(),'voice-studio-http-'));
+  const config={pythonPath:process.execPath,generatorPath:directory,clonePath:directory,codecPath:directory};
+  const resources={initialized:Promise.resolve(),state:()=>({config,components:['runtime','generator','clone','codec'].map(id=>({id,installed:true})),task:null}),close:async()=>{}};
+  const wav=Buffer.alloc(48044);wav.write('RIFF');wav.writeUInt32LE(wav.length-8,4);wav.write('WAVEfmt ',8);wav.writeUInt32LE(16,16);wav.writeUInt16LE(1,20);wav.writeUInt16LE(1,22);wav.writeUInt32LE(24000,24);wav.writeUInt32LE(48000,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);wav.write('data',36);wav.writeUInt32LE(wav.length-44,40);
+  const runtime=await createWorkbench({dataDir:directory,instances:false,voiceStudioOptions:{resources,runWorker:async request=>{await writeFile(request.output,wav);if(request.referenceOutput)await writeFile(request.referenceOutput,wav);}}});
+  t.after(async()=>{await runtime.close();await rm(directory,{recursive:true,force:true});});
+  const api=async(path,body,method=body===undefined?'GET':'POST')=>{const response=await fetch(runtime.url+path,{method,headers:{'content-type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});return {status:response.status,value:await response.json()};};
+  assert.equal((await api('/api/voice-studio/state')).status,200);
+  const created=await api('/api/voice-studio/jobs',{mode:'design',instruction:'清亮轻快',text:'你好，念念。',seed:9});assert.equal(created.status,202);
+  await runtime.context.voiceStudio.pending;const job=(await api('/api/voice-studio/state')).value.job;assert.equal(job.status,'completed');
+  const saved=await api('/api/voice-studio/save',{jobId:job.id,name:'测试声线'});assert.equal(saved.status,200);
+  const voices=(await api('/api/voice/voices')).value.voices;assert.equal(voices[0].id,saved.value.id);
+  const speech=await api('/api/voice/speech',{text:'另一句台词。',voiceId:saved.value.id});assert.equal(speech.status,200);
+  const audio=await fetch(speech.value.url);assert.equal(audio.status,200);assert.equal((await audio.arrayBuffer()).byteLength,wav.length);
+  const [id,signature]=new URL(speech.value.url).pathname.split('/').slice(-2);
+  assert.equal((await api('/api/voice-studio/jobs',{mode:'clone',text:'直接引用合成结果。',referenceAudio:{id,signature}})).status,202);
+  await runtime.context.voiceStudio.pending;assert.equal(runtime.context.voiceStudio.state().job.status,'completed');
+  assert.equal((await api('/api/voice-studio/discard',{jobId:job.id})).status,200);
+  assert.equal((await fetch(job.result.url)).status,404);
+  assert.equal((await fetch(runtime.url+'/api/voice/voices/'+saved.value.id+'/audio')).status,200);
+  assert.equal((await api('/api/voice-studio/jobs',{mode:'design',instruction:'',text:'你好'})).status,400);
+  assert.equal((await api('/api/voice-studio/save',{jobId:job.id,name:'',extra:true})).status,400);
+  assert.equal((await api('/api/voice-studio/jobs',undefined,'DELETE')).status,405);
+});

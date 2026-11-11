@@ -1,0 +1,38 @@
+.module-help-control { white-space: nowrap; }
+.module-manual {
+  color: var(--ink); background: var(--glass-solid); border: 0; border-radius: 16px;
+  padding: 0; width: min(560px, calc(100vw - 64px)); max-height: calc(100vh - 64px);
+  box-shadow: 0 20px 60px rgb(20 19 43 / .24);
+}
+.module-manual[open] { display: flex; flex-direction: column; }
+.module-manual::backdrop { background: rgb(22 20 45 / .34); }
+.module-manual-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 28px 16px; }
+.module-manual-header h2 { margin: 0; font-size: 1.45rem; }
+.module-manual-header .icon-button { flex-shrink: 0; }
+.module-manual-body { overflow: auto; padding: 0 28px; overscroll-behavior: contain; }
+.module-manual-body ol { margin: 0; padding-left: 24px; }
+.module-manual-body li { padding: 12px 0 14px 8px; }
+.module-manual-body li::marker { color: var(--accent-text); font-weight: 650; }
+.module-manual-body h3 { margin: 0 0 6px; font-size: 1.05rem; }
+.module-manual-body p { margin: 0; color: var(--muted); line-height: 1.8; overflow-wrap: anywhere; }
+.module-manual-footer { display: flex; justify-content: flex-end; padding: 20px 28px 24px; }
+.module-tour {
+  position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+  padding: 0; margin: 0; border: 0; background: transparent; overflow: hidden; pointer-events: none; color: var(--ink);
+}
+.module-tour::backdrop { background: transparent; pointer-events: none; }
+.module-tour-spotlight {
+  position: fixed; border: 2px solid var(--accent); border-radius: 12px;
+  box-shadow: 0 0 0 100vmax rgb(22 20 45 / .36); pointer-events: none;
+}
+.module-tour-card {
+  position: fixed; width: min(352px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
+  background: var(--glass-solid); padding: 18px 22px 22px; border-radius: 16px;
+  box-shadow: 0 16px 48px rgb(20 19 43 / .24); pointer-events: auto; overscroll-behavior: contain;
+}
+.module-tour-progress { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.module-tour-progress .button { min-height: 32px; padding: 4px 8px; }
+.module-tour-card h2 { font-size: 1.2rem; margin: 0 0 10px; }
+.module-tour-card p { margin: 0; line-height: 1.8; color: var(--muted); overflow-wrap: anywhere; }
+.module-tour-card .module-tour-unavailable { margin-top: 12px; }
+.module-tour-footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 22px; }

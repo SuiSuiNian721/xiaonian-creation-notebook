@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ComfyUI 日志</title>
+  <link rel="icon" href="/app.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/process-log.css">
+  <script type="module" src="/process-log.js"></script>
+</head>
+<body>
+  <header class="log-toolbar">
+    <div class="log-heading"><h1 id="log-title">ComfyUI 日志</h1><span id="log-status" role="status">正在读取</span></div>
+    <div class="log-actions">
+      <label class="log-follow"><input id="log-follow" type="checkbox" checked>跟随输出</label>
+      <button id="log-copy" type="button">复制全部</button>
+      <button id="log-save" type="button">保存日志</button>
+    </div>
+  </header>
+  <p id="log-notice" class="log-notice" role="status" hidden></p>
+  <p id="log-feedback" class="log-feedback" role="status" hidden></p>
+  <pre id="log-output" tabindex="0" aria-label="实时进程日志">等待进程输出…</pre>
+</body>
+</html>

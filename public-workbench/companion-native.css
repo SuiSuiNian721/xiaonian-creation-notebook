@@ -1,0 +1,21 @@
+:root { --wb-ink:#343866; --wb-muted:#626382; --wb-surface:#f5edf6; --wb-field:rgb(255 255 255 / .52); --wb-line:rgb(104 89 148 / .18); --wb-accent:#6653a4; }
+:root.dark { --wb-ink:#eceafa; --wb-muted:#bfc1db; --wb-surface:#303b57; --wb-field:rgb(29 37 60 / .6); --wb-line:rgb(209 202 246 / .2); --wb-accent:#c1a7ef; }
+html,body,#app { font-family:'Segoe UI Variable Text','Segoe UI','Microsoft YaHei UI',sans-serif !important; color:var(--wb-ink) !important; }
+html,body { background:var(--wb-surface) !important; }
+html[data-companion-view='stage'],html[data-companion-view='stage'] body { background:transparent !important; }
+button,input,textarea,select { font:inherit; }
+button { border-radius:10px !important; background:var(--wb-field) !important; color:var(--wb-ink) !important; border-color:var(--wb-line) !important; }
+input:not([type='checkbox']):not([type='range']),textarea,select { color:var(--wb-ink) !important; background:var(--wb-field) !important; border-color:var(--wb-line) !important; }
+a { color:var(--wb-accent); }
+::selection { background:#bda8e35c; }
+:focus-visible { outline:2px solid var(--wb-accent); outline-offset:3px; }
+html[data-companion-view='settings'] [bg='\$bg-color'] { background:transparent !important; }
+html[data-companion-view='settings'] [style*='padding-top: 44px'] { padding-top:0 !important; }
+html[data-companion-view='settings'] [fixed][top='0'][drag-region] { display:none !important; }
+html[data-companion-view='settings'] [sticky][z-99] { display:none !important; }
+html[data-companion-route='/settings/models'] [hidden] { display:none !important; }
+html[data-companion-view='settings'] [text*='neutral'],html[data-companion-view='settings'] [class*='text-neutral-'] { color:var(--wb-muted) !important; }
+html[data-companion-view='settings'] [class*='font-cute'] { font-family:inherit !important; }
+html[data-companion-view='settings'] h1 { font-size:24px !important; font-weight:650 !important; }
+html[data-companion-view='settings'] h2 { font-size:19px !important; }
+html[data-companion-view='chat'] [fixed][top='0'][drag-region] { background:var(--wb-surface) !important; color:var(--wb-ink) !important; border-bottom:1px solid var(--wb-line); }

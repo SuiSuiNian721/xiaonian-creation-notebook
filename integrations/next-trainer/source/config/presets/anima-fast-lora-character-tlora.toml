@@ -1,0 +1,30 @@
+[metadata]
+name = "Anima Fast T-LoRA - 角色通用"
+version = "1.0"
+author = "SD-Trainer Next"
+train_type = "anima-lora-fast"
+description = "Anima Fast 的受控 T-LoRA 角色预设；通过时间步动态 rank 降低小数据集过拟合风险。"
+
+[data]
+fast_variant = "tlora"
+method = "lora"
+network_module = "networks.lora_anima"
+network_dim = 32
+network_alpha = 32
+
+resolution = "1024,1024"
+enable_bucket = true
+train_batch_size = 1
+gradient_checkpointing = true
+
+optimizer_type = "AdamW"
+learning_rate = 0.00005
+
+mixed_precision = "bf16"
+use_vae_cache = false
+use_text_cache = false
+skip_cache_check = true
+
+torch_compile = true
+compile_dynamic_seq = true
+attn_mode = "flash"

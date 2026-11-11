@@ -1,0 +1,54 @@
+.mc-play-shell .mc-service-bar { display:flex; justify-content:space-between; align-items:center; gap:16px; margin:22px 0 4px; }
+.mc-play-shell .mc-service-bar>div { display:flex; align-items:center; flex-wrap:wrap; gap:14px; }
+.mc-play-shell .mc-secondary { font-size:12px; color:var(--muted); }
+.mc-play-shell .mc-player-name { font-size:15px; overflow-wrap:anywhere; }
+.mc-play-layout { display:grid; grid-template-columns:minmax(300px,0.9fr) minmax(360px,1.1fr); gap:22px; align-items:start; margin-top:16px; }
+.mc-play-layout>.panel { min-width:0; }
+.mc-play-shell .mc-fields { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:0 16px; }
+.mc-play-shell .mc-fields .field { min-width:0; }
+.mc-play-shell .mc-fields input,.mc-play-shell .mc-fields select { width:100%; min-width:0; }
+.mc-play-shell .mc-command-bar { display:flex; flex-wrap:wrap; gap:8px; }
+.mc-play-shell .mc-command-bar .button { padding:9px 12px; font-size:12px; }
+.mc-play-shell .mc-history { margin:20px 0; padding:0; list-style:none; height:clamp(180px,25vh,290px); overflow:auto; scrollbar-width:thin; }
+.mc-play-shell .mc-history-item { padding:12px 2px; border-bottom:1px solid var(--line); }
+.mc-play-shell .mc-history-item>div { display:flex; justify-content:space-between; gap:16px; color:var(--muted); font-size:11px; }
+.mc-play-shell .mc-history-item p { margin:6px 0 0; white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.65; }
+.mc-play-shell .mc-history-item pre { white-space:pre-wrap; overflow-wrap:anywhere; font-size:11px; }
+.mc-play-shell .mc-history-item.error { color:var(--danger); }
+.mc-play-shell #mc-instruction { width:100%; min-height:84px; resize:vertical; padding:12px 14px; color:var(--ink); background:var(--field); border:1px solid var(--line); border-radius:13px; outline:none; }
+.mc-play-shell #mc-instruction:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgb(135 112 183 / .13); }
+.mc-play-shell .mc-instruction-actions { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:10px; }
+.mc-play-shell .mc-live-stats { margin-top:22px; padding-top:18px; border-top:1px solid var(--line); }
+.mc-play-shell .mc-live-stats dl { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:0; }
+.mc-play-shell .mc-live-stats dt,.mc-play-shell .mc-runtime-details dt { font-size:11px; color:var(--muted); margin-bottom:5px; }
+.mc-play-shell .mc-live-stats dd,.mc-play-shell .mc-runtime-details dd { margin:0; overflow-wrap:anywhere; }
+.mc-play-shell .mc-live-stats .wide { grid-column:1/-1; }
+.mc-play-shell .mc-authentication { margin-top:20px; display:grid; gap:12px; padding:16px; border:1px solid var(--line); border-radius:16px; }
+.mc-play-shell .mc-authentication[hidden] { display:none; }
+.mc-play-shell .mc-authentication strong { font-size:24px; letter-spacing:4px; user-select:all; }
+.mc-play-shell .mc-runtime-details { display:flex; gap:32px; flex-wrap:wrap; }
+.mc-bot-skin-panel { margin-top:22px; }
+.mc-bot-skin-identity { display:flex; align-items:center; flex-wrap:wrap; justify-content:flex-end; gap:12px; min-width:0; }
+.mc-bot-skin-identity strong { overflow-wrap:anywhere; }
+.mc-bot-skin-layout { display:grid; grid-template-columns:minmax(280px,1.1fr) minmax(260px,1fr); gap:32px; align-items:start; }
+.mc-bot-skin-figure { margin:0; min-width:0; }
+.mc-bot-skin-stage { display:grid; place-items:center; min-height:304px; background:var(--surface); border-radius:14px; overflow:hidden; }
+.mc-bot-skin-stage canvas { display:block; width:100%; max-width:448px; height:auto; image-rendering:pixelated; }
+.mc-bot-skin-stage>[role=status] { color:var(--muted); padding:12px; font-size:12px; }
+.mc-bot-skin-figure figcaption { display:grid; grid-template-columns:1fr 1fr; max-width:448px; margin:0 auto; padding-top:10px; color:var(--muted); font-size:12px; text-align:center; }
+.mc-bot-skin-controls { min-width:0; padding-top:4px; }
+.mc-bot-skin-file-row { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:22px; }
+.mc-bot-skin-file-row>span { min-width:0; overflow-wrap:anywhere; font-size:13px; }
+.mc-bot-skin-file-row>.button { flex:none; }
+.mc-bot-skin-controls select,.mc-bot-skin-controls input { width:100%; }
+.mc-bot-skin-actions { flex-wrap:wrap; margin-top:20px; }
+.mc-bot-skin-gate { display:flex; align-items:center; gap:6px; margin-top:12px; font-size:12px; color:var(--muted); }
+.mc-bot-skin-upload-note { margin-top:14px; color:var(--muted); font-size:12px; line-height:1.7; }
+.mc-bot-skin-status { margin-top:16px; }
+.mc-bot-skin-status .form-feedback { margin:5px 0 0; }
+.mc-bot-skin-key { margin-top:24px; padding-top:18px; border-top:1px solid var(--line); }
+.mc-bot-skin-key>summary { cursor:pointer; font-size:13px; }
+.mc-bot-skin-key>summary>span { margin-left:10px; }
+.mc-bot-skin-key form { margin-top:16px; }
+@media(max-width:1100px) { .mc-play-layout { grid-template-columns:minmax(0,1fr); } .mc-play-shell .mc-history { height:280px; } }
+@media(max-width:520px) { .mc-play-shell .mc-fields { grid-template-columns:1fr; } .mc-play-shell .mc-service-bar { align-items:start; } .mc-play-shell .mc-service-bar>div { gap:8px; } .mc-play-shell .mc-instruction-actions { align-items:start; } .mc-play-shell .remove-control small { max-width:110px; text-align:right; } }

@@ -1,0 +1,3728 @@
+{
+  "format": 1,
+  "version": "3.3.1-dev",
+  "kernelRevision": "05185eb14fb7f32dddc0d4afb3d02cdeba30d1ac679e79138b08d5e56aa9b3d5",
+  "source": {
+    "repository": "https://github.com/wochenlong/lora-scripts-next.git",
+    "commit": "12963ec369f0c6dd0a0cff94aed6da39ec3929e2",
+    "snapshot": "local modified working tree",
+    "localPath": "E:\\ai draw\\train\\Next-Trainer-v3.3.1-dev\\Next-Trainer"
+  },
+  "modifiedFiles": [
+    "mikazuki/app/api.py",
+    "mikazuki/static/train_log.html",
+    "mikazuki/train_log_hub.py",
+    "mikazuki/utils/config_import.py",
+    "mikazuki/utils/hardware_status.py",
+    "mikazuki/utils/training_time.py",
+    "vendor/sd-scripts/library/strategy_moss_image.py",
+    "mikazuki/engines/kohya/preflight.py",
+    "mikazuki/engines/workbench_paths.py",
+    "mikazuki/engines/anima_fast/environment.py",
+    "mikazuki/engines/musubi/environment.py",
+    "mikazuki/engines/ai_toolkit/environment.py",
+    "vendor/sd-scripts/library/sdxl_model_util.py"
+  ],
+  "files": [
+    {
+      "path": "LICENSE",
+      "size": 35184,
+      "sha256": "6f1e622c82a380075843bb084a7ec3b1f1d12a4a02526d75e78b0924a860aa75"
+    },
+    {
+      "path": "NOTICE.md",
+      "size": 7753,
+      "sha256": "3dc68b9a3ffd05e606be519c78bd7a386e0994ae83c8a26f005ad07f7aae56e4"
+    },
+    {
+      "path": "VERSION",
+      "size": 11,
+      "sha256": "d84876cd83c686d3335ba661405f2035f4c7533247b70219c1182dc08cf8927e"
+    },
+    {
+      "path": "config/presets/anima-fast-lora-character-tlora.toml",
+      "size": 714,
+      "sha256": "1db8ca711845e26c1ef5af45c45c83a5bb3b6f17589868e36d993dc422f91723"
+    },
+    {
+      "path": "config/presets/anima-fast-lora-character.toml",
+      "size": 684,
+      "sha256": "e5605b4bc300439bba756fef05c8519195f2bca7e3cdae8e6bee7b53b94ed57c"
+    },
+    {
+      "path": "config/presets/anima-fast-lora-style-tlora.toml",
+      "size": 714,
+      "sha256": "4872335d35e61d3b17c015a97590d7c97f29c7cb1d03a71d57e5caeafcf45738"
+    },
+    {
+      "path": "config/presets/anima-fast-lora-style.toml",
+      "size": 685,
+      "sha256": "a2ed157cf03aaae520cae52d292fe37ff63b049d70c4bcb5918b35b4aee5ff37"
+    },
+    {
+      "path": "config/presets/anima-lora-character-automagic.toml",
+      "size": 1035,
+      "sha256": "7a7ddede81aefb40c90f64d2f9b78469d041a8744a11cac662f14e1f07b69397"
+    },
+    {
+      "path": "config/presets/anima-lora-style-automagic.toml",
+      "size": 1041,
+      "sha256": "cd1dffd36f024753845fb017921c085d315fb21a23e2bc0682ba268b2fbca80b"
+    },
+    {
+      "path": "config/presets/chroma.toml",
+      "size": 328,
+      "sha256": "6e36aeb166e3351c3a1c8498df93cdc455eed9b571e670a28cc42d3952ac6bbf"
+    },
+    {
+      "path": "config/presets/example.toml",
+      "size": 689,
+      "sha256": "b7077b41b2206180b17b8226bf7eec2f570336fc5d992bbca151397b1cecc79f"
+    },
+    {
+      "path": "config/presets/krea2-lora.toml",
+      "size": 754,
+      "sha256": "7af9c22d0b10d0e48550ceb7646931e7af69761ac8275301aba4f22d1de1c549"
+    },
+    {
+      "path": "mikazuki/__init__.py",
+      "size": 91,
+      "sha256": "5524e96d4ee417f3a744914233d1ae1ad5ee520684fd4bc20cf1c208ce259452"
+    },
+    {
+      "path": "mikazuki/accelerate_launch.py",
+      "size": 357,
+      "sha256": "092bfe62178e98ceb254f60920ce14a2d1a906c6a57e5bfe21083f5f61e983d1"
+    },
+    {
+      "path": "mikazuki/agent_dataset/__init__.py",
+      "size": 1994,
+      "sha256": "a9194af8f0a24ae6a8dee2c79cb2a6296ffdbc6ba9fdec24cb77ace2c9ae55f6"
+    },
+    {
+      "path": "mikazuki/agent_dataset/audit.py",
+      "size": 14670,
+      "sha256": "2bb1f90a800f7b1f8665f20cb98e457176a8ec3ce3142ecf1a85b51164470004"
+    },
+    {
+      "path": "mikazuki/agent_dataset/changes.py",
+      "size": 15189,
+      "sha256": "36f0381f733f4734cf814a4162b2d4234c8ad3ac48352e642eb41523234d3044"
+    },
+    {
+      "path": "mikazuki/agent_dataset/errors.py",
+      "size": 571,
+      "sha256": "d5c8e11a9863c9c6ba055d716d0ddb0f0f409b9b09175feac01779296777be75"
+    },
+    {
+      "path": "mikazuki/agent_dataset/remote_reviewer.py",
+      "size": 12069,
+      "sha256": "e6616ef6083e753e75283480b6fed85244f6bd4c3d75d4eccf54801cbadfa96e"
+    },
+    {
+      "path": "mikazuki/agent_metrics/__init__.py",
+      "size": 1325,
+      "sha256": "3be519747a6f0ac11e9755d7d2c3fc9369dfe48a7d31bfe8b3e300d88635a78f"
+    },
+    {
+      "path": "mikazuki/agent_metrics/analysis.py",
+      "size": 13502,
+      "sha256": "08a678316e23bc24312726f1db1004d7800e7c9573cc97379b8603343440a252"
+    },
+    {
+      "path": "mikazuki/agent_metrics/artifacts.py",
+      "size": 15623,
+      "sha256": "84639667125e8bdc93cc786854ac14349034db031aa6531f156c05975caa4c63"
+    },
+    {
+      "path": "mikazuki/agent_metrics/http_renderer.py",
+      "size": 5305,
+      "sha256": "9e0c36644bb4d78aab565137f0c452a2fa18b8961d671a6c1bd93a1695b10da3"
+    },
+    {
+      "path": "mikazuki/agent_skills/__init__.py",
+      "size": 1197,
+      "sha256": "b8eec73f9a54644db4552e97af3b4ac651cc1af19dc6e7132e09fc2e2b457ac8"
+    },
+    {
+      "path": "mikazuki/agent_skills/civitai.py",
+      "size": 15250,
+      "sha256": "18b63319f7b82c748012f0cda271eb3ca90371ab9583acdf421e08d54b859e8a"
+    },
+    {
+      "path": "mikazuki/agent_skills/cohort.py",
+      "size": 8306,
+      "sha256": "fa34386022be5be519b46ecd97114d81b03c8fd8ec44bd65121bc7389b35dfcf"
+    },
+    {
+      "path": "mikazuki/agent_skills/errors.py",
+      "size": 1026,
+      "sha256": "ab89633b4fc51aa900c5ddab7ddc474c89354a62438ea72ec8cdfac00ca9c4d1"
+    },
+    {
+      "path": "mikazuki/agent_skills/knowledge.py",
+      "size": 4131,
+      "sha256": "87cec898007d6a1e19600d5da85ce4675bae733fd17c931640f43db5465f16ad"
+    },
+    {
+      "path": "mikazuki/agent_skills/models.py",
+      "size": 4958,
+      "sha256": "4887b28e631c97fd9ef0d0074f5ba194370dc4a4b4061162b50901be5d207d2c"
+    },
+    {
+      "path": "mikazuki/agent_skills/skill.py",
+      "size": 7442,
+      "sha256": "b14b47da1fba7cef156ffdb3c82d7f7df33d2e541d0866c46eaeca64b62604ad"
+    },
+    {
+      "path": "mikazuki/agent_tagger.py",
+      "size": 6817,
+      "sha256": "f5bc486d1a06cedd431096466ff8a96fb5418bb35304132ce48bb2f6058760cd"
+    },
+    {
+      "path": "mikazuki/agent_workspace/__init__.py",
+      "size": 1383,
+      "sha256": "a6eafc4f055802ea4e5f550d2716c34895cd4f03b0a47fb4ef19e910a3f88396"
+    },
+    {
+      "path": "mikazuki/agent_workspace/api.py",
+      "size": 10089,
+      "sha256": "111df22576546dd5a204081f004e50538f073aa4a94357ce240463fffc4408ff"
+    },
+    {
+      "path": "mikazuki/agent_workspace/artifacts.py",
+      "size": 18116,
+      "sha256": "9e75264bda27b21c51de9f984e072ae0a93a43fdfd8d3051e1c69f222d7b5aa6"
+    },
+    {
+      "path": "mikazuki/agent_workspace/errors.py",
+      "size": 803,
+      "sha256": "6651265b268ff3b59385e92688fd578ab8618a64fc45bfb23cb5a5402c2eed08"
+    },
+    {
+      "path": "mikazuki/agent_workspace/gateway.py",
+      "size": 4478,
+      "sha256": "29cbcabc22717f70ea60e57ed06d70b35793f84fcbd5add2b2722bc21669b797"
+    },
+    {
+      "path": "mikazuki/agent_workspace/redaction.py",
+      "size": 1441,
+      "sha256": "712bb0ce7d0171a3bbadbff166dbd493717afcb731545620a815394070972e33"
+    },
+    {
+      "path": "mikazuki/agent_workspace/workspace.py",
+      "size": 11783,
+      "sha256": "3610e892d95d9b3c2814d0ba18b922c1d2638b23b7d0bf7bbf9b0e2621494d73"
+    },
+    {
+      "path": "mikazuki/anima_backend/__init__.py",
+      "size": 104,
+      "sha256": "725084f0e8a79e545e5c9f1b23134633a688cb58b0a284440f1c2ac3fc6ab305"
+    },
+    {
+      "path": "mikazuki/anima_backend/adapter.py",
+      "size": 13158,
+      "sha256": "ad593b6ff96beca3261f506c82f290975277683890cd72e2bab37b02cd5bb986"
+    },
+    {
+      "path": "mikazuki/anima_backend/lycoris_patch.py",
+      "size": 2271,
+      "sha256": "c5cda7722f7b5fffbfed9519ac70a06135bd0684f16038b78910f11a5dff0663"
+    },
+    {
+      "path": "mikazuki/anima_backend/upstream.py",
+      "size": 6677,
+      "sha256": "df88b4b2c3856cf955820bbf1b45a3d051d1287b385fe1ee8315614b98fa55d9"
+    },
+    {
+      "path": "mikazuki/app/__init__.py",
+      "size": 50,
+      "sha256": "88b7cad1235c46ea377ff417e9a4ae706a55d5c3ade0604932a9f55cc72e5331"
+    },
+    {
+      "path": "mikazuki/app/api.py",
+      "size": 48291,
+      "sha256": "0246f588ce230edb02f589f434bbb05c0eb78a87c7d7ab43c5894041243415cd"
+    },
+    {
+      "path": "mikazuki/app/application.py",
+      "size": 8559,
+      "sha256": "000b92d9e91ebd5cc2930e6c7ebceace6c8444a2906e23184e3e12a3db443f5a"
+    },
+    {
+      "path": "mikazuki/app/config.py",
+      "size": 1391,
+      "sha256": "7229897e59251d0e10d30532f32bea2e7d135e28044dfef9627ea37f6f32ec3f"
+    },
+    {
+      "path": "mikazuki/app/models.py",
+      "size": 1348,
+      "sha256": "9c611b6b6d79ab6a8e8664868f54ed24dead252585ff20d7efcdacb80501679e"
+    },
+    {
+      "path": "mikazuki/app/proxy.py",
+      "size": 5008,
+      "sha256": "91022b51b4cc2d36b2d9197537c437a7dac8333dbcebe2033cb178ca732f22b9"
+    },
+    {
+      "path": "mikazuki/app/train_submit.py",
+      "size": 16047,
+      "sha256": "f2fa4c9e69640867685fbe9094a730793f5f4fd6dc96a8e30b03435a8a7b485c"
+    },
+    {
+      "path": "mikazuki/app/user_data_api.py",
+      "size": 6013,
+      "sha256": "552ee7375bb499957a1a89f6a399c1b3b34fcdd7f4553be0ba8f01613b37c33a"
+    },
+    {
+      "path": "mikazuki/child_process.py",
+      "size": 838,
+      "sha256": "ca3ea0e7f907cf4c7a2c5c422bdbba5be12fa63f5cb4db68d51bd18e63f1aab9"
+    },
+    {
+      "path": "mikazuki/china_hub.py",
+      "size": 8692,
+      "sha256": "d6805108774df62fcfa3c1821a73324efef9365f35b90675946aa6e97c7e8171"
+    },
+    {
+      "path": "mikazuki/dataset_editor.py",
+      "size": 14887,
+      "sha256": "9b1029e145290ec13c81ba1b8d67f227091c93bfcfe1edb6b7682aa831f0f4f6"
+    },
+    {
+      "path": "mikazuki/datasets/__init__.py",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "mikazuki/datasets/api.py",
+      "size": 16245,
+      "sha256": "0df9347cd36eecd0c095720c9581c7e7c70ce8cea74bd093631e5657c04a5489"
+    },
+    {
+      "path": "mikazuki/datasets/contents.py",
+      "size": 2191,
+      "sha256": "1809832c407c404f328df1fbe97db3601c1ce549742d21324a52f4a3d23d46e4"
+    },
+    {
+      "path": "mikazuki/datasets/copy.py",
+      "size": 4713,
+      "sha256": "4e02f1cf11df741a9c580042fe472afdf79257bd24042c45cafcce89437749b2"
+    },
+    {
+      "path": "mikazuki/datasets/export.py",
+      "size": 3530,
+      "sha256": "e93c8440c19d9e4f6e3fa4fb98b82d95f14ee9dffbe819084f80eeee79e602ed"
+    },
+    {
+      "path": "mikazuki/datasets/inuse.py",
+      "size": 2968,
+      "sha256": "4f64a0cb77b8ff52b88119b844fd8f25fd006a8775e30ba033834d3851544610"
+    },
+    {
+      "path": "mikazuki/datasets/listing.py",
+      "size": 968,
+      "sha256": "548ce86947bd0d3355877032d7a8ae1319610960bd0011f33d1eff1d6b0f72ad"
+    },
+    {
+      "path": "mikazuki/datasets/locks.py",
+      "size": 755,
+      "sha256": "31fc7923d7b5c637680fc85f23bf87e133f5f8025e1e073195237c08ba57fadb"
+    },
+    {
+      "path": "mikazuki/datasets/root.py",
+      "size": 916,
+      "sha256": "953b76b845da232b00bb93625e65c0ec977962e207ceb8b31996841b5aa064ba"
+    },
+    {
+      "path": "mikazuki/datasets/sandbox.py",
+      "size": 1490,
+      "sha256": "5e7ea53363433988629460554cc0c5ab5850dbeda31dbd73dda15217356eb6cc"
+    },
+    {
+      "path": "mikazuki/datasets/stats.py",
+      "size": 3455,
+      "sha256": "74998302912babbca357bf01934c2739802d9718d7e924fad0b8729fc18703d7"
+    },
+    {
+      "path": "mikazuki/datasets/trash.py",
+      "size": 14357,
+      "sha256": "6ef652c861fa06069083e1ee4713d83c79fa7234ea6f98f86c4f555133cd4eec"
+    },
+    {
+      "path": "mikazuki/datasets/upload.py",
+      "size": 4857,
+      "sha256": "8bc72aecb1b85a31c25d9c8912624e3e8ef5e9fa7c8441368566efb2cf0a5565"
+    },
+    {
+      "path": "mikazuki/datasets/validate.py",
+      "size": 4434,
+      "sha256": "0ad7a469ca7315a65db05f3f8ff72392e40c0084a2fb53fc302afee9a1056da3"
+    },
+    {
+      "path": "mikazuki/download_sources.py",
+      "size": 3439,
+      "sha256": "b34109d255d37aa1cb111d5c2df5f76273e859d71d27adeab2abc5c2ede04f8a"
+    },
+    {
+      "path": "mikazuki/engines/ADAPTATION_GUIDE.md",
+      "size": 3914,
+      "sha256": "4be44bb0bc4c592ac68f9e88445bb4640a04b261150377845ce5812e0636d620"
+    },
+    {
+      "path": "mikazuki/engines/KNOWN_PITFALLS.md",
+      "size": 6346,
+      "sha256": "71c2b87f7e94b2707d067ae957df545825d45ebc4947dbe844cb0355c3962c77"
+    },
+    {
+      "path": "mikazuki/engines/VENDOR_BUNDLE.md",
+      "size": 3919,
+      "sha256": "e2f690f9514e0cfa08fa72b97880c62655593d4af4cbdb9b697e0341d105afff"
+    },
+    {
+      "path": "mikazuki/engines/__init__.py",
+      "size": 370,
+      "sha256": "ed1d0a76f9588eda9508fd7122be750486528841ec7ae946154a71126f33b313"
+    },
+    {
+      "path": "mikazuki/engines/_template/FIELD_NOTES.md",
+      "size": 623,
+      "sha256": "d9f52136586ada54d0142f9a1eb2198b5723ddad0ae723b5768d7841ee4924c1"
+    },
+    {
+      "path": "mikazuki/engines/_template/__init__.py",
+      "size": 772,
+      "sha256": "c080eb0ffbc4f311bd76a9ea2d7c596a9ba1e5df8ffa028bd597061f00564db0"
+    },
+    {
+      "path": "mikazuki/engines/_template/adapter.py",
+      "size": 629,
+      "sha256": "a1e424a30240689b99f475701b58b6c0f5e260599b7bf9db12ded53c06123e1b"
+    },
+    {
+      "path": "mikazuki/engines/_template/environment.py",
+      "size": 601,
+      "sha256": "a3a837fc45e5f0f5ab0c5fe14cd697491042de40f902c68f4e1726c25a71421d"
+    },
+    {
+      "path": "mikazuki/engines/_template/extension_state.py",
+      "size": 527,
+      "sha256": "22980c57dd213ffef21e9f1617103c94548b1f953ab14b71695fb573b60c1c75"
+    },
+    {
+      "path": "mikazuki/engines/_template/installer.py",
+      "size": 565,
+      "sha256": "a7921b1c65ba6d8fc4502f069b5402177de3d6172ef778e4ea5ccda0e74b8532"
+    },
+    {
+      "path": "mikazuki/engines/_template/launcher.py",
+      "size": 599,
+      "sha256": "5ffd7c7bb7abdfc74d426793ac740c9957ceb31cb477bf066ff50c715fb27a46"
+    },
+    {
+      "path": "mikazuki/engines/_template/manifest.py",
+      "size": 1685,
+      "sha256": "a9f309493e1fa109fa07aef570b7033c1313b079659ac26965654b04d4920768"
+    },
+    {
+      "path": "mikazuki/engines/_template/patches/README.md",
+      "size": 721,
+      "sha256": "6b61b444bb29109ef0b16a089bfefbc8ceaaa848aa720f7f761793745095adcd"
+    },
+    {
+      "path": "mikazuki/engines/_template/preflight.py",
+      "size": 453,
+      "sha256": "4339a4ec741d8e2a397395bbaddb99a79f1ca0db533cb3435c9747def89351f5"
+    },
+    {
+      "path": "mikazuki/engines/_template/routes.py",
+      "size": 1112,
+      "sha256": "0bc1be3e262d2c62f7c1b4b07c852328aa49de9fd802890c46c5dad2c9665544"
+    },
+    {
+      "path": "mikazuki/engines/_template/run.py",
+      "size": 1423,
+      "sha256": "8718e7b71b14ac60dad74de21ce61ecd8d8c593bbc870e2be9ce6531f0f80658"
+    },
+    {
+      "path": "mikazuki/engines/_template/settings.py",
+      "size": 1044,
+      "sha256": "92b473877b89141c3004e97022171874656e597094276c143c606d2014bb40a5"
+    },
+    {
+      "path": "mikazuki/engines/_template/smoke/README.md",
+      "size": 518,
+      "sha256": "a11a0740eee994019d6e81a84635c4c4c3b4d4d1d64cd2c4b574e1a2c6a0187b"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/FIELD_NOTES.md",
+      "size": 7384,
+      "sha256": "33e1cfeefea0a9d0631fb6e18214abd5cdac9c12f6dd14e0cc3b369c49691066"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/__init__.py",
+      "size": 178,
+      "sha256": "3a5b8be81278a9705b518a466becafd0df69afbeabf5cc2ac88ac61cfc2c9314"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/adapter.py",
+      "size": 17690,
+      "sha256": "76adb0f93d6f849c3700aaa4707006a8662d6f2defa0c25e597190c25386093e"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/capabilities.py",
+      "size": 3793,
+      "sha256": "512fb8c43a45c593a1d43f099a71ece3957d8efc759d7320d0407c09676b01fe"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/config_import.py",
+      "size": 5901,
+      "sha256": "b6bd29fb0860fe5ae2e80e189d6b63eeb9ff3a7ada3c8ebc6a3a09a4eb8a3d16"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/driver.py",
+      "size": 7149,
+      "sha256": "3720c35481feee81696ffd6435091d32e4d2eaf0a1e8eab42b92e75def77d0cf"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/environment.py",
+      "size": 25179,
+      "sha256": "19bfd3f0e57ee1d9077d0b551f3604c9fb2a33a619b9c5b151ec0dcf5c1dd438"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/extension_state.py",
+      "size": 9008,
+      "sha256": "d944578e2cf2772f5253c3fa128d1d5b8ca8f489dd4f0a09c2fd42b03782cd32"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/ideogram4_comfy.py",
+      "size": 5690,
+      "sha256": "39d713fa65d201c7876c185abb372fc6078be5107079a77becd7da8dda91ddee"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/installer.py",
+      "size": 6518,
+      "sha256": "1964a5b438f2798ead70ff2c53df553efdd7f989fbcfe6e0ac03abcfb4f590ef"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/launcher.py",
+      "size": 1937,
+      "sha256": "766d1097cb7491bcab6dc34fedd026e31c3fd2a97ac8b0054a313da31cee247d"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/manifest.py",
+      "size": 788,
+      "sha256": "e4e2aab567a51dd487aeaefddaa6d7890888a634877964c0a342aaeb2eee46b6"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/model_inputs.py",
+      "size": 10963,
+      "sha256": "a1c9e5c8da111c15d1b013a3d25e514f6916e0f5cb0da4f15edf3cd51ca6d9c2"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/preflight.py",
+      "size": 7062,
+      "sha256": "6ed12afb62c0425d7cdb2b83fcd59e286ed5dae710a2158ffef6463c1900aab2"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/progress.py",
+      "size": 2007,
+      "sha256": "363cfa6ad965e4a304daf4330dca6340a92415f6a453e822dca7a19307b34835"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/routes.py",
+      "size": 7639,
+      "sha256": "c1664c2523d57377f55caa8c6066ac4a3f10dd288786abdd2784f094d8f42848"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/run.py",
+      "size": 5460,
+      "sha256": "4623203a0b0b378b4459d7f933d4d279fad07f838eb9a07f44bfc0f8e7574f88"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/schema.py",
+      "size": 842,
+      "sha256": "52d17f2130c13be9796d8ce91e39fcd3811a7c68b0f63052ebb52d062d25b34d"
+    },
+    {
+      "path": "mikazuki/engines/ai_toolkit/settings.py",
+      "size": 8322,
+      "sha256": "4232996f80f5c73163cda9830ff4d52d9489a26c82ca62238cd39c85459b763a"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/__init__.py",
+      "size": 107,
+      "sha256": "18eec8dba30ca52d762abd231456757c73761326ef157ec603e3a976ec0cb625"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/adapter.py",
+      "size": 22783,
+      "sha256": "28b208c49112a70fa8f9c778358b1024a114e1dbde88d1a77e358d058dbf5908"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/environment.py",
+      "size": 35540,
+      "sha256": "702a985154681fcd3a93b7023c14eada132077bff71440fbaa74884c42ff6da8"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/extension_state.py",
+      "size": 9067,
+      "sha256": "5ff1ae7134f764ad3d38c64068bf26ef1f96fdaac1f9e444aa80391555cce29e"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/installer.py",
+      "size": 6200,
+      "sha256": "6dfe006435cff9bb0dfec250698e01c0d0bb1ec6b7f2b7915ffc9edbd23381c2"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/launcher.py",
+      "size": 1429,
+      "sha256": "25f1f3bae53f997cc52835bd459a0c0d0e00c645f93a7af49bb7557f82142e9a"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/manifest.py",
+      "size": 690,
+      "sha256": "cc47d3bb165c774d4062c8e54f0ad685b4fafd91666bcadfede94257ea1f3270"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/portable_runtime.py",
+      "size": 2854,
+      "sha256": "292999ac5c200b72fa7c7f6937f8f2986825ffc108261a9066e85e61ff039d8a"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/preflight.py",
+      "size": 31407,
+      "sha256": "d1cb2198dd490d5af400d41a6b893da72fc3e82504f913ff03205f6333483f09"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/preprocess.py",
+      "size": 6138,
+      "sha256": "b955235981dc72a91cdbd275699a72493719ae7e387f5bb266d6cd3da614513a"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/preview.py",
+      "size": 6139,
+      "sha256": "d7b8a78fc777eb8ab1ecd76dc7b305f1e18cfb4f3f73489c74dab41805276247"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/progress.py",
+      "size": 6724,
+      "sha256": "cab65f850bcb0f0d2abbc17f1ca370c0851437982038e09f874260e44959159a"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/routes.py",
+      "size": 5877,
+      "sha256": "4956a996da7b8327796364b6f7d837a8f30ea9c2f677ed09d7636cf4ff562c92"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/run.py",
+      "size": 5907,
+      "sha256": "5983ded5572c0abc0d20edb15f74a1ea570f008f146ff66cb60684c8e567b252"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/service_resolver.py",
+      "size": 4069,
+      "sha256": "33a72cbd1ea588adc8834ecd0e4d34e41717e07141d1110a4696ea4fef04e3a4"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/settings.py",
+      "size": 5088,
+      "sha256": "022eb0c1a228fcf04f47734e9e11278c7d6e67b9ea955744ed736b9f74e0a05f"
+    },
+    {
+      "path": "mikazuki/engines/anima_fast/source_root.py",
+      "size": 5204,
+      "sha256": "a77fb3ed4c82974362ce75a8857a035efd9ae05cef6941c1445842939c7f1732"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/FIELD_NOTES.md",
+      "size": 3364,
+      "sha256": "f36e7d978c410aafbeae58b5b9fb3ee1b15471c2bc9a3bf433aed0cc71494e20"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/__init__.py",
+      "size": 99,
+      "sha256": "c188981f4298964796396aa173d1d23b0b9827d0c15703370e0194a17b3f54c8"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/adapter.py",
+      "size": 7112,
+      "sha256": "d5227bd2579f998571122f98ab5fcc27acbdc9ed05d334a5bcc92809fe86b085"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/buckets.py",
+      "size": 8572,
+      "sha256": "7201dcdcf281155bfc5dc12ea8ec82d4b4e92d9832fd79380b715996bd81b713"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/diagnose.py",
+      "size": 10627,
+      "sha256": "6e28d6639df8cd74afc877d5511651706525cc1c2e55fb865dd37bfdd6fbdd65"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/edit_images.py",
+      "size": 536,
+      "sha256": "b682d392f2a9f0116c1cf57fbf23a5f26bc34e68c40039d35bb54b0f270fefbd"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/encoding_cache.py",
+      "size": 12756,
+      "sha256": "8134a5370455cb105cf007514d9610c75fc30103cf030c7f557072b7fc5e638a"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/entry.py",
+      "size": 8483,
+      "sha256": "45ca60456dec42ef482cf108f5cdcfc545896fe47a3df896510e1e50a5dd4ed8"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/environment.py",
+      "size": 4077,
+      "sha256": "ca322c0a3a4ae07c9cdced1a2a781dd9789ef83b7208ec2ddd5e59a95d0b212a"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/extension_state.py",
+      "size": 7451,
+      "sha256": "5bffdf21d2be7e718f1c098604f205a2c34fcc4ddb3bd324c96c113fd5ff5a3d"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/formats.py",
+      "size": 5848,
+      "sha256": "92d97ba44b5d35413c2f7a2ab4b36104510ad21a1a0cb724fe5dd79556aa28c9"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/inputs.py",
+      "size": 17375,
+      "sha256": "759b287c3662a581215e874f3435ed260a3e6b4f0b44863b09fc1091e0271253"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/install_worker.py",
+      "size": 5415,
+      "sha256": "9633cbafd8215a5bf23e2886197e179dbc6b52ba027a7ffedf6cc5b6d9891bbb"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/installer.py",
+      "size": 10353,
+      "sha256": "bf447b045aa3ea1290093139721854f118625dda371f2c3c1556f476af93d2fe"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/launcher.py",
+      "size": 1167,
+      "sha256": "1789ff18a39683711791c8f039c1e0b45f2f0222fd15369a9a8fcf85254c9b2c"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/lr_schedule.py",
+      "size": 4424,
+      "sha256": "cae6f1053fb90c8796a61e96554746a9a02c24a47908fb34ce4eb13d83b8f3fe"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/manifest.py",
+      "size": 525,
+      "sha256": "296497bad20764d83f433af5e0f4700b3bc6b4b9871109a00b423a4b5f468d40"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/model_cache.py",
+      "size": 2487,
+      "sha256": "d6a6cbd0c3f6d1958e51d68684d899759d747683e39a256febd2440af85c49ca"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/preflight.py",
+      "size": 447,
+      "sha256": "5f35bdb37c6bcf28a7920b73c611546225ea9db206b40487b50a1565a3178577"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/processor.py",
+      "size": 2759,
+      "sha256": "9e9bd952f2249f963b9514a99cf71635f8fe17e9a55c13a5659478076f7ab709"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/progress.py",
+      "size": 841,
+      "sha256": "f85a7c8126305c243d3c0ab67a8b78e1a846703bb83b95b08eb497afc14e26bb"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/resource.py",
+      "size": 1330,
+      "sha256": "a98007132e50e3ee3921695f5451aaf496d4943e8feb6a7e67a3aa01550f3b4a"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/routes.py",
+      "size": 5140,
+      "sha256": "ae352c0bd929e0388fc2b65bc6d67291cf51fbf9865ad2c0e20b4eaecb69719e"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/run.py",
+      "size": 2519,
+      "sha256": "6556584e6180e63121a10194616533d6a37c2238aa9c73b6a6d42a5994ddd1c7"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/samples.py",
+      "size": 3255,
+      "sha256": "677b615f4a7f68e04ed42b308bb46566c86fba602d49cb6e775c2da33841ac39"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/settings.py",
+      "size": 1527,
+      "sha256": "b150b9610f5885c4d87b2641a79b5759d6695e58f978cdda32da1d8334b556e0"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/text_encoder_hooks.py",
+      "size": 1427,
+      "sha256": "1385b42146303fcd6428ff01adebfde65a4e859dba4f2ce22300155432a4b6cd"
+    },
+    {
+      "path": "mikazuki/engines/diffsynth/training.py",
+      "size": 5017,
+      "sha256": "ec29420652c523a5ec188abecdea1af2931abeb263e11082a1d683eab0e0151f"
+    },
+    {
+      "path": "mikazuki/engines/kohya/__init__.py",
+      "size": 83,
+      "sha256": "e6d88dd6b5d1dc2da83849b131e15b58dd426d14472bd125ad37b33646af08f5"
+    },
+    {
+      "path": "mikazuki/engines/kohya/environment.py",
+      "size": 4878,
+      "sha256": "e5ee1d67796d3c7dac1cdc0050c70eec97b2ee153a8263615c0a39d7cd89af69"
+    },
+    {
+      "path": "mikazuki/engines/kohya/extension_state.py",
+      "size": 2240,
+      "sha256": "091b88551c520bc3b2b450afdd490a56dce5ea252ef886233ca5f098a316e3bf"
+    },
+    {
+      "path": "mikazuki/engines/kohya/install_worker.py",
+      "size": 2215,
+      "sha256": "4874766e3152bb1ee637c80dd2ca5ca5dd22ae73d154a5648cbf45615427c667"
+    },
+    {
+      "path": "mikazuki/engines/kohya/installer.py",
+      "size": 2620,
+      "sha256": "f8ed408ec22f3dcd93ed19662508869f039980e61eeba8d15f1972035722511a"
+    },
+    {
+      "path": "mikazuki/engines/kohya/manifest.py",
+      "size": 1235,
+      "sha256": "516805f54ba3d0f170100cf7bc8832655ed188125861146926468dd3991ba358"
+    },
+    {
+      "path": "mikazuki/engines/kohya/preflight.py",
+      "size": 593,
+      "sha256": "1ff4f4abdeea0420f42578daf1ead8a0fd1e5c8b9a26bad72154b5209f32d32c"
+    },
+    {
+      "path": "mikazuki/engines/kohya/resource.py",
+      "size": 1322,
+      "sha256": "068a8e0e32c5af8606268f26893c7a32b98a38ffe3b4cfd3ce49905275711311"
+    },
+    {
+      "path": "mikazuki/engines/kohya/routes.py",
+      "size": 1840,
+      "sha256": "6454ca6ba6114ea4c34d1e62332696cec767991d77b4d2ef2c0634dc93c192ea"
+    },
+    {
+      "path": "mikazuki/engines/kohya/run.py",
+      "size": 7190,
+      "sha256": "c4d2824a3cd0536be21e00e37b791f35ed5d3cc880de17908344ee3edb6dc07f"
+    },
+    {
+      "path": "mikazuki/engines/kohya/settings.py",
+      "size": 1008,
+      "sha256": "339030f0caaf2c95ce1303d42e1b48190c9540863fc365f6f2b5306f1762ba38"
+    },
+    {
+      "path": "mikazuki/engines/manifest.py",
+      "size": 4227,
+      "sha256": "acdff967fcbbac08c3fae27da8c21ac4b9f3a06c6971109f4d96169261a073f6"
+    },
+    {
+      "path": "mikazuki/engines/moss/FIELD_NOTES.md",
+      "size": 11589,
+      "sha256": "7985655314f6a8f34485e7b696a4c0b892df82299ee9d36ad097d1d30aca4130"
+    },
+    {
+      "path": "mikazuki/engines/moss/__init__.py",
+      "size": 113,
+      "sha256": "9a2939d4e1e7b86bec763cf113211361903bbbd943bd469f5c970c1c33fa683a"
+    },
+    {
+      "path": "mikazuki/engines/moss/adapter.py",
+      "size": 13168,
+      "sha256": "b577f536b493d8f3bd0dc8d7a7c108690d7f5079ebb675c650491222ce7add41"
+    },
+    {
+      "path": "mikazuki/engines/moss/comfy.py",
+      "size": 16445,
+      "sha256": "609e2017ec02d46897aaddadd6cc88a11145ad77449b201db4cef77e9dd93d7f"
+    },
+    {
+      "path": "mikazuki/engines/moss/entry.py",
+      "size": 3657,
+      "sha256": "1ceaeef9ac8d9ac82e5f34e3b05dfbd707ab4196fbfbe77d5578f4d81767e830"
+    },
+    {
+      "path": "mikazuki/engines/moss/environment.py",
+      "size": 8190,
+      "sha256": "1526522a704148ea518b77b84510c4cbe4e389ff961e420cdfed37f4673b2743"
+    },
+    {
+      "path": "mikazuki/engines/moss/extension_state.py",
+      "size": 6244,
+      "sha256": "36cdf7f586330e2eb48df05ac66def72b2ee37e1cd6868773b7436e7099ced7a"
+    },
+    {
+      "path": "mikazuki/engines/moss/inputs.py",
+      "size": 22772,
+      "sha256": "793a20f63d4b82bfb5bd5e0b00a6c5fff9ad8accf537026dad779a478115e990"
+    },
+    {
+      "path": "mikazuki/engines/moss/install_worker.py",
+      "size": 4200,
+      "sha256": "f286225a72ca808772c9a7c0f6d6bb978696489d087d67699485b5bf1d55446d"
+    },
+    {
+      "path": "mikazuki/engines/moss/installer.py",
+      "size": 3751,
+      "sha256": "065c658b553a3fad552c6a6787238e0d02a32ee8c8f740f87476589d251c98c5"
+    },
+    {
+      "path": "mikazuki/engines/moss/launcher.py",
+      "size": 1769,
+      "sha256": "a94dc8d5b919f53b1c2aece62a34f25f214579462143b1930c2190b6dc2d2fd6"
+    },
+    {
+      "path": "mikazuki/engines/moss/manifest.py",
+      "size": 623,
+      "sha256": "fce2fa927dd46ed767fa5b5fecf958d745a66ec3968451f178b78c3bc335adc9"
+    },
+    {
+      "path": "mikazuki/engines/moss/native_configs/text_encoder_config.json",
+      "size": 2920,
+      "sha256": "bf635852147cb98d655e53757133a4d09c14a6c57f565dc66ccbabc6e6168e3d"
+    },
+    {
+      "path": "mikazuki/engines/moss/native_configs/transformer_config.json",
+      "size": 250,
+      "sha256": "55f2613de23a13e25090b1b817922b94728611ec15911751d01c898a79a5492b"
+    },
+    {
+      "path": "mikazuki/engines/moss/native_configs/vae_config.json",
+      "size": 881,
+      "sha256": "1dc13435d3bdddd252700660fa78c4e2e08faa3d387c7a0c360900dc025db779"
+    },
+    {
+      "path": "mikazuki/engines/moss/patches/batched_training.patch",
+      "size": 15913,
+      "sha256": "4c629bf57a0e9c741e3caa20d349d167c09a9f9c0a1663970c2f479367fc7be8"
+    },
+    {
+      "path": "mikazuki/engines/moss/preflight.py",
+      "size": 2935,
+      "sha256": "bdb0024cb9f749ad7d2726af398e552ed64ee6b00820d602b947da0494809847"
+    },
+    {
+      "path": "mikazuki/engines/moss/progress.py",
+      "size": 741,
+      "sha256": "8a9f6e215b26f433ae373ce3b154deede04ce8c8377fd89c455fceac50ce8da7"
+    },
+    {
+      "path": "mikazuki/engines/moss/resource.py",
+      "size": 1394,
+      "sha256": "6aa3973b2676f63576ca0b3157de8d805804629913ca28fb321e55d6d9f6921b"
+    },
+    {
+      "path": "mikazuki/engines/moss/routes.py",
+      "size": 2671,
+      "sha256": "143aae3fbb83b35bb8d40790558ac2281434a7e0c12516fc04c14bbbd1cd0424"
+    },
+    {
+      "path": "mikazuki/engines/moss/run.py",
+      "size": 4575,
+      "sha256": "6ce2b6910c9a2745dea1948bf8bad70586282d37f0d6343a738fe823f8600e91"
+    },
+    {
+      "path": "mikazuki/engines/moss/settings.py",
+      "size": 1791,
+      "sha256": "33213560db6d5588399b96256cc12b8e200a702113dae26d20043ea77212006a"
+    },
+    {
+      "path": "mikazuki/engines/moss/source_integrity.py",
+      "size": 2926,
+      "sha256": "f6ac06abcdece69221a9b7c7e21490a00cf1a27c5d3116a784194545106c89c9"
+    },
+    {
+      "path": "mikazuki/engines/musubi/__init__.py",
+      "size": 333,
+      "sha256": "a0063518d54ce5bbd12a633add0c39162884d4964863af6aa9ef9bbd4916b06c"
+    },
+    {
+      "path": "mikazuki/engines/musubi/adapter.py",
+      "size": 22653,
+      "sha256": "f8370fed9858e3626df53a6e2ef353c8265e46ac43d1b4a179daa54e2cdc552e"
+    },
+    {
+      "path": "mikazuki/engines/musubi/environment.py",
+      "size": 21349,
+      "sha256": "dde79b73f89bcc5d9a6e7e10d8866a61148c2c39b94987655a9f9433c7b3982d"
+    },
+    {
+      "path": "mikazuki/engines/musubi/extension_state.py",
+      "size": 8595,
+      "sha256": "0f8949a1cd59236ce4b02d7c3c2a0ec70776da1d0152b6c857f15d6a24907c6c"
+    },
+    {
+      "path": "mikazuki/engines/musubi/families.py",
+      "size": 5432,
+      "sha256": "795d2dff56af80ba06e2463289b5a6a621f3d0836213149970979d41c697338e"
+    },
+    {
+      "path": "mikazuki/engines/musubi/installer.py",
+      "size": 6427,
+      "sha256": "8212aef3a275cb1f93ca52e750d407e74d1d58b2363dd71cc39081d0f7ac697b"
+    },
+    {
+      "path": "mikazuki/engines/musubi/launcher.py",
+      "size": 5585,
+      "sha256": "0ae676351ae5b39d4cfb43be38757354f206ac67426f7f1f7d8db0246e93aaff"
+    },
+    {
+      "path": "mikazuki/engines/musubi/manifest.py",
+      "size": 785,
+      "sha256": "aab0540616b554be13669e90eb9cd67ca87b9d2c420ae1ef61b904dabacfafbd"
+    },
+    {
+      "path": "mikazuki/engines/musubi/preflight.py",
+      "size": 8317,
+      "sha256": "4ddf7f219bcaea74f92011f2eca58a5e48f9f31f6ad66c73ff380cdb375c604c"
+    },
+    {
+      "path": "mikazuki/engines/musubi/routes.py",
+      "size": 7742,
+      "sha256": "081c82b4bc527ab952ea0b66534936295324dbdfc1864d9a07b9b37441845bd3"
+    },
+    {
+      "path": "mikazuki/engines/musubi/run.py",
+      "size": 8035,
+      "sha256": "48ef70e9689887d7bde8fb58724120ae2fa117bdeee30c2c34d6f7560a28224d"
+    },
+    {
+      "path": "mikazuki/engines/musubi/settings.py",
+      "size": 8989,
+      "sha256": "684e8f923fc3a488f19ba1596a8032bf4e79cf22ced1840e191f757ace7ea30a"
+    },
+    {
+      "path": "mikazuki/engines/portable_venv.py",
+      "size": 6418,
+      "sha256": "e945c837c1efd188fd49e6a2a02d99c0f76fc26da1626d77d15cefffeb08ec64"
+    },
+    {
+      "path": "mikazuki/engines/registry.py",
+      "size": 2811,
+      "sha256": "d900f817418890eea784d49a600946f3da42f4c6b4c5d021e96feb2b0522251f"
+    },
+    {
+      "path": "mikazuki/engines/runner.py",
+      "size": 1556,
+      "sha256": "623901770a960fc6b1af674064d80ff7aa247c3968214cd4ba3e3374d3ad20fc"
+    },
+    {
+      "path": "mikazuki/engines/vendor_bundle.py",
+      "size": 6605,
+      "sha256": "c06540b0e797b8bf3edcdf44de02265825d671918dad592e20d7beaaec1f9e54"
+    },
+    {
+      "path": "mikazuki/global.d.ts",
+      "size": 5727,
+      "sha256": "20a576c85a6e0809530c8e8002c08bdc3ddef78c44505b253c58072249bd64ea"
+    },
+    {
+      "path": "mikazuki/hf_mirror_bootstrap.py",
+      "size": 156,
+      "sha256": "ed9d29fd2483e489d9e601f8d3862e664cb3e2b73962d1ef6f65e750bc1a1da2"
+    },
+    {
+      "path": "mikazuki/hook/i18n.json",
+      "size": 649,
+      "sha256": "19d4017c14671b076cb4ab8baced7753b9b1a6e43147c1eb424bd23041e83dde"
+    },
+    {
+      "path": "mikazuki/hook/sitecustomize.py",
+      "size": 186,
+      "sha256": "5bc27ed4e0881f5e3bb48c9125a2496ed9fbd41f40d49151edb27edcc285441d"
+    },
+    {
+      "path": "mikazuki/launch_utils.py",
+      "size": 17127,
+      "sha256": "399005c83bd299cbd98ba794f609bba5931335dfab2bf22fdc89eae7f0042e1d"
+    },
+    {
+      "path": "mikazuki/log.py",
+      "size": 1108,
+      "sha256": "9ff02624b8902cafd88b5163c954167a68a067746d92de0d68b9c7d9ec75a532"
+    },
+    {
+      "path": "mikazuki/lycoris_patches.py",
+      "size": 6793,
+      "sha256": "61dd63ee185a45d66136e6340febcbc3bc358d60fceebfec9fd5e68020402138"
+    },
+    {
+      "path": "mikazuki/model_asset_validation.py",
+      "size": 4141,
+      "sha256": "333e7ba2c7bdfeaee2bf87e81d9c163b5f0e317ef93f7bb64aef61b1436c1ed5"
+    },
+    {
+      "path": "mikazuki/model_assets.py",
+      "size": 29128,
+      "sha256": "f00bb9d2dd6752d53adafb9d44c98858a9778734c807fefd77341d181f721d08"
+    },
+    {
+      "path": "mikazuki/networking/__init__.py",
+      "size": 213,
+      "sha256": "ffa7cf1f73fec5bc3b93d8e90553c0c796c5520b89eead882e48379c4b792770"
+    },
+    {
+      "path": "mikazuki/networking/api.py",
+      "size": 2686,
+      "sha256": "76e5f446b602eec646b9565dc27d86850d267639a67eef369bfb3f49c3189926"
+    },
+    {
+      "path": "mikazuki/networking/events.py",
+      "size": 605,
+      "sha256": "343cc3d569dd5a210303d8a5bad93b64058dae345a2e409475e4ec56b2b5543b"
+    },
+    {
+      "path": "mikazuki/networking/git.py",
+      "size": 6920,
+      "sha256": "cc0d179af8269cf29123f41595bb980c05afe519f7883cb0dd91d33ff2b75c71"
+    },
+    {
+      "path": "mikazuki/networking/http.py",
+      "size": 2963,
+      "sha256": "1b135c35a51618394bf5a82d09799c6a8831d8812785fc878b93baa65e702129"
+    },
+    {
+      "path": "mikazuki/networking/model_worker.py",
+      "size": 579,
+      "sha256": "71e7235ae36ab9bd9b885c5cff1ae398f553cfa1b5d3d05d48cb2f38a01fa2ee"
+    },
+    {
+      "path": "mikazuki/networking/policy.py",
+      "size": 10598,
+      "sha256": "ff2c516a084fed7be0b28e866bd78d063089f8e829c8aa8d0938ba7262b0145a"
+    },
+    {
+      "path": "mikazuki/networking/process.py",
+      "size": 1564,
+      "sha256": "7579c8a292ef26378d507bf0ada383fc1cec34d2006ab15dcfbe4636bf775a2d"
+    },
+    {
+      "path": "mikazuki/plugin_host/__init__.py",
+      "size": 864,
+      "sha256": "49194171abdb71a1ef187c11d4248ce87c9224cb391edfb6b427c43d5eabb1fd"
+    },
+    {
+      "path": "mikazuki/plugin_host/agent_tools.py",
+      "size": 37184,
+      "sha256": "803cbecd006e5e202640a304405bfc4618c980cc3d78e6afe9bbaab90a3b8b99"
+    },
+    {
+      "path": "mikazuki/plugin_host/broker.py",
+      "size": 10712,
+      "sha256": "a8c81bc2e19bd88146053ba0cccaf8e400012e30357acabada8edebe93ef7f67"
+    },
+    {
+      "path": "mikazuki/plugin_host/confirmation.py",
+      "size": 13538,
+      "sha256": "f5969be544249d65b017ef648157c8334778a9123eb045d3999b0397176e91bb"
+    },
+    {
+      "path": "mikazuki/plugin_host/runtime.py",
+      "size": 42728,
+      "sha256": "2363609880260e32cdeda5549761a004d2a5894fdac35cb9284f4e6c3b89d464"
+    },
+    {
+      "path": "mikazuki/plugin_host/schema.py",
+      "size": 6497,
+      "sha256": "cd4afa10b7fdeb78de6397d9838ad8be5596456f3159e2dd76a301fe63778edf"
+    },
+    {
+      "path": "mikazuki/plugin_host/security.py",
+      "size": 7219,
+      "sha256": "d3031a86cca8431f6a4c1485b74b103d1d58e5fe1d927ec9d93b93b969ba7dc9"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/__init__.py",
+      "size": 630,
+      "sha256": "ceb08b9f77f4038b10356f19c4cb6fc8608b5361a1f44de2159ee283cf6b8908"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/api.py",
+      "size": 49426,
+      "sha256": "9527f9c734788c3354c367ac42dc7d7a3c8c5c027601d404f85e23de38462a6e"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/assets.py",
+      "size": 18698,
+      "sha256": "8b1e21874cf7c479fc445f663299329dbaabad3bdf1c4ff0b906273fbcd12879"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/catalog.py",
+      "size": 37481,
+      "sha256": "face12aa9063541bdd0b3a15640cc49d188b2927296fa5d45e36917d99ea9d62"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/manager.py",
+      "size": 28384,
+      "sha256": "2e7a4bdb013bb9df31dbefa2d96dde916b60a56d7354e66df09937f495c1cbcd"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/models.py",
+      "size": 13408,
+      "sha256": "fdd3e8de96c8e1dccd1a250255146cde8ccb29da73be55ad9a04479fb14f9b6b"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/operations.py",
+      "size": 11908,
+      "sha256": "dc3c9f94447b28c401f70514d90552e556d9754ea283c3ad5fbbee8f955f0a1b"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/package.py",
+      "size": 19114,
+      "sha256": "d755226980a8403c6473afe1ea446089b3337b8079982e657ff7a457fd28340d"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/paths.py",
+      "size": 3734,
+      "sha256": "6e64c3ff9a358fb2a67d9fa649e4a5f7fdbbfa667b41e68fce6109fd8a7f428a"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/store.py",
+      "size": 2268,
+      "sha256": "e23fbd7510d7aa87e5b88021e1c0063174c09b84467a8d35702673183f2a133f"
+    },
+    {
+      "path": "mikazuki/plugin_marketplace/trust.py",
+      "size": 20208,
+      "sha256": "2a72bde40361a6e2b899f4307b681794df0e4f01282a24b9480c4379f38c488d"
+    },
+    {
+      "path": "mikazuki/portable_utils.py",
+      "size": 2239,
+      "sha256": "6a45e8b2dba629cff7d672f412057627828f474802dac5a166ebc4a702105a55"
+    },
+    {
+      "path": "mikazuki/process.py",
+      "size": 19486,
+      "sha256": "20cb860cf0b92d4a1d1604832f6af7ca51e9abbe96e694ef373471692ff06fb3"
+    },
+    {
+      "path": "mikazuki/schema/ai-toolkit-anima-lora.ts",
+      "size": 384,
+      "sha256": "a86d9d72d4313ed3117ed67f044ddb805b59db61603b9b4bb07a8de566f59bcf"
+    },
+    {
+      "path": "mikazuki/schema/ai-toolkit-flux-lora.ts",
+      "size": 357,
+      "sha256": "33cba515beef6f076d4b6f11654edd2567a28f30bc7ec5d915b97b11821eef79"
+    },
+    {
+      "path": "mikazuki/schema/ai-toolkit-ideogram4-lora.ts",
+      "size": 435,
+      "sha256": "232bf1b50d30d47247d024852e2cf91636dea75b27a1428b197dfa80263601ac"
+    },
+    {
+      "path": "mikazuki/schema/ai-toolkit-krea2-lora.ts",
+      "size": 319,
+      "sha256": "fcabf39e6fb90d45d14e2bab6fc87d77c0a692b7da0dbef5c35450d3943553c0"
+    },
+    {
+      "path": "mikazuki/schema/ai-toolkit-qwen-image-21-lora.ts",
+      "size": 412,
+      "sha256": "f1ff4eb94a9bba81aab1aa23530be8c481040f07ed981c2c30e8880d1d2930a7"
+    },
+    {
+      "path": "mikazuki/schema/ai-toolkit-sd15-lora.ts",
+      "size": 372,
+      "sha256": "bba1f424c60d039583f8016e122e8ce2ddcc36d4f7c96f21a903485dc56de3f0"
+    },
+    {
+      "path": "mikazuki/schema/ai-toolkit-sdxl-lora.ts",
+      "size": 414,
+      "sha256": "374341b1da9c1a316cf621341a976586db61832d98d69ef88b88a8de648d78b2"
+    },
+    {
+      "path": "mikazuki/schema/anima-finetune.ts",
+      "size": 13746,
+      "sha256": "a34c8dade839e16ac3384425e6cc90e1b2d61834c68af6de9bd2cb00743dbe02"
+    },
+    {
+      "path": "mikazuki/schema/anima-lora-fast.ts",
+      "size": 9982,
+      "sha256": "4bc41f74285750d4a4d81d3096d85574ca2d89925a7a4d3cb21717b788951155"
+    },
+    {
+      "path": "mikazuki/schema/dreambooth.ts",
+      "size": 12727,
+      "sha256": "7983fb419dbf559f5ed6f0567f7413fe02724b4d7b2039906c615ce68323e41f"
+    },
+    {
+      "path": "mikazuki/schema/flux-lora.ts",
+      "size": 6703,
+      "sha256": "3c317748876f7b575e00cc434d4e15b0e9f2ce9879a04e486cb2b3cdc3675e13"
+    },
+    {
+      "path": "mikazuki/schema/ideogram4-lora.ts",
+      "size": 11296,
+      "sha256": "4ea0e977563a0de1a1d670a8511c3fb4cb70149381a1c9d2cb880bdfbd99f34f"
+    },
+    {
+      "path": "mikazuki/schema/klein-lora.ts",
+      "size": 430,
+      "sha256": "c7be29126b3361fb1f5918dd2705286125de1adb9c50c878fecba0e13815d31b"
+    },
+    {
+      "path": "mikazuki/schema/krea2-lora.ts",
+      "size": 9942,
+      "sha256": "96c09045f4c49d0aaafd64ced5e4e6290eabd9a6661a7ace519e446325d5d80f"
+    },
+    {
+      "path": "mikazuki/schema/lora-basic.ts",
+      "size": 5228,
+      "sha256": "7a22aa675ed9886957988228d6b1d5ab27eb6c061a61b2e5685d2d406029d349"
+    },
+    {
+      "path": "mikazuki/schema/lora-master.ts",
+      "size": 7623,
+      "sha256": "a28d9e0780cbcdd5102639fe7b5875ff8fcea62db2a787588186b1efc2f49554"
+    },
+    {
+      "path": "mikazuki/schema/lumina2-lora.ts",
+      "size": 6492,
+      "sha256": "d51ead20e9ac1c5c31f705118c9727e6ed3252107494fd7b5a1408ee5537f7e2"
+    },
+    {
+      "path": "mikazuki/schema/moss-image-anima-lora.ts",
+      "size": 10909,
+      "sha256": "85f22910a4db8cf03ab34ced426e32cb60a9eb1869fe368c2f5c800159327381"
+    },
+    {
+      "path": "mikazuki/schema/moss-image-lora.ts",
+      "size": 6062,
+      "sha256": "e8f92658464bbc11c16a5161671f0d6e18404f0262842a3ba594a7d55de759a1"
+    },
+    {
+      "path": "mikazuki/schema/qwen-image-21-lora.ts",
+      "size": 10357,
+      "sha256": "971a7f8cd7699eadd87c05cbabf0bf479742b2797e4bf831540969e362a424e8"
+    },
+    {
+      "path": "mikazuki/schema/sd3-lora.ts",
+      "size": 20049,
+      "sha256": "cd3e7d10b48374789912cc7e1b06dfb11ab506b0961acb3169245a2c09b28ba1"
+    },
+    {
+      "path": "mikazuki/schema/shared.ts",
+      "size": 32287,
+      "sha256": "f36843d7b77b6eca1e18d7eabc0b9c97a14cb3945aab83fa8dc6fdc620352b69"
+    },
+    {
+      "path": "mikazuki/schema/tagger.ts",
+      "size": 1727,
+      "sha256": "342522fbf8afb98a7c7dc4d20019a6a60f5a0d745b466f53fdd97dd86b21f53f"
+    },
+    {
+      "path": "mikazuki/scripts/fix_scripts_python_executable_path.py",
+      "size": 780,
+      "sha256": "660a0a926a006224a1d6bd0f9eb83591c8d772ba08acbb7bebb60a7deb744725"
+    },
+    {
+      "path": "mikazuki/scripts/torch_check.py",
+      "size": 1035,
+      "sha256": "3e4ab5c9b6c045174049a90aadbf3f0d930c6303ff5cff09ecff42ffa0733e49"
+    },
+    {
+      "path": "mikazuki/spa.py",
+      "size": 2094,
+      "sha256": "38e550e4807a6448623894417005e8567774e73374258298e33b59bc47894e16"
+    },
+    {
+      "path": "mikazuki/startup_settings.py",
+      "size": 6790,
+      "sha256": "d0acc4cdb628ff32831936f48a5db095aba54796e6305e739af0799da03cf0d2"
+    },
+    {
+      "path": "mikazuki/static/train_log.html",
+      "size": 18562,
+      "sha256": "8d751806ff7d274e88ecfddd3493813120359ba5d8cdc3cc8bc6238803ff6779"
+    },
+    {
+      "path": "mikazuki/tag_translation/__init__.py",
+      "size": 75,
+      "sha256": "cf9865715229e78f0258a55dd101bf3c09b4ee1289d2d2825e92f189e5ab2540"
+    },
+    {
+      "path": "mikazuki/tag_translation/api.py",
+      "size": 11407,
+      "sha256": "09349b829e5442f97de8913faaacaca45526d7d367e8b9b267f9c6ea39f81875"
+    },
+    {
+      "path": "mikazuki/tag_translation/chinese_dictionary_service.py",
+      "size": 20281,
+      "sha256": "63d2af4f8d035554f7d09a704ad733138d991df36f0621133250edabcfa4dea2"
+    },
+    {
+      "path": "mikazuki/tag_translation/local_model_service.py",
+      "size": 21105,
+      "sha256": "21b8dd9bf089a3ca2b1772f872be9f8185ab40f4b6504a7eb290fd0079b28a62"
+    },
+    {
+      "path": "mikazuki/tag_translation/providers.py",
+      "size": 2241,
+      "sha256": "11c1bfec563b8037eef15474a8b49b35767316c4a4c598a26282cc4f859b03b1"
+    },
+    {
+      "path": "mikazuki/tag_translation/runtime.py",
+      "size": 1510,
+      "sha256": "bb39e90bda83da9807e19aaddbf0059eb71be8d522c83b1ac0b1f0071924aeef"
+    },
+    {
+      "path": "mikazuki/tag_translation/translation_config.py",
+      "size": 13750,
+      "sha256": "e3ac9715fccfff27fba56a0d8e1fdb5c9b1254d3bd27433c9ee4801321fcbe39"
+    },
+    {
+      "path": "mikazuki/tag_translation/translation_service.py",
+      "size": 28078,
+      "sha256": "8096a9cdbaed8d990e41197d5449ce386c04622531dddf6c1e51f9a2f70737ef"
+    },
+    {
+      "path": "mikazuki/tag_translation/translation_store.py",
+      "size": 13440,
+      "sha256": "f43bb762ef2cf6e6893d6d8d49dae65e6e70a2db39333aeb177f13f56e04da39"
+    },
+    {
+      "path": "mikazuki/tagger/dbimutils.py",
+      "size": 1596,
+      "sha256": "9473053915ecc2c48304aedd9fefb0f637dcb8dc87a0a3364863adc021603aab"
+    },
+    {
+      "path": "mikazuki/tagger/defaults.py",
+      "size": 300,
+      "sha256": "edb6b999e7cb2c3bf401c948db70372c51bb1dadd90d18482e854538d1bf1cbc"
+    },
+    {
+      "path": "mikazuki/tagger/format.py",
+      "size": 1100,
+      "sha256": "18d2d85abf4b9da296395a210c38251b6676131c01b383be095a5d7d08e5d62e"
+    },
+    {
+      "path": "mikazuki/tagger/interrogator.py",
+      "size": 9210,
+      "sha256": "a3e985762bd1c3213f6269f33b67d92be30ca325f23771365bed61474dab33ef"
+    },
+    {
+      "path": "mikazuki/tagger/interrogators/base.py",
+      "size": 3099,
+      "sha256": "ae9a210e62dc43ee9fe95d7c5e5da90c7f3e275bd3b90170e32ea04295dbc43b"
+    },
+    {
+      "path": "mikazuki/tagger/interrogators/cl.py",
+      "size": 12313,
+      "sha256": "3979d203714019ebdcbaee501fe2cfab40198b2f7a9d21296025ffa242e3fc53"
+    },
+    {
+      "path": "mikazuki/tagger/interrogators/wd14.py",
+      "size": 5494,
+      "sha256": "1f7aa0be33d9b21499a808cc684ab9d8e543b335bc2a14bb3e86cf12b189b6a3"
+    },
+    {
+      "path": "mikazuki/tagger/jobs.py",
+      "size": 5164,
+      "sha256": "13c87fa4bcdfa95ea66454ff2a2db953da5c1dd7e7cc52bd2a9e71c43690c168"
+    },
+    {
+      "path": "mikazuki/tagger/local_models.py",
+      "size": 2064,
+      "sha256": "dc837d179d0b294314ebbaa1cbfac6e95c64f620aa732a9a80487bc637c50e0c"
+    },
+    {
+      "path": "mikazuki/tagger/model_fetch.py",
+      "size": 12057,
+      "sha256": "7e6ffa83d9c95bab1b5a3f3cfaf2d3dc94ec345f81c2526144b0f1e7fd87c7af"
+    },
+    {
+      "path": "mikazuki/tagger/ort_session.py",
+      "size": 4062,
+      "sha256": "c786e86f03891aa01e0b072da17111e434f8b766acf88f176ded7af42c72ef14"
+    },
+    {
+      "path": "mikazuki/tagger/progress.py",
+      "size": 9562,
+      "sha256": "b5f6a037824b8d0f4b4569c26c1c139c54abd2819f3dde5b446807476d5f5094"
+    },
+    {
+      "path": "mikazuki/tasks.py",
+      "size": 35421,
+      "sha256": "09ee83a665cb5d584be868105dfc342785b45c8156541524cc290c701f434328"
+    },
+    {
+      "path": "mikazuki/tokenizer_cache.py",
+      "size": 4681,
+      "sha256": "5da3f3f60004be35f6ae3f3205b7ec136ab8d9267e203762bcb41a863d98d2eb"
+    },
+    {
+      "path": "mikazuki/train_log_hub.py",
+      "size": 5270,
+      "sha256": "4f9fcfde53450f461b8490a97d4571f02b6271b1bac955fd10286d4b8f467bfc"
+    },
+    {
+      "path": "mikazuki/tsconfig.json",
+      "size": 143,
+      "sha256": "501127db83b30c1c1f18e2c45caa1bceb365d318af1538db0356c7bdeb11a95d"
+    },
+    {
+      "path": "mikazuki/update_check.py",
+      "size": 7658,
+      "sha256": "fafabaf241c5d2303eb9964b5d80d76523d2da1a249408c0cc64a0b67b5c717d"
+    },
+    {
+      "path": "mikazuki/user_data.py",
+      "size": 22503,
+      "sha256": "979e225fd6d86cc27e172fb7f7d58f964d7692141b199a4a60f7c934e11d273e"
+    },
+    {
+      "path": "mikazuki/utils/config_args.py",
+      "size": 1690,
+      "sha256": "ce2c0d8a272f019f1e6a20cc196e0a83373dec293a68bbd94e8f45e1d14efcfc"
+    },
+    {
+      "path": "mikazuki/utils/config_export.py",
+      "size": 4663,
+      "sha256": "8f743e99a3fb88d95965dd64b8b78f382a8101c2050b6efaccc835cc57c13479"
+    },
+    {
+      "path": "mikazuki/utils/config_import.py",
+      "size": 29573,
+      "sha256": "6232638ca458d8df5ebab941c994f8665b92811fb0ebabd5c941e895137ea38d"
+    },
+    {
+      "path": "mikazuki/utils/devices.py",
+      "size": 2489,
+      "sha256": "4c6123cbf997d75f3c048b84417dd3ebcaa92bc5551f981dac80df43084d72e1"
+    },
+    {
+      "path": "mikazuki/utils/hardware_status.py",
+      "size": 2933,
+      "sha256": "96a425cd515746922bf47c0c1d273aca5e3bd2221b8e8e402cffb56a6bc4c5f7"
+    },
+    {
+      "path": "mikazuki/utils/output_naming.py",
+      "size": 3674,
+      "sha256": "083eea24b1d483cad84a1f572416d65f2479211700ef2d73d393217336dc2b75"
+    },
+    {
+      "path": "mikazuki/utils/path_browser.py",
+      "size": 7581,
+      "sha256": "8b070cf52ed39ba594eed1adfd63679137f8d965e1920e2268b96fe7804bc501"
+    },
+    {
+      "path": "mikazuki/utils/task_insights.py",
+      "size": 16244,
+      "sha256": "0baa1ce58e927b731e039bfd9267d763a5343eea19e0edcb1cf7d3529624e760"
+    },
+    {
+      "path": "mikazuki/utils/tk_window.py",
+      "size": 2719,
+      "sha256": "d867769bba7fa8a4a8f07082c6a978355a717ece17b24dbf3eca8e89e569c911"
+    },
+    {
+      "path": "mikazuki/utils/train_utils.py",
+      "size": 22382,
+      "sha256": "91128b004401abd2227e53477c996a04b8b52d1ba57795724b18a715e82aba12"
+    },
+    {
+      "path": "mikazuki/utils/training_time.py",
+      "size": 3737,
+      "sha256": "9d1f2adfb5966725f744aa8452c282077278fb008310021782d38797ecabfa6b"
+    },
+    {
+      "path": "requirements.txt",
+      "size": 1651,
+      "sha256": "5998c5442b9b4aaf0f7553aa8c2c4895304588c1b5f3c0ef2ab50c6bf14659ab"
+    },
+    {
+      "path": "scripts/dev/.gitignore",
+      "size": 130,
+      "sha256": "93ff7d8f2bd698e66e13eea52a89363bd19ddc836b26445916183474de617814"
+    },
+    {
+      "path": "scripts/dev/COMMIT_ID",
+      "size": 40,
+      "sha256": "f3128433ffeb68fe82ccad9ba538afb1e04b2c3d642d3ecd0cee69242dc9f5d1"
+    },
+    {
+      "path": "scripts/dev/LICENSE.md",
+      "size": 11543,
+      "sha256": "faeb63342ddf1231a3ed1abd8c64c98f5d9c24388ce9b931b081f8bb557d84d7"
+    },
+    {
+      "path": "scripts/dev/README-ja.md",
+      "size": 8650,
+      "sha256": "f3ca6192104a99dae61442a16657dce1a122639fbf9a9b59e3984f3036642277"
+    },
+    {
+      "path": "scripts/dev/README.md",
+      "size": 105707,
+      "sha256": "dfab4a6f9c33138ae76a74f722eb1f95c2d88baab149294b4ca90762d106e73d"
+    },
+    {
+      "path": "scripts/dev/XTI_hijack.py",
+      "size": 8408,
+      "sha256": "953fe167205cbe83f5ca6528d8d84cda645ea48af3685284c11629ee67705adb"
+    },
+    {
+      "path": "scripts/dev/_typos.toml",
+      "size": 533,
+      "sha256": "82c0f894e8f79fa55c783e7dfea1c9be919e24d91fd6998cb5458b8266805225"
+    },
+    {
+      "path": "scripts/dev/anima_compare_lora.py",
+      "size": 16093,
+      "sha256": "82e2fc55d4e06537dc22f1c93899a3a153992cb03dd9ea88e608b2fd3b47e55c"
+    },
+    {
+      "path": "scripts/dev/anima_train.py",
+      "size": 2261,
+      "sha256": "5169c165456bb09491b4465b24cbb0aeec9b65cc17f6f2eba6bb17bbd60858f8"
+    },
+    {
+      "path": "scripts/dev/anima_train_network.py",
+      "size": 2554,
+      "sha256": "77c2f3c578928e7cd5af1c983bbd3191a4bae7c3ba587676706aeb509267759c"
+    },
+    {
+      "path": "scripts/dev/fine_tune.py",
+      "size": 25543,
+      "sha256": "4159141a03031f5711508a75dcefe706deb92d4147caedf118d1acd895585836"
+    },
+    {
+      "path": "scripts/dev/finetune/blip/blip.py",
+      "size": 11520,
+      "sha256": "a9131becfdfcad43c0a88658c0ef0043dd78ed51c775f18ce2182b43b67219f7"
+    },
+    {
+      "path": "scripts/dev/finetune/blip/med.py",
+      "size": 42741,
+      "sha256": "8e95ddd10384702c86c16db40e10cbb6913b65d9b73b2f476280279e7b020c65"
+    },
+    {
+      "path": "scripts/dev/finetune/blip/med_config.json",
+      "size": 548,
+      "sha256": "26177b4256d5cf97ad7d8cce71c9f8a314f99ba5922f6a04223722d69458fb73"
+    },
+    {
+      "path": "scripts/dev/finetune/blip/vit.py",
+      "size": 14544,
+      "sha256": "53ad148ba6550f4c179b21a842645f2e5b03beafc3235fe7fcc8f01745b4c288"
+    },
+    {
+      "path": "scripts/dev/finetune/clean_captions_and_tags.py",
+      "size": 7109,
+      "sha256": "805535a68e99085ec0ad76b8c343120a95594872248e23b92982e53e92c2adbf"
+    },
+    {
+      "path": "scripts/dev/finetune/hypernetwork_nai.py",
+      "size": 3647,
+      "sha256": "024bee60ed91101da84160644229a93b19d7a2fdd974e4ca507cc6eee2956c85"
+    },
+    {
+      "path": "scripts/dev/finetune/make_captions.py",
+      "size": 8572,
+      "sha256": "d627caf9ee7ee33363af50294e1271eb911d7b9be567186dc24777d56c60afbd"
+    },
+    {
+      "path": "scripts/dev/finetune/make_captions_by_git.py",
+      "size": 7637,
+      "sha256": "f50aeab3a548c34030de25dbef0f00b7db9ddc44ef877229d5da65c7e7a28002"
+    },
+    {
+      "path": "scripts/dev/finetune/merge_captions_to_metadata.py",
+      "size": 4153,
+      "sha256": "75d7d86ce11f3bbed61006635aca6640cc4e7b014753ecc09709c06e40eaffc6"
+    },
+    {
+      "path": "scripts/dev/finetune/merge_dd_tags_to_metadata.py",
+      "size": 3699,
+      "sha256": "f70551d5c4689c8333ad5da2fbdacba266796d673810c090d06991b2ade256d8"
+    },
+    {
+      "path": "scripts/dev/finetune/prepare_buckets_latents.py",
+      "size": 12410,
+      "sha256": "6f8aeb22ba9fd463eb06d88b0afd4f3a382f8778f5bb6cd6b91bc38dc17261b3"
+    },
+    {
+      "path": "scripts/dev/finetune/tag_images_by_wd14_tagger.py",
+      "size": 22837,
+      "sha256": "dc3bd126d866ba31163418a141ccd2acab3bef99c0a384a2899ea03cd70094c8"
+    },
+    {
+      "path": "scripts/dev/flux_minimal_inference.py",
+      "size": 21468,
+      "sha256": "2c75dc231c85561fc9b542848482a5cd36627a8d7e67f99865c849223cfdf65a"
+    },
+    {
+      "path": "scripts/dev/flux_train.py",
+      "size": 39991,
+      "sha256": "1d0b43c978fe2a2ab47663014d0d0506bb6de15ae997789cf82e489e815a59ef"
+    },
+    {
+      "path": "scripts/dev/flux_train_control_net.py",
+      "size": 41331,
+      "sha256": "b864f6c2190f88a7f1fd533565631751222a9173edf714ef8cfae6dbbcb44d3f"
+    },
+    {
+      "path": "scripts/dev/flux_train_network.py",
+      "size": 26982,
+      "sha256": "88060665f3fead78f23d484bf7fa706924d736622a7f4d0fbe842029c7b6eb23"
+    },
+    {
+      "path": "scripts/dev/gen_img.py",
+      "size": 152154,
+      "sha256": "bd04f1067cc9b7cc07ca8e03202212d68ea2f73fc8f07828cf8f141d044fa193"
+    },
+    {
+      "path": "scripts/dev/gen_img_diffusers.py",
+      "size": 179395,
+      "sha256": "6cbbafbca161cb0de4f86ff989500887c970edcba3d2d963dc8c87e9b4e290db"
+    },
+    {
+      "path": "scripts/dev/library/__init__.py",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/dev/library/adafactor_fused.py",
+      "size": 4514,
+      "sha256": "9af7dc687028407c83aaba9d9c5e4e163d5d8581c2f58b3d56c1ec57442df95b"
+    },
+    {
+      "path": "scripts/dev/library/anima_models.py",
+      "size": 66934,
+      "sha256": "07717701de13cdfb14bd933836c2abd1244f0b23530986e7ea824439c007a742"
+    },
+    {
+      "path": "scripts/dev/library/anima_train_utils.py",
+      "size": 23964,
+      "sha256": "89cfbc3957fbe54146b8baabd4d428e8974d08f2e7214ff5b9c712dba8dec259"
+    },
+    {
+      "path": "scripts/dev/library/anima_utils.py",
+      "size": 13098,
+      "sha256": "16d8e93bd2115b8a106305de3132bc5b5a4cc2ba100c3b64ffc61450887e4700"
+    },
+    {
+      "path": "scripts/dev/library/attention.py",
+      "size": 11677,
+      "sha256": "452224af3f504ef5c4bf22102623b26f54b305428513e93ba5d1723126272449"
+    },
+    {
+      "path": "scripts/dev/library/attention_processors.py",
+      "size": 7924,
+      "sha256": "cccb25811f0a2ee86d0abd2d61a560423dd4841e3ef59b5b2176a8904a3fd08d"
+    },
+    {
+      "path": "scripts/dev/library/chroma_models.py",
+      "size": 28861,
+      "sha256": "365a5fb231a0d7a5b358c19217d2c0a10c4c1bc09deeffb8a9ca0451314657e8"
+    },
+    {
+      "path": "scripts/dev/library/config_util.py",
+      "size": 28837,
+      "sha256": "86567c628a9f92d4f453d27aeda18b0f4dd5ced37d6e77cd62782f88f8d47301"
+    },
+    {
+      "path": "scripts/dev/library/custom_offloading_utils.py",
+      "size": 10163,
+      "sha256": "b3b4f181fc56eb7a5fafe509b8f758e09eeb79623e7d237f883d1baf3a402891"
+    },
+    {
+      "path": "scripts/dev/library/custom_train_functions.py",
+      "size": 22630,
+      "sha256": "1b465ca7f73f80a7fe19d4be376e116700074e6d6834630e9d213c01f06c923f"
+    },
+    {
+      "path": "scripts/dev/library/deepspeed_utils.py",
+      "size": 7261,
+      "sha256": "c4a1d6f40f2953e718b1cbbbd9e0382beb32b8f32e7e6fd0dd0a412bbe3281b0"
+    },
+    {
+      "path": "scripts/dev/library/device_utils.py",
+      "size": 2786,
+      "sha256": "ab0243073a77d2b132812a170fe66ef7b7e5188297b981a5b9a48bebe4bcbc3d"
+    },
+    {
+      "path": "scripts/dev/library/flux_models.py",
+      "size": 50674,
+      "sha256": "4d8a3b8aa8fe47c65dc3640214350e5bcbfe5caafd2cdf4e9c1896344f059c06"
+    },
+    {
+      "path": "scripts/dev/library/flux_train_utils.py",
+      "size": 27965,
+      "sha256": "8b07ad5b76f6ed2e5f6de02c91ff5590cd7942131d9f7ae2f46f907e00d46ea6"
+    },
+    {
+      "path": "scripts/dev/library/flux_utils.py",
+      "size": 23349,
+      "sha256": "232f4f3e01fe98f00eb22ec0f4b2fbcfee758b0fea088682358215ff3029c3d4"
+    },
+    {
+      "path": "scripts/dev/library/fp8_optimization_utils.py",
+      "size": 20561,
+      "sha256": "d64805990b74a3feaca813972b4092ca48af626a6d33c3d3311891a1f2e2f299"
+    },
+    {
+      "path": "scripts/dev/library/huggingface_util.py",
+      "size": 3182,
+      "sha256": "a5d59698828d1ea16ba6b95429148fda98452194f4910c978ada12878aa2afaa"
+    },
+    {
+      "path": "scripts/dev/library/hypernetwork.py",
+      "size": 6965,
+      "sha256": "fd6771795222d97f96bda91fecb1136469d4d077db208b4b5494cfd76bad753c"
+    },
+    {
+      "path": "scripts/dev/library/ipex/__init__.py",
+      "size": 11602,
+      "sha256": "3c90c5afb4bc1601797f8ee77006a99c08d93a51d3aeb7cde0870ae7cf91e3a0"
+    },
+    {
+      "path": "scripts/dev/library/ipex/attention.py",
+      "size": 6483,
+      "sha256": "bca23921992b766f4c86c02b8e82fb3767c4401c1cba32a7a18f1085023cc8d7"
+    },
+    {
+      "path": "scripts/dev/library/ipex/diffusers.py",
+      "size": 5526,
+      "sha256": "0170dc7a3d42314842c9d64a7c8af838b530a631074fb693445866c729b07f76"
+    },
+    {
+      "path": "scripts/dev/library/ipex/hijacks.py",
+      "size": 21051,
+      "sha256": "d784e7329a0a6a796dfb7444911554a155b6ba335ae6513b8398acacf8b912b3"
+    },
+    {
+      "path": "scripts/dev/library/jpeg_xl_util.py",
+      "size": 6781,
+      "sha256": "970c8439b8fa710dfc2fd79815eb0097af48077ef99244880548366a6717dbf6"
+    },
+    {
+      "path": "scripts/dev/library/lora_utils.py",
+      "size": 12576,
+      "sha256": "6e8cdb669bc8da1b6ca4b15d650b42eab3489acac776e277e3a6f4f60eb75d54"
+    },
+    {
+      "path": "scripts/dev/library/lpw_stable_diffusion.py",
+      "size": 62131,
+      "sha256": "02d500fd9d1130e2a237b9e6177875e35f44b04bfde434ff53a9ebf133175eda"
+    },
+    {
+      "path": "scripts/dev/library/lumina_models.py",
+      "size": 49964,
+      "sha256": "b14350ed5ec63c8c8be68eed0d59a8c8d04cc63d599fcb262c9c48f1ce40ae42"
+    },
+    {
+      "path": "scripts/dev/library/lumina_train_util.py",
+      "size": 41761,
+      "sha256": "7842b7ebf24d14ec184dd8b99b3fd0c1b0c21a47e05a5bf1a6a878e9f2462a7f"
+    },
+    {
+      "path": "scripts/dev/library/lumina_util.py",
+      "size": 9954,
+      "sha256": "70912b512917fd404bc471029ccb641ebd23ced1e1b24652cd4784f81cd73138"
+    },
+    {
+      "path": "scripts/dev/library/model_util.py",
+      "size": 57156,
+      "sha256": "1762a8046cd8bff7bd5b1bb6c905d0dd254baea1c83dfbcc7b2864f4022730b6"
+    },
+    {
+      "path": "scripts/dev/library/original_unet.py",
+      "size": 72241,
+      "sha256": "eb52e8d21754024eb473c77d1e37f6c60b3d36b851d31da26c05011391f4c1e2"
+    },
+    {
+      "path": "scripts/dev/library/qwen_image_autoencoder_kl.py",
+      "size": 72702,
+      "sha256": "c8a7b13e7b7b64a38e1b805e370e6bc0509614f13276cc875f88705f72400262"
+    },
+    {
+      "path": "scripts/dev/library/safetensors_utils.py",
+      "size": 20566,
+      "sha256": "817083e9283555e3bce64ea86f7256c904de5b6ec29e318d654d78733fc88d31"
+    },
+    {
+      "path": "scripts/dev/library/sai_model_spec.py",
+      "size": 23733,
+      "sha256": "0d384a7d666cf1769c60aa33a44fa0adc5ee8dc78d888e7e289c2f56980310dd"
+    },
+    {
+      "path": "scripts/dev/library/sd3_models.py",
+      "size": 56071,
+      "sha256": "ee822e722f39491d345935270bd0d95167cada4d1c22da480c917ff2af7aa3c9"
+    },
+    {
+      "path": "scripts/dev/library/sd3_train_utils.py",
+      "size": 38072,
+      "sha256": "9e1925181e610835197e1040ebd3771a59244e024c3960b1e742118d1c87fc07"
+    },
+    {
+      "path": "scripts/dev/library/sd3_utils.py",
+      "size": 10904,
+      "sha256": "da76608c86c68060bc2d747625bb1596af692894debac9c37539f225abee8b4a"
+    },
+    {
+      "path": "scripts/dev/library/sdxl_lpw_stable_diffusion.py",
+      "size": 63996,
+      "sha256": "f9ae8413cf38df84701a75d510c1872d7aa44937340d2c78eb760814f7fc6f28"
+    },
+    {
+      "path": "scripts/dev/library/sdxl_model_util.py",
+      "size": 23489,
+      "sha256": "59814fa25b19752c43f13e89db764756f6a2aa4e81f14eb52928fe58ec0feedf"
+    },
+    {
+      "path": "scripts/dev/library/sdxl_original_control_net.py",
+      "size": 10277,
+      "sha256": "c838b41b6dc005da1bccb5eedf5888196a45f31fcc28c84af8109bcffc7b3ddd"
+    },
+    {
+      "path": "scripts/dev/library/sdxl_original_unet.py",
+      "size": 47035,
+      "sha256": "5460343ee9e6b577c3b1ef9050881eea507358fc875dc36a1d1776985ef6c717"
+    },
+    {
+      "path": "scripts/dev/library/sdxl_train_util.py",
+      "size": 14780,
+      "sha256": "323a2815321baf6b959dc000cb87bb2b9d82f00000e021f05c5ab3e63aeedc17"
+    },
+    {
+      "path": "scripts/dev/library/slicing_vae.py",
+      "size": 25081,
+      "sha256": "63798a8698fc2c59f0af77d46f8aa7dcb7e8159ca8c9804beffffd9b733d650f"
+    },
+    {
+      "path": "scripts/dev/library/strategy_anima.py",
+      "size": 12397,
+      "sha256": "0501f8036d3472f8038d504efae981e93b720d32626f14b2bc437ad72a6ce4e5"
+    },
+    {
+      "path": "scripts/dev/library/strategy_base.py",
+      "size": 25341,
+      "sha256": "dc7c7920eaa138990aab1712c55ddf35ccee8d705295fe1e959d8fcb88ba1dab"
+    },
+    {
+      "path": "scripts/dev/library/strategy_flux.py",
+      "size": 11545,
+      "sha256": "11b30c35a5116b4c8ac6161bae1d1791c05c277f1f5b5eeff24aade275737e1d"
+    },
+    {
+      "path": "scripts/dev/library/strategy_lumina.py",
+      "size": 12765,
+      "sha256": "ab85db64d364e83ef9a4742f65bf21220fbe0b7ea264fe939499518d0ed3cc1e"
+    },
+    {
+      "path": "scripts/dev/library/strategy_sd.py",
+      "size": 8422,
+      "sha256": "3da4a4efb04125482d5f051f2c72b2a26904ccbfc196f281d7aef5690b3a302d"
+    },
+    {
+      "path": "scripts/dev/library/strategy_sd3.py",
+      "size": 19452,
+      "sha256": "1489cb9c1e13196989f7c6260a50aeb744b37679cb4ebda4e5e2062a3c38c9b8"
+    },
+    {
+      "path": "scripts/dev/library/strategy_sdxl.py",
+      "size": 14632,
+      "sha256": "2190d42198ecd4031ec3639dfaa6577c1289af1a7731527e9b3cb9f1fcad5edd"
+    },
+    {
+      "path": "scripts/dev/library/train_util.py",
+      "size": 295675,
+      "sha256": "901d9c257665e3db5677ddf6e01cc6a8d60ef00b4ffde43a83eca6590f21e521"
+    },
+    {
+      "path": "scripts/dev/library/utils.py",
+      "size": 27674,
+      "sha256": "435530b64c59db5d3aa5e1a8879ff3110868e4447381c4e17c8db11537452229"
+    },
+    {
+      "path": "scripts/dev/lumina_minimal_inference.py",
+      "size": 14514,
+      "sha256": "e7e024482977e772f9cf78eb2aa24792e42f16fb35cc278c322f43938129d444"
+    },
+    {
+      "path": "scripts/dev/lumina_train.py",
+      "size": 40491,
+      "sha256": "bd58684d72f1999d2586c34db4863412b49bf1e1598973ca1b6b9800725795e1"
+    },
+    {
+      "path": "scripts/dev/lumina_train_network.py",
+      "size": 16313,
+      "sha256": "69b0cce825bb6612e390b1753e15d5f5b98af765d184b50e19893cb09121ec31"
+    },
+    {
+      "path": "scripts/dev/moss_image_train_network.py",
+      "size": 363,
+      "sha256": "5eda913e39ccc46d6de0a263a2996ad71b6fce1aba1ba00e33c8430645a39fe3"
+    },
+    {
+      "path": "scripts/dev/networks/check_lora_weights.py",
+      "size": 1536,
+      "sha256": "db5e6583e88f4f62d2650d3f4a9f514ddda54883f23291e053bc815166b50df4"
+    },
+    {
+      "path": "scripts/dev/networks/control_net_lllite.py",
+      "size": 19611,
+      "sha256": "835622f879e9aafb2b5601e16298c241b65010068ea08831e8ec95192b2e1cda"
+    },
+    {
+      "path": "scripts/dev/networks/control_net_lllite_for_train.py",
+      "size": 21435,
+      "sha256": "c40bfcc66222d2e848ac69e2d11523865642d6f6eec4bb9ac80c421221959cf1"
+    },
+    {
+      "path": "scripts/dev/networks/convert_flux_lora.py",
+      "size": 20523,
+      "sha256": "c6687c730cdbf9b324888c4bec3f08f2160a58c51f051e2b9c339b79baa2953b"
+    },
+    {
+      "path": "scripts/dev/networks/dylora.py",
+      "size": 21844,
+      "sha256": "08aba69f29a9ebabf743e923c2eb1771e2ab32a2144b56b8a3c442ee51d33bdc"
+    },
+    {
+      "path": "scripts/dev/networks/extract_lora_from_dylora.py",
+      "size": 4416,
+      "sha256": "bc0b8b71847621811017cde8fe16078d82e586bd930a59b5fcf5cfebe27d6e1c"
+    },
+    {
+      "path": "scripts/dev/networks/extract_lora_from_models.py",
+      "size": 14403,
+      "sha256": "bdacdef284ad840d6cbe9e35163bab2d9e027d0733ca3b25d6f357405e52c389"
+    },
+    {
+      "path": "scripts/dev/networks/flux_extract_lora.py",
+      "size": 7781,
+      "sha256": "024ace8b37d31ad8d492badc6ac5e315291ee5b1034ca50d3248a40143eb3e9d"
+    },
+    {
+      "path": "scripts/dev/networks/flux_merge_lora.py",
+      "size": 33957,
+      "sha256": "a3fed04787192794f54ba949bb24f3b845211b49555f74ecb6932c6d384a3121"
+    },
+    {
+      "path": "scripts/dev/networks/lora.py",
+      "size": 60414,
+      "sha256": "9329014d269f063068dc60f67dfc60e70a00dca976334166837dbc3bc3515048"
+    },
+    {
+      "path": "scripts/dev/networks/lora_anima.py",
+      "size": 27233,
+      "sha256": "2f7ebfa9eae09e735ae6a0297c7f209b1e92105bdfea426a46505f520f590183"
+    },
+    {
+      "path": "scripts/dev/networks/lora_diffusers.py",
+      "size": 26524,
+      "sha256": "7de55b9f6b84863fabf02275344318effb733f3d4e6da1d0d50fd791321e9b28"
+    },
+    {
+      "path": "scripts/dev/networks/lora_fa.py",
+      "size": 52070,
+      "sha256": "20a419d0c88d1a8793ab0bbe6407afaae369954cf8fc81b6e60a3657dcd48288"
+    },
+    {
+      "path": "scripts/dev/networks/lora_flux.py",
+      "size": 62991,
+      "sha256": "45f45d3a9ae5f6809463a0a332e3036e3d16b8ba020472308317fbdc0dc42a68"
+    },
+    {
+      "path": "scripts/dev/networks/lora_interrogator.py",
+      "size": 6256,
+      "sha256": "66a8571985026cbdc0837f03e517fd2ec1fc82f5e0408b40d55480d30a61a2ba"
+    },
+    {
+      "path": "scripts/dev/networks/lora_lumina.py",
+      "size": 43744,
+      "sha256": "6daa4ec188093bd20671292637d1763f30bbecb004a41aefb5e6e6127cf9d86d"
+    },
+    {
+      "path": "scripts/dev/networks/lora_sd3.py",
+      "size": 36579,
+      "sha256": "5ad2ec556fe2d7764de340c783970f770d4eef28a1a3e0acbc2cecdd3c0ad761"
+    },
+    {
+      "path": "scripts/dev/networks/merge_lora.py",
+      "size": 15175,
+      "sha256": "c0cae76c02c3bc06b1f1d7cf012c9490ecaa1fcc9809c5f2746c079b9a2aede6"
+    },
+    {
+      "path": "scripts/dev/networks/merge_lora_old.py",
+      "size": 7556,
+      "sha256": "9b8a474a044caeb803e9d4bb2aafb7b58764328affb8418a9e69dd452514252f"
+    },
+    {
+      "path": "scripts/dev/networks/oft.py",
+      "size": 16755,
+      "sha256": "abe1f9113cbd79dcc7b14dd983aa46a851d01dc88707bbcbfb26093f2dd16e9c"
+    },
+    {
+      "path": "scripts/dev/networks/oft_flux.py",
+      "size": 17182,
+      "sha256": "6c6b6d8d90c3aee82c00b92c0b49ba139d4bd94ab390df7bea5e6a4cc4f89bb9"
+    },
+    {
+      "path": "scripts/dev/networks/resize_lora.py",
+      "size": 15597,
+      "sha256": "31792377ebafbe54b919206e2f4c091469a8768ab94dec1405d60446343e1555"
+    },
+    {
+      "path": "scripts/dev/networks/sdxl_merge_lora.py",
+      "size": 21376,
+      "sha256": "0243907f173829dcdc0e7e4f01977f5a9e5ac910dc597d9e156b4f088a301bb9"
+    },
+    {
+      "path": "scripts/dev/networks/svd_merge_lora.py",
+      "size": 18187,
+      "sha256": "8d33d24e98623ead4fdf381688bcf74c710c97e1be84633490a3c80b78204426"
+    },
+    {
+      "path": "scripts/dev/networks/tlora.py",
+      "size": 14904,
+      "sha256": "e56f5f3c2f6be895f774e9694e49b7433d902750225d0325be9c812b34b8371f"
+    },
+    {
+      "path": "scripts/dev/networks/tlora_anima.py",
+      "size": 10341,
+      "sha256": "7d1f1a2e9d23537f0151adacb5ea9653a4d261eb889d5341df45b674b1355d97"
+    },
+    {
+      "path": "scripts/dev/pytest.ini",
+      "size": 168,
+      "sha256": "c55375f26289c2857ef3c4f108596610f59ad56d418349a7e2b4660b86f91165"
+    },
+    {
+      "path": "scripts/dev/requirements.txt",
+      "size": 1190,
+      "sha256": "0f7e9ebcafa2b91d092465df779827768bd1677daa74aac75c159a8223f2a2cc"
+    },
+    {
+      "path": "scripts/dev/sd3_minimal_inference.py",
+      "size": 15009,
+      "sha256": "1991d8002a4bc56f83463d6cdc98b08391f2d7d83d01c2e6409f412bf747f1ce"
+    },
+    {
+      "path": "scripts/dev/sd3_train.py",
+      "size": 50763,
+      "sha256": "daa5356913d9da7c75821836d242b64529f7ad6c5754e03534b0ea5bcc4c6ceb"
+    },
+    {
+      "path": "scripts/dev/sd3_train_network.py",
+      "size": 24880,
+      "sha256": "3c86718d77f7e0d732e89d32875abafdbc5c04259d21520605f2e764fd31bd3a"
+    },
+    {
+      "path": "scripts/dev/sdxl_gen_img.py",
+      "size": 143569,
+      "sha256": "643f8ac264d89846621f55a98f40a0ef34a3393eb3cdef8a05a61c5636df2b9f"
+    },
+    {
+      "path": "scripts/dev/sdxl_minimal_inference.py",
+      "size": 14207,
+      "sha256": "a7a54f055730ae8531383c2704ada3be2d633d20fe125decaa5af98f097c3571"
+    },
+    {
+      "path": "scripts/dev/sdxl_train.py",
+      "size": 44403,
+      "sha256": "a53accde6bfacce3ccf48e5c19c9cac2dabad0f202e01fb9940502c0857e11e6"
+    },
+    {
+      "path": "scripts/dev/sdxl_train_control_net.py",
+      "size": 32037,
+      "sha256": "e26592b07379485745929150e91ab9be47940bfa52f23765de9f5e2949888643"
+    },
+    {
+      "path": "scripts/dev/sdxl_train_control_net_lllite.py",
+      "size": 30202,
+      "sha256": "942af1b3685470dd0df01b16c83b9ba24b017bfcb847f4f5900db7a1e8596808"
+    },
+    {
+      "path": "scripts/dev/sdxl_train_control_net_lllite_old.py",
+      "size": 27641,
+      "sha256": "681d16b3a5dba3616738340e46986ed6958af78e88682ac8f53a6a39db777293"
+    },
+    {
+      "path": "scripts/dev/sdxl_train_network.py",
+      "size": 10761,
+      "sha256": "43d49bee84a8cbe0e0f09e169e2b8916ea06a690578a3d7e49a00ae979cb6f49"
+    },
+    {
+      "path": "scripts/dev/sdxl_train_textual_inversion.py",
+      "size": 5401,
+      "sha256": "57043847a0e768c0fef77c996725b4faf0fef25a3c5d872630e8369f854ba64c"
+    },
+    {
+      "path": "scripts/dev/setup.py",
+      "size": 99,
+      "sha256": "ba1f8b0ce339617f0802955c9abd4dc94a0b1e2ce41e1ae793333394d101cb63"
+    },
+    {
+      "path": "scripts/dev/test_install_retry_semantics.ps1",
+      "size": 6132,
+      "sha256": "501bd98067afaabc44ffa7c7694fc1194fcc2321595c603982c227dbb767e89c"
+    },
+    {
+      "path": "scripts/dev/tools/cache_latents.py",
+      "size": 8028,
+      "sha256": "8b72d73b5116f1cffb6dcf7d08cba17d76ce837eaaab4f9334e418d35710db09"
+    },
+    {
+      "path": "scripts/dev/tools/cache_text_encoder_outputs.py",
+      "size": 9719,
+      "sha256": "cc3d35993e65437f11a41e9d1fa50cdb3e7840463e7417726fc65e70e4361b9b"
+    },
+    {
+      "path": "scripts/dev/tools/canny.py",
+      "size": 914,
+      "sha256": "48eb21790d96383187393059dd0e110467228ddfaf8980dd5d1ec0fd1a70c18a"
+    },
+    {
+      "path": "scripts/dev/tools/convert_diffusers20_original_sd.py",
+      "size": 7508,
+      "sha256": "9a45bd6e93dfee9ced704d9e5fa67fdb9d44365626e2710431ff377ee6512800"
+    },
+    {
+      "path": "scripts/dev/tools/convert_diffusers_to_flux.py",
+      "size": 6130,
+      "sha256": "471201aab900e54921866b1a140333ad7b60225a8fb6eb1f1551e84d6ce38283"
+    },
+    {
+      "path": "scripts/dev/tools/detect_face_rotate.py",
+      "size": 10757,
+      "sha256": "b7dec0cc9376d54296b38e10c24d88b00f84be5beafc527c38b463d7697ca188"
+    },
+    {
+      "path": "scripts/dev/tools/latent_upscaler.py",
+      "size": 12854,
+      "sha256": "d463afd2a02020bc41fc538f95ddc8e453379c4d8f4c7f00de3af1ef4c562236"
+    },
+    {
+      "path": "scripts/dev/tools/merge_models.py",
+      "size": 6783,
+      "sha256": "2c0e1f862c9423167c16b40cc2612b8e8b626c7767cb03417bd988ed596b141f"
+    },
+    {
+      "path": "scripts/dev/tools/merge_sd3_safetensors.py",
+      "size": 6778,
+      "sha256": "5e4e6055b98c29c4081e1c99987d6f2345b7c8d00dff987aa2da6c61c4fbdec0"
+    },
+    {
+      "path": "scripts/dev/tools/original_control_net.py",
+      "size": 13713,
+      "sha256": "997f1f0905bcb5cd779bcb905fdc956fd59f12f1446c2b85af6ffa27b8a3b552"
+    },
+    {
+      "path": "scripts/dev/tools/resize_images_to_resolution.py",
+      "size": 6307,
+      "sha256": "f3e11066f146f6c076f4e0358f248e3bc6cb303d0d87bbd0a184c2080069f978"
+    },
+    {
+      "path": "scripts/dev/tools/show_metadata.py",
+      "size": 607,
+      "sha256": "a28fc38c019f14ae3851cd5568971524cb9aff5ad35c63031502c8f5d44761d8"
+    },
+    {
+      "path": "scripts/dev/train_control_net.py",
+      "size": 27985,
+      "sha256": "aaf246bf911cce12ce772610d8d805dd614d7cb8dc3938a3b66da9d452c7b8ba"
+    },
+    {
+      "path": "scripts/dev/train_controlnet.py",
+      "size": 680,
+      "sha256": "ff5c94a3f5173093915313bdab55449e0cf25e5497645dd4507b0eb8306b078f"
+    },
+    {
+      "path": "scripts/dev/train_db.py",
+      "size": 25642,
+      "sha256": "71c23c6569fe76cbcab62dc431b13f468be914361aaf304af81ec6b0f128a95d"
+    },
+    {
+      "path": "scripts/dev/train_network.py",
+      "size": 94762,
+      "sha256": "37f7e5b180c8419ff4c54b87836cef8b8cca8e48de427384bab117bb90043c5a"
+    },
+    {
+      "path": "scripts/dev/train_textual_inversion.py",
+      "size": 40343,
+      "sha256": "184cff0e399c3e742948951fc9b43e0db1501bc318dbd02c4220689ab151bf39"
+    },
+    {
+      "path": "scripts/dev/train_textual_inversion_XTI.py",
+      "size": 31751,
+      "sha256": "341c02bb883d32eea2046644be2d706f5297a6d2a4ea84de228e3d03c7a46b56"
+    },
+    {
+      "path": "scripts/stable/.gitignore",
+      "size": 79,
+      "sha256": "57da8faf23542725e6b2a5291ecb5d9b219d434ae134ed66459460a31d652ff7"
+    },
+    {
+      "path": "scripts/stable/COMMIT_ID",
+      "size": 40,
+      "sha256": "68751d1f491845b15acc975eca7e76bcb7dc0898eb5918cbd915fbb262929972"
+    },
+    {
+      "path": "scripts/stable/LICENSE.md",
+      "size": 11543,
+      "sha256": "faeb63342ddf1231a3ed1abd8c64c98f5d9c24388ce9b931b081f8bb557d84d7"
+    },
+    {
+      "path": "scripts/stable/README-ja.md",
+      "size": 8300,
+      "sha256": "72ae432246a6aefa13b2e3bc1a5ee9551faf5ca33176a0548621114a43912c2e"
+    },
+    {
+      "path": "scripts/stable/README.md",
+      "size": 56771,
+      "sha256": "7ecba991f475f2d5ab36867542371cbba2800bc3a353414e20fb1e958fefc0e3"
+    },
+    {
+      "path": "scripts/stable/XTI_hijack.py",
+      "size": 8408,
+      "sha256": "953fe167205cbe83f5ca6528d8d84cda645ea48af3685284c11629ee67705adb"
+    },
+    {
+      "path": "scripts/stable/_typos.toml",
+      "size": 533,
+      "sha256": "82c0f894e8f79fa55c783e7dfea1c9be919e24d91fd6998cb5458b8266805225"
+    },
+    {
+      "path": "scripts/stable/fine_tune.py",
+      "size": 24393,
+      "sha256": "fdb2e7499ce90d8e9809302476a869a00c4bc7fb995cbabd9ca325462b796367"
+    },
+    {
+      "path": "scripts/stable/finetune/blip/blip.py",
+      "size": 11520,
+      "sha256": "a9131becfdfcad43c0a88658c0ef0043dd78ed51c775f18ce2182b43b67219f7"
+    },
+    {
+      "path": "scripts/stable/finetune/blip/med.py",
+      "size": 42741,
+      "sha256": "8e95ddd10384702c86c16db40e10cbb6913b65d9b73b2f476280279e7b020c65"
+    },
+    {
+      "path": "scripts/stable/finetune/blip/med_config.json",
+      "size": 548,
+      "sha256": "26177b4256d5cf97ad7d8cce71c9f8a314f99ba5922f6a04223722d69458fb73"
+    },
+    {
+      "path": "scripts/stable/finetune/blip/vit.py",
+      "size": 14544,
+      "sha256": "53ad148ba6550f4c179b21a842645f2e5b03beafc3235fe7fcc8f01745b4c288"
+    },
+    {
+      "path": "scripts/stable/finetune/clean_captions_and_tags.py",
+      "size": 7109,
+      "sha256": "805535a68e99085ec0ad76b8c343120a95594872248e23b92982e53e92c2adbf"
+    },
+    {
+      "path": "scripts/stable/finetune/hypernetwork_nai.py",
+      "size": 3647,
+      "sha256": "024bee60ed91101da84160644229a93b19d7a2fdd974e4ca507cc6eee2956c85"
+    },
+    {
+      "path": "scripts/stable/finetune/make_captions.py",
+      "size": 8572,
+      "sha256": "d627caf9ee7ee33363af50294e1271eb911d7b9be567186dc24777d56c60afbd"
+    },
+    {
+      "path": "scripts/stable/finetune/make_captions_by_git.py",
+      "size": 7637,
+      "sha256": "f50aeab3a548c34030de25dbef0f00b7db9ddc44ef877229d5da65c7e7a28002"
+    },
+    {
+      "path": "scripts/stable/finetune/merge_captions_to_metadata.py",
+      "size": 4153,
+      "sha256": "75d7d86ce11f3bbed61006635aca6640cc4e7b014753ecc09709c06e40eaffc6"
+    },
+    {
+      "path": "scripts/stable/finetune/merge_dd_tags_to_metadata.py",
+      "size": 3699,
+      "sha256": "f70551d5c4689c8333ad5da2fbdacba266796d673810c090d06991b2ade256d8"
+    },
+    {
+      "path": "scripts/stable/finetune/prepare_buckets_latents.py",
+      "size": 12410,
+      "sha256": "6f8aeb22ba9fd463eb06d88b0afd4f3a382f8778f5bb6cd6b91bc38dc17261b3"
+    },
+    {
+      "path": "scripts/stable/finetune/tag_images_by_wd14_tagger.py",
+      "size": 22851,
+      "sha256": "f8a73389c4df81519618c8182489e7bb3699971d1d7e7439116c68d8d270416e"
+    },
+    {
+      "path": "scripts/stable/gen_img.py",
+      "size": 148796,
+      "sha256": "02516aac6a9b5ea6f856e90e58ccb12923e3b92a4f2629e2827a914a9730825d"
+    },
+    {
+      "path": "scripts/stable/gen_img_diffusers.py",
+      "size": 179395,
+      "sha256": "6cbbafbca161cb0de4f86ff989500887c970edcba3d2d963dc8c87e9b4e290db"
+    },
+    {
+      "path": "scripts/stable/library/__init__.py",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "scripts/stable/library/adafactor_fused.py",
+      "size": 3510,
+      "sha256": "7cca9bd9138aabcfcfe5e3c5662c687c35cd216537a4a0bcafa61d5c4cd4b118"
+    },
+    {
+      "path": "scripts/stable/library/attention_processors.py",
+      "size": 7924,
+      "sha256": "cccb25811f0a2ee86d0abd2d61a560423dd4841e3ef59b5b2176a8904a3fd08d"
+    },
+    {
+      "path": "scripts/stable/library/config_util.py",
+      "size": 26365,
+      "sha256": "6760451d98a337b57df9e53d6ca6f80d4c07b9f15c9d1880b585fb9a1798ea0f"
+    },
+    {
+      "path": "scripts/stable/library/custom_train_functions.py",
+      "size": 22233,
+      "sha256": "7f18a5c16d20989bff27e1f343a5bda40c7854bb70ec21f7191de1d4d478dcbc"
+    },
+    {
+      "path": "scripts/stable/library/deepspeed_utils.py",
+      "size": 5630,
+      "sha256": "af3d55f03f27c3dba6903f0aae1b132d0fceb985b637d99c877850d0421373e4"
+    },
+    {
+      "path": "scripts/stable/library/device_utils.py",
+      "size": 2106,
+      "sha256": "186582e171aa56b8d58556c0bd7e60fe035589cabb61c36e402400ddc5bfa443"
+    },
+    {
+      "path": "scripts/stable/library/huggingface_util.py",
+      "size": 3182,
+      "sha256": "a5d59698828d1ea16ba6b95429148fda98452194f4910c978ada12878aa2afaa"
+    },
+    {
+      "path": "scripts/stable/library/hypernetwork.py",
+      "size": 6965,
+      "sha256": "fd6771795222d97f96bda91fecb1136469d4d077db208b4b5494cfd76bad753c"
+    },
+    {
+      "path": "scripts/stable/library/ipex/__init__.py",
+      "size": 10186,
+      "sha256": "874f4b919c766cc5ab64652facbf8f286191fedf5dbb92a78f0fb8875ce260eb"
+    },
+    {
+      "path": "scripts/stable/library/ipex/attention.py",
+      "size": 9760,
+      "sha256": "7721892663783b9c8b9edcb91d2bfcaba74db261a9b32e970960777c1f5df48c"
+    },
+    {
+      "path": "scripts/stable/library/ipex/diffusers.py",
+      "size": 15392,
+      "sha256": "3f0f094f91df8fe887edd931f12b6058c94294591379517a0fb8078c981d3a6f"
+    },
+    {
+      "path": "scripts/stable/library/ipex/gradscaler.py",
+      "size": 8831,
+      "sha256": "70a86882b0e571c16a1fc6665b53abf9aa700abb7eabe7573de764902ba97d97"
+    },
+    {
+      "path": "scripts/stable/library/ipex/hijacks.py",
+      "size": 14083,
+      "sha256": "1247a92f3d43d30584d7fa2e6e4800501a58e111ff8ad5a2b8d28a5cb5771f5f"
+    },
+    {
+      "path": "scripts/stable/library/lpw_stable_diffusion.py",
+      "size": 62131,
+      "sha256": "02d500fd9d1130e2a237b9e6177875e35f44b04bfde434ff53a9ebf133175eda"
+    },
+    {
+      "path": "scripts/stable/library/model_util.py",
+      "size": 57332,
+      "sha256": "1c8f58336ffab8e2637320f2a3ec0f13f977d77445ab15368e0d743bced8d88c"
+    },
+    {
+      "path": "scripts/stable/library/original_unet.py",
+      "size": 72241,
+      "sha256": "eb52e8d21754024eb473c77d1e37f6c60b3d36b851d31da26c05011391f4c1e2"
+    },
+    {
+      "path": "scripts/stable/library/sai_model_spec.py",
+      "size": 9912,
+      "sha256": "2f6b0cbb7de27f422ab243c8bd5b11d53723a70f5d28a950ff61fb82291adae9"
+    },
+    {
+      "path": "scripts/stable/library/sdxl_lpw_stable_diffusion.py",
+      "size": 67373,
+      "sha256": "5a915baaf3083b131c396b31e174c74225c5ceb1ea79f90ecdd7ec39ad7fbc07"
+    },
+    {
+      "path": "scripts/stable/library/sdxl_model_util.py",
+      "size": 23614,
+      "sha256": "2e7a39a8cc4fc3de3058a258a9a1c5973cbb551402687eb80a3f9ebda19e9133"
+    },
+    {
+      "path": "scripts/stable/library/sdxl_original_unet.py",
+      "size": 46793,
+      "sha256": "b764a8a6169bc2101b12f141a43dbdd8feafee0511f05122e9808c4427e7eae9"
+    },
+    {
+      "path": "scripts/stable/library/sdxl_train_util.py",
+      "size": 15096,
+      "sha256": "846820c4c5f9ffbc5c2d06e86aadef78af09b5c0b391cb60853a2133c1b0d8a8"
+    },
+    {
+      "path": "scripts/stable/library/slicing_vae.py",
+      "size": 25081,
+      "sha256": "63798a8698fc2c59f0af77d46f8aa7dcb7e8159ca8c9804beffffd9b733d650f"
+    },
+    {
+      "path": "scripts/stable/library/train_util.py",
+      "size": 260272,
+      "sha256": "b841657d4d0d4eddd016452a2e684298e0095238852dde328a62fe2132348309"
+    },
+    {
+      "path": "scripts/stable/library/utils.py",
+      "size": 11464,
+      "sha256": "a8fbae40e62c7471b6fa694392fb9596b664b87dc4447206ac1c941464cb7442"
+    },
+    {
+      "path": "scripts/stable/networks/check_lora_weights.py",
+      "size": 1536,
+      "sha256": "db5e6583e88f4f62d2650d3f4a9f514ddda54883f23291e053bc815166b50df4"
+    },
+    {
+      "path": "scripts/stable/networks/control_net_lllite.py",
+      "size": 19611,
+      "sha256": "835622f879e9aafb2b5601e16298c241b65010068ea08831e8ec95192b2e1cda"
+    },
+    {
+      "path": "scripts/stable/networks/control_net_lllite_for_train.py",
+      "size": 21435,
+      "sha256": "c40bfcc66222d2e848ac69e2d11523865642d6f6eec4bb9ac80c421221959cf1"
+    },
+    {
+      "path": "scripts/stable/networks/dylora.py",
+      "size": 21844,
+      "sha256": "08aba69f29a9ebabf743e923c2eb1771e2ab32a2144b56b8a3c442ee51d33bdc"
+    },
+    {
+      "path": "scripts/stable/networks/extract_lora_from_dylora.py",
+      "size": 4416,
+      "sha256": "bc0b8b71847621811017cde8fe16078d82e586bd930a59b5fcf5cfebe27d6e1c"
+    },
+    {
+      "path": "scripts/stable/networks/extract_lora_from_models.py",
+      "size": 14403,
+      "sha256": "bdacdef284ad840d6cbe9e35163bab2d9e027d0733ca3b25d6f357405e52c389"
+    },
+    {
+      "path": "scripts/stable/networks/lora.py",
+      "size": 60414,
+      "sha256": "9329014d269f063068dc60f67dfc60e70a00dca976334166837dbc3bc3515048"
+    },
+    {
+      "path": "scripts/stable/networks/lora_diffusers.py",
+      "size": 26524,
+      "sha256": "7de55b9f6b84863fabf02275344318effb733f3d4e6da1d0d50fd791321e9b28"
+    },
+    {
+      "path": "scripts/stable/networks/lora_fa.py",
+      "size": 52070,
+      "sha256": "20a419d0c88d1a8793ab0bbe6407afaae369954cf8fc81b6e60a3657dcd48288"
+    },
+    {
+      "path": "scripts/stable/networks/lora_interrogator.py",
+      "size": 6256,
+      "sha256": "66a8571985026cbdc0837f03e517fd2ec1fc82f5e0408b40d55480d30a61a2ba"
+    },
+    {
+      "path": "scripts/stable/networks/merge_lora.py",
+      "size": 15175,
+      "sha256": "c0cae76c02c3bc06b1f1d7cf012c9490ecaa1fcc9809c5f2746c079b9a2aede6"
+    },
+    {
+      "path": "scripts/stable/networks/merge_lora_old.py",
+      "size": 7556,
+      "sha256": "9b8a474a044caeb803e9d4bb2aafb7b58764328affb8418a9e69dd452514252f"
+    },
+    {
+      "path": "scripts/stable/networks/oft.py",
+      "size": 16755,
+      "sha256": "d0e4f7491702c595631c3756bfa9c445871f9e31045f07d33fb8a6248315319c"
+    },
+    {
+      "path": "scripts/stable/networks/resize_lora.py",
+      "size": 14950,
+      "sha256": "e7864195eb7dccce5468245692725b654d74a055b45d6d3f296cba2c18b4c5b8"
+    },
+    {
+      "path": "scripts/stable/networks/sdxl_merge_lora.py",
+      "size": 21376,
+      "sha256": "0243907f173829dcdc0e7e4f01977f5a9e5ac910dc597d9e156b4f088a301bb9"
+    },
+    {
+      "path": "scripts/stable/networks/svd_merge_lora.py",
+      "size": 18187,
+      "sha256": "8d33d24e98623ead4fdf381688bcf74c710c97e1be84633490a3c80b78204426"
+    },
+    {
+      "path": "scripts/stable/requirements.txt",
+      "size": 1025,
+      "sha256": "08ec1ce04f7cf7ca446e42e15f43c47de8ce5624c7e5c7026e40a2f216d97498"
+    },
+    {
+      "path": "scripts/stable/sdxl_gen_img.py",
+      "size": 143569,
+      "sha256": "643f8ac264d89846621f55a98f40a0ef34a3393eb3cdef8a05a61c5636df2b9f"
+    },
+    {
+      "path": "scripts/stable/sdxl_minimal_inference.py",
+      "size": 14207,
+      "sha256": "a7a54f055730ae8531383c2704ada3be2d633d20fe125decaa5af98f097c3571"
+    },
+    {
+      "path": "scripts/stable/sdxl_train.py",
+      "size": 44044,
+      "sha256": "ba5061366fbcf8e8dc7957d901fe94160efc96d8885f06e17578a6ac973ca738"
+    },
+    {
+      "path": "scripts/stable/sdxl_train_control_net_lllite.py",
+      "size": 29145,
+      "sha256": "818ccb9758cf949caa79cd308f7b15679f200325c63100c10a50e9f3aa108a31"
+    },
+    {
+      "path": "scripts/stable/sdxl_train_control_net_lllite_old.py",
+      "size": 27424,
+      "sha256": "5577399a9494e0e5b11657409dc81c631f3bf90178e1d647d428418a66032058"
+    },
+    {
+      "path": "scripts/stable/sdxl_train_network.py",
+      "size": 10805,
+      "sha256": "2d8085ced89e2daa2e09a9301518799c487112103fa5aaf8f6ab3c6296beec9d"
+    },
+    {
+      "path": "scripts/stable/sdxl_train_textual_inversion.py",
+      "size": 5497,
+      "sha256": "d14db49e49a6a660e02eeb42efd35ae6ecaeb5a8520737a16f233321517268dc"
+    },
+    {
+      "path": "scripts/stable/setup.py",
+      "size": 99,
+      "sha256": "ba1f8b0ce339617f0802955c9abd4dc94a0b1e2ce41e1ae793333394d101cb63"
+    },
+    {
+      "path": "scripts/stable/tools/cache_latents.py",
+      "size": 8506,
+      "sha256": "2c752060633940533276b60080308b0bc036e92dd5cf3ee5c35b4e62e0e2d7ed"
+    },
+    {
+      "path": "scripts/stable/tools/cache_text_encoder_outputs.py",
+      "size": 8277,
+      "sha256": "c40dc333a02c6d459374da60bff6c558c6695ead756d3033dd00d18e2e828629"
+    },
+    {
+      "path": "scripts/stable/tools/canny.py",
+      "size": 914,
+      "sha256": "48eb21790d96383187393059dd0e110467228ddfaf8980dd5d1ec0fd1a70c18a"
+    },
+    {
+      "path": "scripts/stable/tools/convert_diffusers20_original_sd.py",
+      "size": 7508,
+      "sha256": "9a45bd6e93dfee9ced704d9e5fa67fdb9d44365626e2710431ff377ee6512800"
+    },
+    {
+      "path": "scripts/stable/tools/detect_face_rotate.py",
+      "size": 10874,
+      "sha256": "7004603cf226d17b3c17ead2d5138d956097de5ed0a959529766f1c34b3aee0f"
+    },
+    {
+      "path": "scripts/stable/tools/latent_upscaler.py",
+      "size": 12854,
+      "sha256": "d463afd2a02020bc41fc538f95ddc8e453379c4d8f4c7f00de3af1ef4c562236"
+    },
+    {
+      "path": "scripts/stable/tools/merge_models.py",
+      "size": 6783,
+      "sha256": "2c0e1f862c9423167c16b40cc2612b8e8b626c7767cb03417bd988ed596b141f"
+    },
+    {
+      "path": "scripts/stable/tools/original_control_net.py",
+      "size": 13713,
+      "sha256": "997f1f0905bcb5cd779bcb905fdc956fd59f12f1446c2b85af6ffa27b8a3b552"
+    },
+    {
+      "path": "scripts/stable/tools/resize_images_to_resolution.py",
+      "size": 6513,
+      "sha256": "05865fc8ffb66ba914ec922df6069399e5c543af635d2581342cd37d9de811bc"
+    },
+    {
+      "path": "scripts/stable/tools/show_metadata.py",
+      "size": 607,
+      "sha256": "a28fc38c019f14ae3851cd5568971524cb9aff5ad35c63031502c8f5d44761d8"
+    },
+    {
+      "path": "scripts/stable/train_controlnet.py",
+      "size": 26797,
+      "sha256": "d5647175cf3a1aeb14562e954c32003adf75074025f4b9675f8ff31e43010712"
+    },
+    {
+      "path": "scripts/stable/train_db.py",
+      "size": 24407,
+      "sha256": "f453cb2b4bec3f87ef73198cd19d3805cbe289aad1fbd3f8fd21f52186ffbeb2"
+    },
+    {
+      "path": "scripts/stable/train_network.py",
+      "size": 70274,
+      "sha256": "d5a90b5d982c5c82b672edc16d1e1df978711c1ff244f34dc1d44ce8f852a7f0"
+    },
+    {
+      "path": "scripts/stable/train_textual_inversion.py",
+      "size": 39519,
+      "sha256": "2f10654276a4785c97d3df237be7ad282d6f807d75f02609bf7182ad03b4af27"
+    },
+    {
+      "path": "scripts/stable/train_textual_inversion_XTI.py",
+      "size": 31536,
+      "sha256": "4907f9c8a2aaab251106b9ccdb868bb4079950e290fbc8606c1d10e403b2cc42"
+    },
+    {
+      "path": "vendor/sd-scripts/.ai/claude.prompt.md",
+      "size": 292,
+      "sha256": "a8caee875f724b5122d8598410e84d7a9c10ad9164ffd7a9caf508e1f69e4520"
+    },
+    {
+      "path": "vendor/sd-scripts/.ai/context/01-overview.md",
+      "size": 4622,
+      "sha256": "fa6a9f7fe7d30995bf8ecc9cb08e7880bcb2a73f1d1f52a2a55adcc76423f635"
+    },
+    {
+      "path": "vendor/sd-scripts/.ai/gemini.prompt.md",
+      "size": 320,
+      "sha256": "6862cdcd4c3a50a7c3b2d0f1d9ee83c5efbcd5b370f401dfcb20cb3a4f33772b"
+    },
+    {
+      "path": "vendor/sd-scripts/.gitignore",
+      "size": 322,
+      "sha256": "53b70ecaeed7ce21645928df6756a65e08325f897511c3615140c682c51c9da1"
+    },
+    {
+      "path": "vendor/sd-scripts/LICENSE.md",
+      "size": 11543,
+      "sha256": "faeb63342ddf1231a3ed1abd8c64c98f5d9c24388ce9b931b081f8bb557d84d7"
+    },
+    {
+      "path": "vendor/sd-scripts/README-ja.md",
+      "size": 16201,
+      "sha256": "583df421a4265fe3e225a100dcec4cd7590a88cc5eb626b7be8b59df48fa0b0e"
+    },
+    {
+      "path": "vendor/sd-scripts/README.md",
+      "size": 12623,
+      "sha256": "9e9b273a10efdf96f3262277cc84b49ccd5974b8246796e23fae37f909156476"
+    },
+    {
+      "path": "vendor/sd-scripts/XTI_hijack.py",
+      "size": 8408,
+      "sha256": "953fe167205cbe83f5ca6528d8d84cda645ea48af3685284c11629ee67705adb"
+    },
+    {
+      "path": "vendor/sd-scripts/_typos.toml",
+      "size": 594,
+      "sha256": "516c60d7eceab218986a20721be1bb9145ab2606ac1c686960c77f85875c2af3"
+    },
+    {
+      "path": "vendor/sd-scripts/anima_minimal_inference.py",
+      "size": 43712,
+      "sha256": "4f35fe344a405329aa0ca38c5c3bad43434c5a9ce5251868b948c6574ad6a9b4"
+    },
+    {
+      "path": "vendor/sd-scripts/anima_minimal_inference_control_net_lllite.py",
+      "size": 14502,
+      "sha256": "5c331d8f000391f3d23b708785fec46e826e54e6043f5cba6d3bb1db3edef1e1"
+    },
+    {
+      "path": "vendor/sd-scripts/anima_train.py",
+      "size": 32303,
+      "sha256": "bc419cc064c15a7d0f5c04e1600847e87cf9767d0a4835188176d36c1f168542"
+    },
+    {
+      "path": "vendor/sd-scripts/anima_train_control_net_lllite.py",
+      "size": 35922,
+      "sha256": "426c3731d4ddacd5991d5c098be82852fc3f95be69cf4b456bb84d0a6a017e56"
+    },
+    {
+      "path": "vendor/sd-scripts/anima_train_network.py",
+      "size": 19510,
+      "sha256": "c659275ad3bbccb40d6fe8f97f8d12871fce2751ee48687a08c2c24b56f54b5f"
+    },
+    {
+      "path": "vendor/sd-scripts/bitsandbytes_windows/cextension.py",
+      "size": 2176,
+      "sha256": "be942be8f22b94c92dc0bcf62b24086928bbac1d00c19100d701d07740f64c4e"
+    },
+    {
+      "path": "vendor/sd-scripts/bitsandbytes_windows/libbitsandbytes_cpu.dll",
+      "size": 76288,
+      "sha256": "3d5157fd45c53db3d276d955f2eb50af58f651f41016ef7e50b2e8f70e1367ac"
+    },
+    {
+      "path": "vendor/sd-scripts/bitsandbytes_windows/libbitsandbytes_cuda116.dll",
+      "size": 4724224,
+      "sha256": "88f7bd2916ca3effc43f88492f1e1b9088d13cb5be3b4a3a4aede6aa3bf8d412"
+    },
+    {
+      "path": "vendor/sd-scripts/bitsandbytes_windows/libbitsandbytes_cuda118.dll",
+      "size": 14026752,
+      "sha256": "4dc34709b8dcb078cbcdd65e5684f116cb395644d12b9c9fb144af5455bb1c18"
+    },
+    {
+      "path": "vendor/sd-scripts/bitsandbytes_windows/main.py",
+      "size": 6178,
+      "sha256": "f1c86e1668c1eef466d655ad7f66673f9cc7d9362eb365fba2f6e6e354dd80bb"
+    },
+    {
+      "path": "vendor/sd-scripts/configs/moss_image_qwen35_9b/config.json",
+      "size": 2036,
+      "sha256": "c058a4762925170cf0c7df5548e385e17d264b23f3da04956a893d9ade233aeb"
+    },
+    {
+      "path": "vendor/sd-scripts/configs/qwen3_06b/config.json",
+      "size": 757,
+      "sha256": "19a7f4d1b0d23df7c0ce5d1b8d77b1698678910e17f2b2fa6dd430ac4931c3c7"
+    },
+    {
+      "path": "vendor/sd-scripts/configs/qwen3_06b/merges.txt",
+      "size": 1823241,
+      "sha256": "b8e04af9c950e393054010dcef499c3f005e803e9b2da1a09b96a26c33266eb1"
+    },
+    {
+      "path": "vendor/sd-scripts/configs/qwen3_06b/tokenizer.json",
+      "size": 7334926,
+      "sha256": "47ec9be242d3ef39b9c97ac0a3f06c1752f061b234e295bc0a2842067a3fe4f9"
+    },
+    {
+      "path": "vendor/sd-scripts/configs/qwen3_06b/tokenizer_config.json",
+      "size": 9916,
+      "sha256": "7992a7924330571ac9b97d58e39d4a4993ccdb865335034cec29cf2c482fd460"
+    },
+    {
+      "path": "vendor/sd-scripts/configs/qwen3_06b/vocab.json",
+      "size": 2776833,
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    {
+      "path": "vendor/sd-scripts/configs/t5_old/config.json",
+      "size": 1254,
+      "sha256": "f59550f9095104a1d970031bf7ae640b92866fbb19cac7bd0e1ce4d09d32d776"
+    },
+    {
+      "path": "vendor/sd-scripts/configs/t5_old/spiece.model",
+      "size": 791656,
+      "sha256": "d60acb128cf7b7f2536e8f38a5b18a05535c9e14c7a355904270e15b0945ea86"
+    },
+    {
+      "path": "vendor/sd-scripts/configs/t5_old/tokenizer.json",
+      "size": 1389353,
+      "sha256": "d2acde0d8d71dd30a711834b07781b9c89feaac33fd332f60507699282740066"
+    },
+    {
+      "path": "vendor/sd-scripts/fine_tune.py",
+      "size": 26391,
+      "sha256": "e35eec97d79ed83b7b3dcc42b8f9dd6bc5a10bde68743ac573e32ddc18f11440"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/blip/blip.py",
+      "size": 11520,
+      "sha256": "a9131becfdfcad43c0a88658c0ef0043dd78ed51c775f18ce2182b43b67219f7"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/blip/med.py",
+      "size": 42741,
+      "sha256": "8e95ddd10384702c86c16db40e10cbb6913b65d9b73b2f476280279e7b020c65"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/blip/med_config.json",
+      "size": 548,
+      "sha256": "26177b4256d5cf97ad7d8cce71c9f8a314f99ba5922f6a04223722d69458fb73"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/blip/vit.py",
+      "size": 14544,
+      "sha256": "53ad148ba6550f4c179b21a842645f2e5b03beafc3235fe7fcc8f01745b4c288"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/clean_captions_and_tags.py",
+      "size": 7109,
+      "sha256": "805535a68e99085ec0ad76b8c343120a95594872248e23b92982e53e92c2adbf"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/hypernetwork_nai.py",
+      "size": 3647,
+      "sha256": "024bee60ed91101da84160644229a93b19d7a2fdd974e4ca507cc6eee2956c85"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/make_captions.py",
+      "size": 8572,
+      "sha256": "d627caf9ee7ee33363af50294e1271eb911d7b9be567186dc24777d56c60afbd"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/make_captions_by_git.py",
+      "size": 7637,
+      "sha256": "f50aeab3a548c34030de25dbef0f00b7db9ddc44ef877229d5da65c7e7a28002"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/merge_captions_to_metadata.py",
+      "size": 4153,
+      "sha256": "75d7d86ce11f3bbed61006635aca6640cc4e7b014753ecc09709c06e40eaffc6"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/merge_dd_tags_to_metadata.py",
+      "size": 3699,
+      "sha256": "f70551d5c4689c8333ad5da2fbdacba266796d673810c090d06991b2ade256d8"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/prepare_buckets_latents.py",
+      "size": 12410,
+      "sha256": "6f8aeb22ba9fd463eb06d88b0afd4f3a382f8778f5bb6cd6b91bc38dc17261b3"
+    },
+    {
+      "path": "vendor/sd-scripts/finetune/tag_images_by_wd14_tagger.py",
+      "size": 35222,
+      "sha256": "8d7f9d2f1dd230b4e27f56c2541624e4f32bf09b004cc4779115d9376f4ba547"
+    },
+    {
+      "path": "vendor/sd-scripts/flux_minimal_inference.py",
+      "size": 21541,
+      "sha256": "0bfe03c05c6da961b42b7cbe775ad6733b67e20aff8a9931f73b6e78cea7817b"
+    },
+    {
+      "path": "vendor/sd-scripts/flux_train.py",
+      "size": 39991,
+      "sha256": "1d0b43c978fe2a2ab47663014d0d0506bb6de15ae997789cf82e489e815a59ef"
+    },
+    {
+      "path": "vendor/sd-scripts/flux_train_control_net.py",
+      "size": 41331,
+      "sha256": "b864f6c2190f88a7f1fd533565631751222a9173edf714ef8cfae6dbbcb44d3f"
+    },
+    {
+      "path": "vendor/sd-scripts/flux_train_network.py",
+      "size": 26982,
+      "sha256": "88060665f3fead78f23d484bf7fa706924d736622a7f4d0fbe842029c7b6eb23"
+    },
+    {
+      "path": "vendor/sd-scripts/gen_img.py",
+      "size": 159361,
+      "sha256": "dd41db96c2683944b65c926a587cf63e1f2c585ca686271cc987ee042a659bf8"
+    },
+    {
+      "path": "vendor/sd-scripts/gen_img_diffusers.py",
+      "size": 179395,
+      "sha256": "6cbbafbca161cb0de4f86ff989500887c970edcba3d2d963dc8c87e9b4e290db"
+    },
+    {
+      "path": "vendor/sd-scripts/hunyuan_image_minimal_inference.py",
+      "size": 51874,
+      "sha256": "538027bfebee3006c9aac87a31798a9a747cb2f55ac230d754cb3f84396b4747"
+    },
+    {
+      "path": "vendor/sd-scripts/hunyuan_image_train_network.py",
+      "size": 32439,
+      "sha256": "cc8e3596daa13bd78572db8469b05ac4586aafcf955100f08c923da6f5403621"
+    },
+    {
+      "path": "vendor/sd-scripts/images/logo_aihub.png",
+      "size": 7090,
+      "sha256": "13f8b7aea1907b42936cfad5889e80337486402e10e9f5719c29f019a10f8965"
+    },
+    {
+      "path": "vendor/sd-scripts/inpainting_minimal_inference.py",
+      "size": 17060,
+      "sha256": "bfc489428da3c3a958b846fa579deb425991b3cc2021db72949dba3a2e414b16"
+    },
+    {
+      "path": "vendor/sd-scripts/library/__init__.py",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "vendor/sd-scripts/library/adafactor_fused.py",
+      "size": 4514,
+      "sha256": "9af7dc687028407c83aaba9d9c5e4e163d5d8581c2f58b3d56c1ec57442df95b"
+    },
+    {
+      "path": "vendor/sd-scripts/library/anima_models.py",
+      "size": 67609,
+      "sha256": "a6627340e3d00b3fd6e3ea793249e155634025a367835f7179aaf8a8b4d931cb"
+    },
+    {
+      "path": "vendor/sd-scripts/library/anima_train_utils.py",
+      "size": 22884,
+      "sha256": "9f889c3ad8eef9c06d2fee0da762b1e0a7cacf0d9241debaf471ac36b9240c9e"
+    },
+    {
+      "path": "vendor/sd-scripts/library/anima_utils.py",
+      "size": 13061,
+      "sha256": "9437c6b418448d4c01744cc9374331586535cb576f0dffbb03251d20a68479d5"
+    },
+    {
+      "path": "vendor/sd-scripts/library/attention.py",
+      "size": 11677,
+      "sha256": "452224af3f504ef5c4bf22102623b26f54b305428513e93ba5d1723126272449"
+    },
+    {
+      "path": "vendor/sd-scripts/library/attention_processors.py",
+      "size": 7924,
+      "sha256": "cccb25811f0a2ee86d0abd2d61a560423dd4841e3ef59b5b2176a8904a3fd08d"
+    },
+    {
+      "path": "vendor/sd-scripts/library/chroma_models.py",
+      "size": 28861,
+      "sha256": "365a5fb231a0d7a5b358c19217d2c0a10c4c1bc09deeffb8a9ca0451314657e8"
+    },
+    {
+      "path": "vendor/sd-scripts/library/compile_utils.py",
+      "size": 8115,
+      "sha256": "0c2b8080bb019df2f1e429ada402029ad673194eacabaaeeeddff8ef22e10994"
+    },
+    {
+      "path": "vendor/sd-scripts/library/config_util.py",
+      "size": 29181,
+      "sha256": "57117f341a20ad660351a29659074c995c0713bf962568b607d5027b6c7749c7"
+    },
+    {
+      "path": "vendor/sd-scripts/library/convrot_int8_kernels.py",
+      "size": 21517,
+      "sha256": "8c8444b9970e093283d82607dfa98b7f16a0a05ffce86c31d1afd946ee479d3c"
+    },
+    {
+      "path": "vendor/sd-scripts/library/convrot_int8_utils.py",
+      "size": 28145,
+      "sha256": "a02a31fb24c96af77a07fdc7a4294bee31a2dec8cace01948080cc71389753ba"
+    },
+    {
+      "path": "vendor/sd-scripts/library/custom_offloading_utils.py",
+      "size": 17259,
+      "sha256": "c738344d67926f71b7c142d779b4ea543e539ab976725856f2c355a2bf129029"
+    },
+    {
+      "path": "vendor/sd-scripts/library/custom_train_functions.py",
+      "size": 22630,
+      "sha256": "1b465ca7f73f80a7fe19d4be376e116700074e6d6834630e9d213c01f06c923f"
+    },
+    {
+      "path": "vendor/sd-scripts/library/deepspeed_utils.py",
+      "size": 7107,
+      "sha256": "6c504aaac9f1a33a398ecb608787769ffb541143299f2bc4a29e7bec63f27fe8"
+    },
+    {
+      "path": "vendor/sd-scripts/library/device_utils.py",
+      "size": 2788,
+      "sha256": "7448b882dcf51f01358ab4531e925d5911e25f234506b1d49d1965a0a9c6cc73"
+    },
+    {
+      "path": "vendor/sd-scripts/library/flux2_vae.py",
+      "size": 19829,
+      "sha256": "ea08be58bd645f36ea7572cc2f87cdb2f7eec6e4203cd75a257722c030a87310"
+    },
+    {
+      "path": "vendor/sd-scripts/library/flux_models.py",
+      "size": 50674,
+      "sha256": "4d8a3b8aa8fe47c65dc3640214350e5bcbfe5caafd2cdf4e9c1896344f059c06"
+    },
+    {
+      "path": "vendor/sd-scripts/library/flux_train_utils.py",
+      "size": 32283,
+      "sha256": "65c06203d9d7cf23d3879c0df33b5a8934327a1d6e3cb16bb5a77bfb784cda0f"
+    },
+    {
+      "path": "vendor/sd-scripts/library/flux_utils.py",
+      "size": 23527,
+      "sha256": "9c660ec69ec5d970ed99cce3ae41585a7973db84cadec858f1ca1e7bd91709ac"
+    },
+    {
+      "path": "vendor/sd-scripts/library/fp8_optimization_utils.py",
+      "size": 20561,
+      "sha256": "d64805990b74a3feaca813972b4092ca48af626a6d33c3d3311891a1f2e2f299"
+    },
+    {
+      "path": "vendor/sd-scripts/library/huggingface_util.py",
+      "size": 3182,
+      "sha256": "a5d59698828d1ea16ba6b95429148fda98452194f4910c978ada12878aa2afaa"
+    },
+    {
+      "path": "vendor/sd-scripts/library/hunyuan_image_models.py",
+      "size": 19798,
+      "sha256": "5ad56ea7c75aad0fdafb9e92549366db7018668a6d8ab24e45374799df8052a4"
+    },
+    {
+      "path": "vendor/sd-scripts/library/hunyuan_image_modules.py",
+      "size": 32340,
+      "sha256": "554d51b317fc940b303882d5a6e55e93b2720c38ec3888cc0159121dfedebf6f"
+    },
+    {
+      "path": "vendor/sd-scripts/library/hunyuan_image_text_encoder.py",
+      "size": 51234,
+      "sha256": "2d940f764c484b29904668ab5e3c52753737b62183db5dc244266e6de19e1ab5"
+    },
+    {
+      "path": "vendor/sd-scripts/library/hunyuan_image_utils.py",
+      "size": 17800,
+      "sha256": "aa268a55162de94b3cde09863ffcdad979a2eccb6359ccf13a15febeaac0f3e3"
+    },
+    {
+      "path": "vendor/sd-scripts/library/hunyuan_image_vae.py",
+      "size": 29529,
+      "sha256": "cb3703330090fe5f46c298c908c9a8433773aa1a4638663942ed3590f9ebdea4"
+    },
+    {
+      "path": "vendor/sd-scripts/library/hypernetwork.py",
+      "size": 6965,
+      "sha256": "fd6771795222d97f96bda91fecb1136469d4d077db208b4b5494cfd76bad753c"
+    },
+    {
+      "path": "vendor/sd-scripts/library/ipex/__init__.py",
+      "size": 11774,
+      "sha256": "d3a49e2764de86868353a55976686b7aecb8cec5d1db77897a61e2f85a136541"
+    },
+    {
+      "path": "vendor/sd-scripts/library/ipex/attention.py",
+      "size": 6483,
+      "sha256": "bca23921992b766f4c86c02b8e82fb3767c4401c1cba32a7a18f1085023cc8d7"
+    },
+    {
+      "path": "vendor/sd-scripts/library/ipex/diffusers.py",
+      "size": 5526,
+      "sha256": "0170dc7a3d42314842c9d64a7c8af838b530a631074fb693445866c729b07f76"
+    },
+    {
+      "path": "vendor/sd-scripts/library/ipex/hijacks.py",
+      "size": 21051,
+      "sha256": "d784e7329a0a6a796dfb7444911554a155b6ba335ae6513b8398acacf8b912b3"
+    },
+    {
+      "path": "vendor/sd-scripts/library/jpeg_xl_util.py",
+      "size": 6781,
+      "sha256": "970c8439b8fa710dfc2fd79815eb0097af48077ef99244880548366a6717dbf6"
+    },
+    {
+      "path": "vendor/sd-scripts/library/leco_train_util.py",
+      "size": 19677,
+      "sha256": "9a4d1e59e09d7877d1eb2455dee7966e8793df906d341132e9ec3ebf15be1acc"
+    },
+    {
+      "path": "vendor/sd-scripts/library/lora_utils.py",
+      "size": 14547,
+      "sha256": "16708cc90b42fe2fc0aac3549c089144a1b4c5c70dc698b7f5a9cfb310ebe345"
+    },
+    {
+      "path": "vendor/sd-scripts/library/lpw_stable_diffusion.py",
+      "size": 64752,
+      "sha256": "2fe93875e4e15bcdd7c8e1de1fce8aa44e5eaacc04f068ac8bdafe7bcf39340f"
+    },
+    {
+      "path": "vendor/sd-scripts/library/lumina_models.py",
+      "size": 49673,
+      "sha256": "2bcec1463bc6f9efe99d047999bf538472aa2ecbdbf36a885eb19bba41bf4551"
+    },
+    {
+      "path": "vendor/sd-scripts/library/lumina_train_util.py",
+      "size": 42675,
+      "sha256": "f77a7db52dbc9ff98771a7d9a47e89c20e719e77e169fe329946967287d6c0e3"
+    },
+    {
+      "path": "vendor/sd-scripts/library/lumina_util.py",
+      "size": 9966,
+      "sha256": "dbdcf5149af76ec405c6a3c7c42a44b1fc82146974c737bfc6626ecf6f7390bd"
+    },
+    {
+      "path": "vendor/sd-scripts/library/mask_generator.py",
+      "size": 13516,
+      "sha256": "262233b746c32ba1fdf22feb51244071fd0866bf6f19c9d0274f258877e20a62"
+    },
+    {
+      "path": "vendor/sd-scripts/library/model_util.py",
+      "size": 59955,
+      "sha256": "0166201f5e5f659c188908e6aa8d1e1a49aa6ffc2e29e29890ee5d0e7627fe13"
+    },
+    {
+      "path": "vendor/sd-scripts/library/moss_image_models.py",
+      "size": 21985,
+      "sha256": "afd933962c4363a2251c87319dbdac4dd526e00dbff1a1504e211f13335ac880"
+    },
+    {
+      "path": "vendor/sd-scripts/library/moss_image_train_utils.py",
+      "size": 23979,
+      "sha256": "019904d39d48d625aad54c114649c7bed8001f6218131e0599ecc76300e46a17"
+    },
+    {
+      "path": "vendor/sd-scripts/library/moss_image_utils.py",
+      "size": 19361,
+      "sha256": "039d71ad46165a6582af73dd8efd229d2b91554d5bab18248602ddc57d54f9e9"
+    },
+    {
+      "path": "vendor/sd-scripts/library/optimizers/__init__.py",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "vendor/sd-scripts/library/optimizers/automagic.py",
+      "size": 12416,
+      "sha256": "88c55cc89b4129053b58bbe145e7d35ff4a4b1d36c48b31f7b2f45e34a75aae1"
+    },
+    {
+      "path": "vendor/sd-scripts/library/optimizers/emosens.py",
+      "size": 13827,
+      "sha256": "a58612acda406731636e305d29ee17ea5f90461152b5abce6562b174a6a3aec8"
+    },
+    {
+      "path": "vendor/sd-scripts/library/optimizers/optimizer_utils.py",
+      "size": 5661,
+      "sha256": "34e1de17d09607ac8dd6027d5cf44d66aebe0f953fd6469ad4dfda2e57374cb7"
+    },
+    {
+      "path": "vendor/sd-scripts/library/original_unet.py",
+      "size": 72559,
+      "sha256": "ac76af96997761c500f159a2e44a9e7273a5b012bf180ca855c0900c371627a2"
+    },
+    {
+      "path": "vendor/sd-scripts/library/qwen_image_autoencoder_kl.py",
+      "size": 72702,
+      "sha256": "c8a7b13e7b7b64a38e1b805e370e6bc0509614f13276cc875f88705f72400262"
+    },
+    {
+      "path": "vendor/sd-scripts/library/safetensors_utils.py",
+      "size": 21006,
+      "sha256": "a304f2c59c3ce6ae2f7c06dc0da3d9af55bc21d0054e3b3ce76a88b2101d74af"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sai_model_spec.py",
+      "size": 24864,
+      "sha256": "0ee919c7c8b90c32106f0b11edd59debfb20fa352bad1982eeab0d43b5c0d318"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sampling.py",
+      "size": 20774,
+      "sha256": "ab17e6e422c0941f346117e786028f93286cefa55cec4ba5100087b4cb273272"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sd3_models.py",
+      "size": 56071,
+      "sha256": "ee822e722f39491d345935270bd0d95167cada4d1c22da480c917ff2af7aa3c9"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sd3_train_utils.py",
+      "size": 38072,
+      "sha256": "9e1925181e610835197e1040ebd3771a59244e024c3960b1e742118d1c87fc07"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sd3_utils.py",
+      "size": 10933,
+      "sha256": "aa390ee5e40aa3dfa6d4ab80ce2a00abff0b31e06f68988df99657aa5131e0a6"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sdxl_lpw_stable_diffusion.py",
+      "size": 66826,
+      "sha256": "27907100ee60928775ce3e5dc85d26d8951dc789f939ff8a11c36755f5c5ef6d"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sdxl_model_util.py",
+      "size": 24077,
+      "sha256": "392a7c3abb89bc1d2a90c182ecb3cb0caab4fb27a00eca84e5ee21e45a5f9b86"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sdxl_original_control_net.py",
+      "size": 10277,
+      "sha256": "c838b41b6dc005da1bccb5eedf5888196a45f31fcc28c84af8109bcffc7b3ddd"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sdxl_original_unet.py",
+      "size": 47076,
+      "sha256": "1b76a34f77477d9415e574dcda97228a1324c46618375e72bdaf86587b5fe86d"
+    },
+    {
+      "path": "vendor/sd-scripts/library/sdxl_train_util.py",
+      "size": 15425,
+      "sha256": "c600090111f4835dc4d5e5059cdbbdffde091e31982c51ba92731e6fde6636ba"
+    },
+    {
+      "path": "vendor/sd-scripts/library/slicing_vae.py",
+      "size": 25081,
+      "sha256": "63798a8698fc2c59f0af77d46f8aa7dcb7e8159ca8c9804beffffd9b733d650f"
+    },
+    {
+      "path": "vendor/sd-scripts/library/strategy_anima.py",
+      "size": 12344,
+      "sha256": "063e0a3be9c4357293a87c95545fc58c0e3a7ebb77dadaeb8b1ee896ab284ebb"
+    },
+    {
+      "path": "vendor/sd-scripts/library/strategy_base.py",
+      "size": 26896,
+      "sha256": "54a874cb432005b239e77ac0c701d4e5adca60903bb47337f63610234838331a"
+    },
+    {
+      "path": "vendor/sd-scripts/library/strategy_flux.py",
+      "size": 11545,
+      "sha256": "11b30c35a5116b4c8ac6161bae1d1791c05c277f1f5b5eeff24aade275737e1d"
+    },
+    {
+      "path": "vendor/sd-scripts/library/strategy_hunyuan_image.py",
+      "size": 9470,
+      "sha256": "21522d5f11e2ffb61fa352f2a4347d863041003083486db4515acd347f0f3a04"
+    },
+    {
+      "path": "vendor/sd-scripts/library/strategy_lumina.py",
+      "size": 12765,
+      "sha256": "ab85db64d364e83ef9a4742f65bf21220fbe0b7ea264fe939499518d0ed3cc1e"
+    },
+    {
+      "path": "vendor/sd-scripts/library/strategy_moss_image.py",
+      "size": 12059,
+      "sha256": "887f5412a100b7764798dbeb4d022480ea5254b94b77c9644e51c103fb7129fa"
+    },
+    {
+      "path": "vendor/sd-scripts/library/strategy_sd.py",
+      "size": 8806,
+      "sha256": "1e3ccc62fa6b77a501ba294d4d0a5cca70e0440e110b77e068bcb6393a59228e"
+    },
+    {
+      "path": "vendor/sd-scripts/library/strategy_sd3.py",
+      "size": 19452,
+      "sha256": "1489cb9c1e13196989f7c6260a50aeb744b37679cb4ebda4e5e2062a3c38c9b8"
+    },
+    {
+      "path": "vendor/sd-scripts/library/strategy_sdxl.py",
+      "size": 14632,
+      "sha256": "2190d42198ecd4031ec3639dfaa6577c1289af1a7731527e9b3cb9f1fcad5edd"
+    },
+    {
+      "path": "vendor/sd-scripts/library/timestep_visualization.py",
+      "size": 5758,
+      "sha256": "1ce921663c1e492b4c341c7ae202b4e7a1bc3915671fafcfcd7d0d6eab03ecf1"
+    },
+    {
+      "path": "vendor/sd-scripts/library/train_util.py",
+      "size": 309561,
+      "sha256": "140029d91762fddfdd79f200e6a9a87eed466eb50f02d7b2b01b399596ab6f99"
+    },
+    {
+      "path": "vendor/sd-scripts/library/utils.py",
+      "size": 20587,
+      "sha256": "eafb61c7434cf03411c750e009c03383ef2dd43f2513054e94764a1334427c02"
+    },
+    {
+      "path": "vendor/sd-scripts/lumina_minimal_inference.py",
+      "size": 14514,
+      "sha256": "e7e024482977e772f9cf78eb2aa24792e42f16fb35cc278c322f43938129d444"
+    },
+    {
+      "path": "vendor/sd-scripts/lumina_train.py",
+      "size": 41081,
+      "sha256": "a05c8a705bb7b90d70a127050bc9df0f34ec74b92c788506ca563a673c80da93"
+    },
+    {
+      "path": "vendor/sd-scripts/lumina_train_network.py",
+      "size": 16450,
+      "sha256": "17f18b36a8aaa6b89ab0f367119b0096702df0ad40db701fffedf470ea9183c2"
+    },
+    {
+      "path": "vendor/sd-scripts/moss_image_minimal_inference.py",
+      "size": 22007,
+      "sha256": "c090dca5766eb9964133a5b731e554bc53a2a87cbd7d61cbd5bf4473ab7578df"
+    },
+    {
+      "path": "vendor/sd-scripts/moss_image_train_network.py",
+      "size": 24300,
+      "sha256": "6289249688f7ed1ca296437fd790ea0b85be34156f0b193332a34ec4c6e329ad"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/check_lora_weights.py",
+      "size": 1536,
+      "sha256": "db5e6583e88f4f62d2650d3f4a9f514ddda54883f23291e053bc815166b50df4"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/control_net_lllite.py",
+      "size": 19611,
+      "sha256": "835622f879e9aafb2b5601e16298c241b65010068ea08831e8ec95192b2e1cda"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/control_net_lllite_anima.py",
+      "size": 38731,
+      "sha256": "c1f358b607aef5e8933281903ad5fb2b77c57682630a68d8145cf89a60054389"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/control_net_lllite_for_train.py",
+      "size": 21435,
+      "sha256": "c40bfcc66222d2e848ac69e2d11523865642d6f6eec4bb9ac80c421221959cf1"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/convert_anima_lora_to_comfy.py",
+      "size": 7795,
+      "sha256": "39ffa399724808aa0b8b416b1179a88886b98f49e334dad5a4e6a5ae20e837e5"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/convert_flux_lora.py",
+      "size": 20523,
+      "sha256": "c6687c730cdbf9b324888c4bec3f08f2160a58c51f051e2b9c339b79baa2953b"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/convert_hunyuan_image_lora_to_comfy.py",
+      "size": 2831,
+      "sha256": "efc1b754199a7c09d4901a0923456f4dc52b17505e87d3256e93893c771bbc55"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/dylora.py",
+      "size": 21844,
+      "sha256": "08aba69f29a9ebabf743e923c2eb1771e2ab32a2144b56b8a3c442ee51d33bdc"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/extract_lora_from_dylora.py",
+      "size": 4416,
+      "sha256": "bc0b8b71847621811017cde8fe16078d82e586bd930a59b5fcf5cfebe27d6e1c"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/extract_lora_from_models.py",
+      "size": 14403,
+      "sha256": "bdacdef284ad840d6cbe9e35163bab2d9e027d0733ca3b25d6f357405e52c389"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/flux_extract_lora.py",
+      "size": 7793,
+      "sha256": "29f1223f15993801ae306eb30eb0f50568ce1d388d62be2cc158160167d0e8ba"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/flux_merge_lora.py",
+      "size": 34339,
+      "sha256": "b0757ae294819fd3bdaf618ef203bbb0f7b489bd317ceb7f6987f84d58eda0bd"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/loha.py",
+      "size": 24885,
+      "sha256": "6e4daa17979ad22e6afd894943eab0ed02c576f8744d516925fa0b9c0ce99deb"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lokr.py",
+      "size": 24499,
+      "sha256": "2e9aa984d2fdf1a87bac432d5b2ad7cd8dae3570a07f71151b104332f5a1dbd8"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora.py",
+      "size": 60414,
+      "sha256": "9329014d269f063068dc60f67dfc60e70a00dca976334166837dbc3bc3515048"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora_anima.py",
+      "size": 34850,
+      "sha256": "3f65de6ac5a4bae090353b1325c5e2414fa1819123d95e617b6f935ed4c2a2fd"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora_diffusers.py",
+      "size": 26524,
+      "sha256": "7de55b9f6b84863fabf02275344318effb733f3d4e6da1d0d50fd791321e9b28"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora_fa.py",
+      "size": 52081,
+      "sha256": "915ab979cfb93259599d5ec25a57dd6d2dc84a2c74754258f547ce438d5c19bd"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora_flux.py",
+      "size": 62799,
+      "sha256": "f3c24bf692850133cdf26cf2a27839554a1a7ab205d27ba05acdd831e54d28bd"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora_generic.py",
+      "size": 15887,
+      "sha256": "8ab7c47ee11e2361f64216aa265dd7f2d757ae94876759e2da9743413b6fc627"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora_hunyuan_image.py",
+      "size": 15134,
+      "sha256": "b61c7ceb66ea249a7351b09d7b9a7fa3597296173927623e017bf4e13977883d"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora_interrogator.py",
+      "size": 6256,
+      "sha256": "66a8571985026cbdc0837f03e517fd2ec1fc82f5e0408b40d55480d30a61a2ba"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora_lumina.py",
+      "size": 44939,
+      "sha256": "3a1cd7dfccc06f10bf84722f6f9b97b62d561a1da0620cd7ef0cd8c1f6e34232"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/lora_sd3.py",
+      "size": 36579,
+      "sha256": "5ad2ec556fe2d7764de340c783970f770d4eef28a1a3e0acbc2cecdd3c0ad761"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/merge_lora.py",
+      "size": 15175,
+      "sha256": "c0cae76c02c3bc06b1f1d7cf012c9490ecaa1fcc9809c5f2746c079b9a2aede6"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/merge_lora_old.py",
+      "size": 7556,
+      "sha256": "9b8a474a044caeb803e9d4bb2aafb7b58764328affb8418a9e69dd452514252f"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/network_base.py",
+      "size": 24904,
+      "sha256": "8e5373a619c602e19028e613e2996b37ce69477116ad8f91577c0c7ad8997c62"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/oft.py",
+      "size": 16755,
+      "sha256": "abe1f9113cbd79dcc7b14dd983aa46a851d01dc88707bbcbfb26093f2dd16e9c"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/oft_flux.py",
+      "size": 17182,
+      "sha256": "6c6b6d8d90c3aee82c00b92c0b49ba139d4bd94ab390df7bea5e6a4cc4f89bb9"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/resize_lora.py",
+      "size": 16499,
+      "sha256": "751cf4ad77f52d5c97767d21197ed752eb85e9dfe312b6082cb8070f1f3fa1b1"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/sdxl_merge_lora.py",
+      "size": 21376,
+      "sha256": "0243907f173829dcdc0e7e4f01977f5a9e5ac910dc597d9e156b4f088a301bb9"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/svd_merge_lora.py",
+      "size": 18187,
+      "sha256": "8d33d24e98623ead4fdf381688bcf74c710c97e1be84633490a3c80b78204426"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/tlora.py",
+      "size": 14904,
+      "sha256": "e56f5f3c2f6be895f774e9694e49b7433d902750225d0325be9c812b34b8371f"
+    },
+    {
+      "path": "vendor/sd-scripts/networks/tlora_anima.py",
+      "size": 10341,
+      "sha256": "7d1f1a2e9d23537f0151adacb5ea9653a4d261eb889d5341df45b674b1355d97"
+    },
+    {
+      "path": "vendor/sd-scripts/pytest.ini",
+      "size": 168,
+      "sha256": "c55375f26289c2857ef3c4f108596610f59ad56d418349a7e2b4660b86f91165"
+    },
+    {
+      "path": "vendor/sd-scripts/pytorch_lightning/__init__.py",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "vendor/sd-scripts/pytorch_lightning/callbacks/__init__.py",
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "vendor/sd-scripts/pytorch_lightning/callbacks/model_checkpoint.py",
+      "size": 74,
+      "sha256": "8bb69835a44690527e70490cde542f54cfe249d7be0023f2031e4fb2253353d9"
+    },
+    {
+      "path": "vendor/sd-scripts/requirements.txt",
+      "size": 1178,
+      "sha256": "382321fe77f958a553b214d765949c2033cf3458dc5c525d930bcd5fc132b4b0"
+    },
+    {
+      "path": "vendor/sd-scripts/sd3_minimal_inference.py",
+      "size": 15021,
+      "sha256": "d92cd7c2d8df7411b6120d145f939e8f228e5920d5df831e3705523c48e56b28"
+    },
+    {
+      "path": "vendor/sd-scripts/sd3_train.py",
+      "size": 50807,
+      "sha256": "dc31fea7d71dd4ed463d3f3c17eaa5440c89c87c30e245b67125badf0a9ae9d2"
+    },
+    {
+      "path": "vendor/sd-scripts/sd3_train_network.py",
+      "size": 24930,
+      "sha256": "e89f33f8b048e7fbc7282ed16ddf50b745bb06ce3a45108c5bba4d31d798a592"
+    },
+    {
+      "path": "vendor/sd-scripts/sdxl_gen_img.py",
+      "size": 143768,
+      "sha256": "cf21c64dbc8c0b65563b51b20165de0183882e1b6dbef782d20084a479193ce1"
+    },
+    {
+      "path": "vendor/sd-scripts/sdxl_minimal_inference.py",
+      "size": 14207,
+      "sha256": "a7a54f055730ae8531383c2704ada3be2d633d20fe125decaa5af98f097c3571"
+    },
+    {
+      "path": "vendor/sd-scripts/sdxl_train.py",
+      "size": 45147,
+      "sha256": "6b4e12bf137d31628ef0f753c619df3afe3df35c4c775f3d8fd1c175846b1178"
+    },
+    {
+      "path": "vendor/sd-scripts/sdxl_train_control_net.py",
+      "size": 32037,
+      "sha256": "e26592b07379485745929150e91ab9be47940bfa52f23765de9f5e2949888643"
+    },
+    {
+      "path": "vendor/sd-scripts/sdxl_train_control_net_lllite.py",
+      "size": 30307,
+      "sha256": "7b1d49df36273c1412a71fa359f0806db3ced82cef24a8a320b043045ad92dad"
+    },
+    {
+      "path": "vendor/sd-scripts/sdxl_train_control_net_lllite_old.py",
+      "size": 27641,
+      "sha256": "681d16b3a5dba3616738340e46986ed6958af78e88682ac8f53a6a39db777293"
+    },
+    {
+      "path": "vendor/sd-scripts/sdxl_train_leco.py",
+      "size": 15456,
+      "sha256": "38ebae688ccbbe940a11bd548364cff8b9cd9465ec4ab191ac5bd7497cbf2b7a"
+    },
+    {
+      "path": "vendor/sd-scripts/sdxl_train_network.py",
+      "size": 10805,
+      "sha256": "2d8085ced89e2daa2e09a9301518799c487112103fa5aaf8f6ab3c6296beec9d"
+    },
+    {
+      "path": "vendor/sd-scripts/sdxl_train_textual_inversion.py",
+      "size": 5445,
+      "sha256": "c346dc0c2c8f3d83f9971d8b7794fa6b1fa3f22b471e1713b6b784b551f0ea9f"
+    },
+    {
+      "path": "vendor/sd-scripts/setup.py",
+      "size": 99,
+      "sha256": "ba1f8b0ce339617f0802955c9abd4dc94a0b1e2ce41e1ae793333394d101cb63"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/cache_latents.py",
+      "size": 9069,
+      "sha256": "398764ab92d45443c9f430f358875198a888226f66f66bd1e167908f4d090f9a"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/cache_text_encoder_outputs.py",
+      "size": 11042,
+      "sha256": "f2660a6be6da557ca4839d73be3220953788aea4f900f687c57debe94b80ae69"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/canny.py",
+      "size": 914,
+      "sha256": "48eb21790d96383187393059dd0e110467228ddfaf8980dd5d1ec0fd1a70c18a"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/convert_diffusers20_original_sd.py",
+      "size": 7508,
+      "sha256": "9a45bd6e93dfee9ced704d9e5fa67fdb9d44365626e2710431ff377ee6512800"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/convert_diffusers_to_flux.py",
+      "size": 6174,
+      "sha256": "c370e7ea58316a6c410ed4493ad18f01b42111496182cf3ce23e066718f89291"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/detect_face_rotate.py",
+      "size": 10757,
+      "sha256": "b7dec0cc9376d54296b38e10c24d88b00f84be5beafc527c38b463d7697ca188"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/latent_upscaler.py",
+      "size": 12854,
+      "sha256": "d463afd2a02020bc41fc538f95ddc8e453379c4d8f4c7f00de3af1ef4c562236"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/merge_models.py",
+      "size": 6783,
+      "sha256": "2c0e1f862c9423167c16b40cc2612b8e8b626c7767cb03417bd988ed596b141f"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/merge_sd3_safetensors.py",
+      "size": 6816,
+      "sha256": "a8c7affe3a1f4849c10741027bb9787da619901574f53caf67b7dfdcee45957f"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/original_control_net.py",
+      "size": 13713,
+      "sha256": "997f1f0905bcb5cd779bcb905fdc956fd59f12f1446c2b85af6ffa27b8a3b552"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/resize_images_to_resolution.py",
+      "size": 6307,
+      "sha256": "f3e11066f146f6c076f4e0358f248e3bc6cb303d0d87bbd0a184c2080069f978"
+    },
+    {
+      "path": "vendor/sd-scripts/tools/show_metadata.py",
+      "size": 607,
+      "sha256": "a28fc38c019f14ae3851cd5568971524cb9aff5ad35c63031502c8f5d44761d8"
+    },
+    {
+      "path": "vendor/sd-scripts/train_control_net.py",
+      "size": 28449,
+      "sha256": "9005d29d79b7035148f0c5eb21d29eb4dfeaa0d63a9f07587a7885726ff5712d"
+    },
+    {
+      "path": "vendor/sd-scripts/train_controlnet.py",
+      "size": 680,
+      "sha256": "ff5c94a3f5173093915313bdab55449e0cf25e5497645dd4507b0eb8306b078f"
+    },
+    {
+      "path": "vendor/sd-scripts/train_db.py",
+      "size": 26459,
+      "sha256": "15563ac8ae7121040fd543249cc601d9eedfd0b083692ff4485fede64ca9d14d"
+    },
+    {
+      "path": "vendor/sd-scripts/train_leco.py",
+      "size": 14075,
+      "sha256": "dba4d8bf8990c135592cfb077be90eb9c0a153a5648ccb0e77f0b47256f983d9"
+    },
+    {
+      "path": "vendor/sd-scripts/train_network.py",
+      "size": 96600,
+      "sha256": "3764d2a9da2e8ec7ab4637ddef704117532513faf70b5fb1af4d5ae2d6d30c9a"
+    },
+    {
+      "path": "vendor/sd-scripts/train_textual_inversion.py",
+      "size": 41232,
+      "sha256": "172715d552b9dceba76cd058485315bfdb475ea8b75fed673d0fa37cf0415e50"
+    },
+    {
+      "path": "vendor/sd-scripts/train_textual_inversion_XTI.py",
+      "size": 31751,
+      "sha256": "341c02bb883d32eea2046644be2d706f5297a6d2a4ea84de228e3d03c7a46b56"
+    },
+    {
+      "path": "frontend/src/api/engines.ts",
+      "size": 11579,
+      "sha256": "4fc0bdd922deb4bbe727d8629fe214d85dd84822e75f1a00af1540296106b353"
+    },
+    {
+      "path": "frontend/src/training/modules.ts",
+      "size": 13243,
+      "sha256": "7450e4248d3d105f1f6fb223370135139c3e7aff2ddca4df6f200495ba80d44c"
+    },
+    {
+      "path": "mikazuki/engines/workbench_paths.py",
+      "size": 1852,
+      "sha256": "9c1a36b3c468c1f10cfdfd5363e67ebb98ab333f0581bec7967bbed10f71d228"
+    }
+  ]
+}

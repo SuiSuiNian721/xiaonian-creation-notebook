@@ -1,0 +1,1180 @@
+import asyncio
+import hashlib
+import json
+import os
+import re
+import toml
+import uuid
+
+from glob import glob
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import List, Optional
+
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Request, Response, UploadFile, File
+from fastapi.responses import FileResponse, StreamingResponse
+from urllib.parse import quote
+
+import mikazuki.process as process
+from mikazuki import launch_utils
+from mikazuki.engines import registry
+from mikazuki.engines.anima_fast import TRAIN_TYPE as ANIMA_FAST_TRAIN_TYPE
+from mikazuki.engines.kohya.run import TRAINER_MAPPING as trainer_mapping
+from mikazuki.engines.manifest import KIND_BUILTIN
+from mikazuki.engines.musubi import TRAIN_TYPE as MUSUBI_TRAIN_TYPE
+from mikazuki.engines.runner import RunContext, dispatch_run
+from mikazuki.utils.output_naming import ensure_unique_output_name
+from mikazuki.model_assets import (
+    check_assets as check_model_assets,
+    resolve_train_type as resolve_model_asset_train_type,
+    start_download_task as start_model_assets_download_task,
+)
+from mikazuki.app.train_submit import (
+    ANIMA_DEFAULT_SAMPLE_NEGATIVE,
+    ANIMA_DEFAULT_SAMPLE_POSITIVE,
+    ANIMA_DEFAULT_UNET_LR,
+    ANIMA_FINETUNE_TYPE,
+    ANIMA_FULL_PRECISION_UNSAFE_OPTIMIZERS,
+    ANIMA_LEGACY_UNET_LR,
+    ANIMA_TRAIN_TYPES,
+    TOKENIZER_CACHE_TRAIN_TYPES,
+    _add_training_warning,
+    _is_invalid_value,
+    _missing_standard_train_field,
+    apply_anima_training_defaults,
+    apply_sdxl_prediction_type,
+    apply_tokenizer_cache_dir,
+    get_sample_prompts,
+    has_explicit_sample_prompt_source,
+    is_preview_enabled,
+    sanitize_config,
+    should_generate_sample_prompts,
+    toml,
+)
+from mikazuki.app.config import app_config
+from mikazuki.app.user_data_api import router as user_data_router
+from mikazuki.app.models import (APIResponse, APIResponseFail,
+                                 APIResponseSuccess, TaggerInterrogateRequest,
+                                 TaggerPrefetchRequest)
+from mikazuki.dataset_editor import router as dataset_editor_router
+from mikazuki.tag_translation.api import router as tag_translation_router
+from mikazuki.datasets.api import router as datasets_router
+from mikazuki.datasets.inuse import ensure_path_not_in_use
+from mikazuki.plugin_marketplace.api import host_router as plugin_host_router
+from mikazuki.plugin_marketplace.api import router as plugin_marketplace_router
+from mikazuki.agent_workspace.api import router as agent_workspace_router
+from mikazuki.plugin_host.agent_tools import router as agent_tools_router
+from mikazuki.log import log
+from mikazuki.tagger.interrogator import available_interrogators
+from mikazuki.tagger.jobs import run_interrogate_job, run_prefetch_job
+from mikazuki.tagger.progress import tagger_progress
+from mikazuki.tasks import tm
+from mikazuki.train_log_hub import hub as train_log_hub
+from mikazuki.utils import task_insights, train_utils
+from mikazuki.utils.config_import import validate_config_import
+from mikazuki.utils.config_export import normalize_config_for_export
+from mikazuki.utils.config_args import normalize_custom_args
+from mikazuki.utils.devices import printable_devices
+from mikazuki.utils import path_browser as path_browser_utils
+from mikazuki.utils.tk_window import (NativePickerError,
+                                      open_directory_selector,
+                                      open_file_selector,
+                                      tkinter_available)
+
+router = APIRouter()
+router.include_router(user_data_router)
+router.include_router(dataset_editor_router)
+router.include_router(tag_translation_router)
+router.include_router(datasets_router)
+router.include_router(plugin_marketplace_router)
+router.include_router(plugin_host_router)
+router.include_router(agent_workspace_router)
+router.include_router(agent_tools_router)
+
+TRAINING_PREVIEW_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".bmp"}
+TRAINING_PREVIEW_MAX_BYTES = 20 * 1024 * 1024
+TRAINING_PREVIEW_MAX_FILES = 100
+
+
+def _training_preview_dir() -> Path:
+    return Path.cwd() / ".runtime" / "training-preview"
+
+
+def _prune_training_previews(target_dir: Path) -> None:
+    files = sorted(
+        (path for path in target_dir.iterdir() if path.is_file()),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    for stale in files[TRAINING_PREVIEW_MAX_FILES - 1:]:
+        stale.unlink(missing_ok=True)
+
+
+@router.post("/training/preview-upload")
+async def upload_training_preview(file: UploadFile = File(...)):
+    """Store a browser-dropped preview image where the training process can read it."""
+    if not file.content_type or not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="仅支持图片文件")
+    suffix = Path(file.filename or "").suffix.lower()
+    if suffix not in TRAINING_PREVIEW_EXTENSIONS:
+        raise HTTPException(status_code=400, detail="仅支持 PNG、JPG、WEBP 或 BMP 图片")
+    target_dir = _training_preview_dir()
+    target_dir.mkdir(parents=True, exist_ok=True)
+    _prune_training_previews(target_dir)
+    target = target_dir / f"{datetime.now().strftime('%Y%m%d-%H%M%S-%f')}{suffix}"
+    written = 0
+    try:
+        with target.open("wb") as output:
+            while chunk := await file.read(1024 * 1024):
+                written += len(chunk)
+                if written > TRAINING_PREVIEW_MAX_BYTES:
+                    raise HTTPException(status_code=413, detail="图片不能超过 20 MiB")
+                output.write(chunk)
+    except Exception:
+        target.unlink(missing_ok=True)
+        raise
+    return APIResponseSuccess(data={"path": target.relative_to(Path.cwd()).as_posix()})
+
+
+@router.get("/training/preview-image")
+async def training_preview_image(path: str):
+    """Serve browser-uploaded previews without exposing arbitrary local files."""
+    root = _training_preview_dir().resolve()
+    candidate = Path(path).expanduser()
+    candidate = (candidate if candidate.is_absolute() else Path.cwd() / candidate).resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError as exc:
+        raise HTTPException(status_code=403, detail="预览图片路径无效") from exc
+    if candidate.suffix.lower() not in TRAINING_PREVIEW_EXTENSIONS or not candidate.is_file():
+        raise HTTPException(status_code=404, detail="预览图片不存在")
+    return FileResponse(candidate)
+
+avaliable_scripts = [
+    "networks/extract_lora_from_models.py",
+    "networks/extract_lora_from_dylora.py",
+    "networks/merge_lora.py",
+    "tools/merge_models.py",
+]
+
+avaliable_schemas = []
+avaliable_presets = []
+
+
+async def load_schemas():
+    avaliable_schemas.clear()
+
+    schema_dir = os.path.join(os.getcwd(), "mikazuki", "schema")
+    schemas = sorted(os.listdir(schema_dir), key=lambda name: (os.path.splitext(name)[0] != "shared", name))
+
+    def lambda_hash(x):
+        return hashlib.md5(x.encode()).hexdigest()
+
+    for schema_name in schemas:
+        schema_id = os.path.splitext(schema_name)[0]
+        with open(os.path.join(schema_dir, schema_name), encoding="utf-8") as f:
+            content = f.read()
+            avaliable_schemas.append({
+                "name": schema_id,
+                "schema": content,
+                "hash": lambda_hash(content)
+            })
+
+
+async def load_presets():
+    avaliable_presets.clear()
+
+    preset_dir = os.path.join(os.getcwd(), "config", "presets")
+    presets = os.listdir(preset_dir)
+
+    for preset_name in presets:
+        with open(os.path.join(preset_dir, preset_name), encoding="utf-8") as f:
+            content = f.read()
+            avaliable_presets.append(toml.loads(content))
+
+
+@router.post("/config/validate-import")
+async def validate_import_config(request: Request):
+    """Validate imported TOML/JSON config against the current training page."""
+    try:
+        payload = json.loads(await request.body())
+    except json.JSONDecodeError:
+        return APIResponseFail(message="请求体必须是 JSON")
+
+    page_train_type = payload.get("page_train_type")
+    config = payload.get("config")
+    if not page_train_type or not isinstance(page_train_type, str):
+        return APIResponseFail(message="缺少 page_train_type")
+    if not isinstance(config, dict):
+        return APIResponseFail(message="缺少 config 对象")
+
+    result = validate_config_import(page_train_type, config)
+    return APIResponseSuccess(data=result)
+
+
+@router.post("/config/normalize-for-export")
+async def normalize_export_config(request: Request):
+    """Normalize form config for export/download TOML (Anima uses adapt_anima_config)."""
+    try:
+        payload = json.loads(await request.body())
+    except json.JSONDecodeError:
+        return APIResponseFail(message="请求体必须是 JSON")
+
+    page_train_type = payload.get("page_train_type")
+    config = payload.get("config")
+    if not page_train_type or not isinstance(page_train_type, str):
+        return APIResponseFail(message="缺少 page_train_type")
+    if not isinstance(config, dict):
+        return APIResponseFail(message="缺少 config 对象")
+
+    try:
+        cfg, warnings = normalize_config_for_export(
+            config,
+            page_train_type=page_train_type,
+        )
+    except Exception as exc:
+        log.exception("normalize-for-export failed")
+        return APIResponseFail(message=f"预览配置失败: {exc}")
+
+    return APIResponseSuccess(data={"config": cfg, "warnings": warnings})
+
+
+@router.post("/run")
+async def create_toml_file(request: Request):
+    # Per-request random component: two submissions inside the same second must
+    # not share the autosave snapshot name, or the later write silently replaces
+    # the config the earlier task is about to read (#334). Same scheme as the
+    # batch endpoint below.
+    timestamp = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:4]}"
+    autosave_dir = os.path.join(os.getcwd(), "config", "autosave")
+    os.makedirs(autosave_dir, exist_ok=True)
+    json_data = await request.body()
+
+    config: dict = json.loads(json_data.decode("utf-8"))
+    train_utils.fix_config_types(config)
+    normalize_custom_args(config)
+    train_utils.ensure_enable_preview_flag(config)
+
+    gpu_ids = config.pop("gpu_ids", None)
+    model_train_type = config.pop("model_train_type", "sd-lora")
+
+    renamed_from = ensure_unique_output_name(config, tm)
+    result = dispatch_run(
+        model_train_type,
+        config,
+        RunContext(
+            timestamp=timestamp,
+            autosave_dir=autosave_dir,
+            gpu_ids=gpu_ids,
+            model_train_type=model_train_type,
+        ),
+    )
+    if result is None:
+        return APIResponseFail(
+            message=f"不支持的训练类型: {model_train_type}",
+            data={"model_train_type": model_train_type},
+        )
+    if renamed_from and result.status == "success":
+        data = dict(result.data or {})
+        data["output_name_renamed"] = {"from": renamed_from, "to": config["output_name"]}
+        result.data = data
+    return result
+
+
+@router.post("/tasks/batch-enqueue")
+async def batch_enqueue_training(files: List[UploadFile] = File(...)):
+    """Enqueue several exported training configs (TOML/JSON) at once (#357).
+
+    Each file must carry model_train_type and goes through the same
+    preparation + dispatch pipeline as /api/run; files that fail validation
+    are reported without blocking the rest. Successfully enqueued configs
+    already live in the engine autosave and the task archive, so their
+    staging copies are removed; only failed files stay in
+    config/batch-queue/ for diagnosis (pruned to the newest 100).
+    """
+    MAX_FILES = 32
+    MAX_FILE_BYTES = 256 * 1024
+    RETENTION_FILES = 100
+
+    if len(files) > MAX_FILES:
+        return APIResponseFail(message=f"一次最多入队 {MAX_FILES} 个配置文件")
+    queue_dir = Path(os.getcwd()) / "config" / "batch-queue"
+    queue_dir.mkdir(parents=True, exist_ok=True)
+    autosave_dir = os.path.join(os.getcwd(), "config", "autosave")
+    os.makedirs(autosave_dir, exist_ok=True)
+    # Per-request random component: two batches starting within the same
+    # second must not share archive names or engine autosave timestamps.
+    base_timestamp = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:4]}"
+
+    results: list[dict] = []
+    for index, upload in enumerate(files):
+        name = Path(upload.filename or f"config-{index}.toml").name
+        entry: dict = {"file": name, "ok": False}
+        results.append(entry)
+        if not name.lower().endswith(".toml"):
+            entry["error"] = "仅支持训练页导出的 TOML 配置文件（.toml）"
+            await upload.close()
+            continue
+        # Bounded read: reject oversize configs without ever holding more
+        # than MAX_FILE_BYTES + 1 in memory.
+        raw_bytes = await upload.read(MAX_FILE_BYTES + 1)
+        await upload.close()
+        if len(raw_bytes) > MAX_FILE_BYTES:
+            entry["error"] = f"配置文件超过大小上限（{MAX_FILE_BYTES // 1024} KB）"
+            continue
+        try:
+            raw = raw_bytes.decode("utf-8-sig")
+        except UnicodeDecodeError:
+            entry["error"] = "文件编码不是有效的 UTF-8"
+            continue
+        try:
+            config = toml.loads(raw)
+        except Exception as exc:
+            entry["error"] = f"配置解析失败: {exc}"
+            continue
+        if not isinstance(config, dict):
+            entry["error"] = "配置内容不是键值表"
+            continue
+        staged_path = queue_dir / f"{base_timestamp}-{index:02d}-{name}"
+        staged_path.write_text(raw, encoding="utf-8")
+
+        model_train_type = str(config.get("model_train_type") or "").strip()
+        if not model_train_type or registry.resolve_train_type(model_train_type) is None:
+            entry["error"] = f"无法识别训练类型: {model_train_type or '(缺失 model_train_type)'}"
+            continue
+        try:
+            train_utils.fix_config_types(config)
+            normalize_custom_args(config)
+            train_utils.ensure_enable_preview_flag(config)
+            gpu_ids = config.pop("gpu_ids", None)
+            config.pop("model_train_type", None)
+            renamed_from = ensure_unique_output_name(config, tm)
+            result = dispatch_run(
+                model_train_type,
+                config,
+                RunContext(
+                    timestamp=f"{base_timestamp}-{index:02d}",
+                    autosave_dir=autosave_dir,
+                    gpu_ids=gpu_ids,
+                    model_train_type=model_train_type,
+                ),
+            )
+        except Exception as exc:
+            entry["error"] = str(exc)
+            continue
+        if result is None or result.status != "success":
+            entry["error"] = (result.message if result is not None else None) or f"不支持的训练类型: {model_train_type}"
+            continue
+        entry["ok"] = True
+        data = result.data or {}
+        if data.get("task_id"):
+            entry["task_id"] = data["task_id"]
+        entry["queued"] = bool(data.get("queued"))
+        if renamed_from:
+            entry["output_name_renamed"] = {"from": renamed_from, "to": config["output_name"]}
+        # The enqueued config already lives in the engine autosave and the
+        # task archive; drop the staging copy. Only failed files stay behind
+        # for diagnosis.
+        staged_path.unlink(missing_ok=True)
+
+    ok_count = sum(1 for item in results if item["ok"])
+    try:
+        archives = sorted(queue_dir.iterdir(), key=lambda p: p.name, reverse=True)
+        for stale in archives[RETENTION_FILES:]:
+            stale.unlink(missing_ok=True)
+    except OSError:
+        pass
+    return APIResponseSuccess(data={
+        "results": results,
+        "ok_count": ok_count,
+        "fail_count": len(results) - ok_count,
+        "queue_dir": str(queue_dir),
+    })
+
+
+def _engine_routes_module(engine_id: str):
+    pack = registry.get_pack(engine_id)
+    if pack is None:
+        raise HTTPException(status_code=404, detail=f"Unknown engine: {engine_id}")
+    try:
+        return pack.import_module("routes")
+    except ModuleNotFoundError as exc:
+        # Only translate a genuinely missing routes module; a nested import
+        # failure inside an existing routes.py must surface as-is.
+        if exc.name and exc.name.rsplit(".", 1)[-1] == "routes" and exc.name.startswith(pack.package):
+            raise HTTPException(status_code=404, detail=f"Engine {engine_id} exposes no routes")
+        raise
+
+
+async def _engine_payload(request: Request) -> dict:
+    return json.loads((await request.body()).decode("utf-8") or "{}")
+
+
+@router.get("/engines/{engine_id}/status")
+async def engine_status(engine_id: str):
+    return await _engine_routes_module(engine_id).status()
+
+
+@router.get("/engines/{engine_id}/diagnose")
+async def engine_diagnose(engine_id: str):
+    routes = _engine_routes_module(engine_id)
+    handler = getattr(routes, "diagnose", None)
+    if handler is None:
+        raise HTTPException(status_code=404, detail=f"Engine {engine_id} has no diagnose")
+    return await handler()
+
+
+@router.post("/engines/{engine_id}/preflight")
+async def engine_preflight(engine_id: str, request: Request):
+    routes = _engine_routes_module(engine_id)
+    handler = getattr(routes, "preflight", None)
+    if handler is None:
+        raise HTTPException(status_code=404, detail=f"Engine {engine_id} has no preflight")
+    return await handler(await _engine_payload(request))
+
+
+@router.post("/engines/{engine_id}/dry-run")
+async def engine_dry_run(engine_id: str, request: Request):
+    routes = _engine_routes_module(engine_id)
+    handler = getattr(routes, "dry_run", None)
+    if handler is None:
+        raise HTTPException(status_code=404, detail=f"Engine {engine_id} has no dry-run")
+    return await handler(await _engine_payload(request))
+
+
+async def _engine_install_impl(engine_id: str, request: Request, force_install: bool):
+    pack = registry.get_pack(engine_id)
+    if pack is None:
+        raise HTTPException(status_code=404, detail=f"Unknown engine: {engine_id}")
+    if pack.manifest.kind == KIND_BUILTIN:
+        return APIResponseFail(message=f"{engine_id} 为内置引擎，无需安装。")
+    routes = _engine_routes_module(engine_id)
+    handler = getattr(routes, "install", None)
+    if handler is None:
+        return APIResponseFail(message=f"{engine_id} 插件未提供安装接口。")
+    return await handler(await _engine_payload(request), force_install=force_install)
+
+
+@router.post("/engines/{engine_id}/install")
+async def engine_install(engine_id: str, request: Request):
+    return await _engine_install_impl(engine_id, request, force_install=False)
+
+
+@router.post("/engines/{engine_id}/repair")
+async def engine_repair(engine_id: str, request: Request):
+    pack = registry.get_pack(engine_id)
+    if pack is None:
+        raise HTTPException(status_code=404, detail=f"Unknown engine: {engine_id}")
+    if pack.manifest.kind == KIND_BUILTIN:
+        return APIResponseFail(message=f"{engine_id} 为内置引擎，无需修复。")
+    routes = _engine_routes_module(engine_id)
+    handler = getattr(routes, "repair", None)
+    if handler is None:
+        return await _engine_install_impl(engine_id, request, force_install=True)
+    return await handler(await _engine_payload(request))
+
+
+@router.post("/engines/{engine_id}/uninstall")
+async def engine_uninstall(engine_id: str):
+    pack = registry.get_pack(engine_id)
+    if pack is None:
+        raise HTTPException(status_code=404, detail=f"Unknown engine: {engine_id}")
+    if pack.manifest.kind == KIND_BUILTIN:
+        return APIResponseFail(message=f"{engine_id} 为内置引擎，不可卸载。")
+    routes = _engine_routes_module(engine_id)
+    handler = getattr(routes, "uninstall", None)
+    if handler is None:
+        return APIResponseFail(message=f"{engine_id} 插件未提供卸载接口。")
+    return await handler()
+
+
+@router.get("/engines/{engine_id}/install/log/stream/{task_id}")
+async def engine_install_log_stream(engine_id: str, task_id: str):
+    """Engine install task stdout stream (same payload as train log stream)."""
+    _engine_routes_module(engine_id)
+    return await train_log_stream(task_id)
+
+
+@router.get("/engines/{engine_id}/install/progress/stream/{task_id}")
+async def engine_install_progress_stream(engine_id: str, task_id: str):
+    """Server-Sent Events: structured engine install progress."""
+    _engine_routes_module(engine_id)
+    if task_id not in tm.tasks:
+        raise HTTPException(status_code=404, detail="Unknown task_id")
+
+    async def event_generator():
+        idx = 0
+        while True:
+            await asyncio.sleep(0.08)
+            events, total, done = train_log_hub.snapshot_events_from(task_id, idx)
+            for event in events:
+                yield "data: " + json.dumps(event, ensure_ascii=False) + "\n\n"
+            idx = total
+            if done:
+                yield "data: " + json.dumps({"type": "done", "done": True}, ensure_ascii=False) + "\n\n"
+                break
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@router.post("/assets/check")
+async def model_assets_check(request: Request):
+    payload: dict = json.loads((await request.body()).decode("utf-8") or "{}")
+    values = payload.get("values") or {}
+    if not isinstance(values, dict):
+        return APIResponseFail(message="values must be an object")
+    train_type = resolve_model_asset_train_type(str(payload.get("train_type") or ""), values)
+    return APIResponseSuccess(data={
+        "train_type": train_type,
+        "items": check_model_assets(train_type, values, Path.cwd()),
+    })
+
+
+@router.post("/assets/download")
+async def model_assets_download(request: Request):
+    payload: dict = json.loads((await request.body()).decode("utf-8") or "{}")
+    values = payload.get("values") or {}
+    items = payload.get("items") or []
+    source = str(payload.get("source") or "")
+    train_type = resolve_model_asset_train_type(str(payload.get("train_type") or ""), values if isinstance(values, dict) else {})
+    if not items or not isinstance(items, list):
+        return APIResponseFail(message="items must be a non-empty list")
+    if source not in {"huggingface", "modelscope"}:
+        return APIResponseFail(message="source must be huggingface or modelscope")
+    if not train_type:
+        return APIResponseFail(message="missing train_type")
+    try:
+        task_id, data = start_model_assets_download_task(train_type, items, source, Path.cwd())
+    except Exception as exc:
+        return APIResponseFail(message=f"asset download failed to start: {exc}")
+    data["message"] = "asset download task started"
+    return APIResponseSuccess(data=data)
+
+
+@router.post("/run_script")
+async def run_script(request: Request, background_tasks: BackgroundTasks):
+    paras = await request.body()
+    j = json.loads(paras.decode("utf-8"))
+    script_name = j["script_name"]
+    if script_name not in avaliable_scripts:
+        return APIResponseFail(message="Script not found")
+    del j["script_name"]
+    result = []
+    for k, v in j.items():
+        result.append(f"--{k}")
+        if not isinstance(v, bool):
+            value = str(v)
+            if " " in value:
+                value = f'"{v}"'
+            result.append(value)
+    script_args = " ".join(result)
+    script_path = Path(os.getcwd()) / "scripts" / script_name
+    cmd = f"{launch_utils.python_bin} {script_path} {script_args}"
+    background_tasks.add_task(launch_utils.run, cmd)
+    return APIResponseSuccess()
+
+
+@router.get("/tagger/status")
+async def tagger_status():
+    return APIResponseSuccess(data=tagger_progress.get())
+
+
+@router.get("/tagger/models")
+def tagger_models():
+    from mikazuki.tagger.model_fetch import interrogator_assets_ready
+
+    return APIResponseSuccess(data={"models": [
+        {"id": key, "downloaded": interrogator_assets_ready(interrogator, key)}
+        for key, interrogator in available_interrogators.items()
+    ]})
+
+
+@router.get("/tagger/download-status")
+async def tagger_download_status():
+    snap = tagger_progress.get()
+    return APIResponseSuccess(data={
+        "phase": snap.get("phase"),
+        "model": snap.get("model"),
+        "download": snap.get("download"),
+        "message": snap.get("message"),
+        "error": snap.get("error"),
+    })
+
+
+@router.post("/tagger/cancel")
+async def tagger_cancel():
+    if not tagger_progress.request_cancel():
+        return APIResponseSuccess(message="当前无运行中的任务")
+    return APIResponseSuccess(message="正在中止任务…")
+
+
+@router.post("/tagger/reset")
+async def tagger_reset():
+    if tagger_progress.is_busy():
+        tagger_progress.request_cancel()
+    tagger_progress.reset_idle("配置参数后点击启动")
+    return APIResponseSuccess(message="已重置打标状态")
+
+
+@router.post("/tagger/prefetch")
+async def tagger_prefetch(req: TaggerPrefetchRequest, background_tasks: BackgroundTasks):
+    if req.interrogator_model not in available_interrogators:
+        return APIResponseFail(message=f"未知模型: {req.interrogator_model}")
+    if tagger_progress.is_busy():
+        return APIResponseFail(message="已有打标或下载任务进行中")
+    background_tasks.add_task(run_prefetch_job, req)
+    return APIResponseSuccess(message="模型下载已开始")
+
+
+@router.post("/interrogate")
+async def run_interrogate(req: TaggerInterrogateRequest, background_tasks: BackgroundTasks):
+    if req.interrogator_model not in available_interrogators:
+        return APIResponseFail(message=f"未知模型: {req.interrogator_model}")
+    if tagger_progress.is_busy():
+        return APIResponseFail(message="已有打标或下载任务进行中")
+    try:
+        ensure_path_not_in_use(req.path)
+    except HTTPException:
+        return APIResponseFail(message="训练任务正在使用该数据集，打标已锁定")
+    background_tasks.add_task(run_interrogate_job, req)
+    return APIResponseSuccess(message="打标任务已提交")
+
+
+@router.get("/pick_file")
+async def pick_file(picker_type: str):
+    """Native tkinter picker (desktop host only). Prefer /api/path_browser on Linux/remote."""
+    if not path_browser_utils.gui_picker_available():
+        return APIResponseFail(
+            message="当前环境无法使用系统文件选择框（无桌面 / 远程访问 / 未安装 tkinter）。"
+            "请使用网页路径浏览器，或手动输入服务器上的路径。",
+            data={"code": "GUI_PICKER_UNAVAILABLE", "web_picker": True},
+        )
+    if picker_type == "folder":
+        coro = asyncio.to_thread(open_directory_selector, "")
+    elif picker_type == "model-file":
+        file_types = [("checkpoints", "*.safetensors;*.ckpt;*.pt"), ("all files", "*.*")]
+        coro = asyncio.to_thread(open_file_selector, "", "Select file", file_types)
+    else:
+        return APIResponseFail(message=f"不支持的 picker_type: {picker_type}")
+
+    try:
+        result = await coro
+    except NativePickerError:
+        return APIResponseFail(
+            message="系统文件选择框打开失败，请改用网页路径浏览器。",
+            data={"code": "NATIVE_PICKER_ERROR", "web_picker": True},
+        )
+    if result == "":
+        return APIResponseFail(message="用户取消选择", data={"code": "CANCELLED", "web_picker": True})
+
+    return APIResponseSuccess(data={
+        "path": result
+    })
+
+
+@router.get("/path_browser/capability")
+async def path_browser_capability():
+    return APIResponseSuccess(data={
+        "web_picker": True,
+        "gui_picker": path_browser_utils.gui_picker_available(),
+        "tkinter": tkinter_available(),
+    })
+
+
+@router.get("/path_browser/list")
+async def path_browser_list(
+    path: str = "",
+    mode: str = "folder",
+    name_filter: str = "",
+):
+    """List a server directory for the in-browser path picker (#244)."""
+    try:
+        data = await asyncio.to_thread(
+            path_browser_utils.list_directory,
+            path or None,
+            mode=mode,
+            name_filter=name_filter or None,
+        )
+    except PermissionError as exc:
+        return APIResponseFail(message=str(exc), data={"code": "DENIED"})
+    except FileNotFoundError as exc:
+        return APIResponseFail(message=str(exc), data={"code": "NOT_FOUND"})
+    except (NotADirectoryError, ValueError, OSError) as exc:
+        return APIResponseFail(message=str(exc), data={"code": "BAD_PATH"})
+    return APIResponseSuccess(data=data)
+
+
+@router.get("/get_files")
+async def get_files(pick_type) -> APIResponse:
+    pick_preset = {
+        "model-file": {
+            "type": "file",
+            "path": "./sd-models",
+            "filter": "(.safetensors|.ckpt|.pt)"
+        },
+        "model-saved-file": {
+            "type": "file",
+            "path": "./output",
+            "filter": "(.safetensors|.ckpt|.pt)"
+        },
+        "train-dir": {
+            "type": "folder",
+            "path": "./train",
+            "filter": None
+        },
+    }
+
+    folder_blacklist = [".ipynb_checkpoints", ".DS_Store"]
+
+    def list_path_or_files(preset_info):
+        path = Path(preset_info["path"])
+        file_type = preset_info["type"]
+        if not path.is_dir():
+            return []
+        regex_filter = preset_info["filter"]
+        result_list = []
+
+        if file_type == "file":
+            if regex_filter:
+                pattern = re.compile(regex_filter)
+                files = [f for f in path.glob("**/*") if f.is_file() and pattern.search(f.name)]
+            else:
+                files = [f for f in path.glob("**/*") if f.is_file()]
+            for file in files:
+                stat = file.stat()
+                result_list.append({
+                    "path": str(file.resolve().absolute()).replace("\\", "/"),
+                    "name": file.name,
+                    "size": f"{round(stat.st_size / (1024**3),2)} GB",
+                    "size_bytes": stat.st_size,
+                    "mtime": int(stat.st_mtime),
+                })
+        elif file_type == "folder":
+            folders = [f for f in path.iterdir() if f.is_dir()]
+            for folder in folders:
+                if folder.name in folder_blacklist:
+                    continue
+                result_list.append({
+                    "path": str(folder.resolve().absolute()).replace("\\", "/"),
+                    "name": folder.name,
+                    "size": 0
+                })
+
+        return result_list
+
+    if pick_type not in pick_preset:
+        return APIResponseFail(message="Invalid request")
+
+    dirs = list_path_or_files(pick_preset[pick_type])
+    return APIResponseSuccess(data={
+        "files": dirs
+    })
+
+
+@router.get("/tasks", response_model_exclude_none=True)
+async def get_tasks() -> APIResponse:
+    tasks = tm.dump()
+    for item in tasks:
+        # Older tasks never persisted train_type; derive it so the UI
+        # train-type filter works for history as well (#291 review).
+        metadata = item.get("metadata") or {}
+        if not metadata.get("train_type"):
+            task = tm.tasks.get(item["id"])
+            derived = _task_train_type(task) if task is not None else None
+            if derived:
+                metadata["train_type"] = derived
+    return APIResponseSuccess(data={
+        "tasks": tasks
+    })
+
+
+@router.get("/tasks/terminate/{task_id}", response_model_exclude_none=True)
+async def terminate_task(task_id: str):
+    tm.terminate_task(task_id)
+    return APIResponseSuccess()
+
+
+@router.get("/tasks/resume/{task_id}", response_model_exclude_none=True)
+async def resume_task(task_id: str):
+    """Release a restored queued task that is waiting for manual confirmation."""
+    if tm.resume_task(task_id):
+        return APIResponseSuccess(data={"resumed": True})
+    return APIResponseFail(message="Task is not a held queued task / 任务不在待确认队列中")
+
+
+@router.get("/tasks/auto_retry")
+async def get_task_auto_retry():
+    """Current global failure re-queue budget (#357)."""
+    return APIResponseSuccess(data={"auto_retry_max": tm.auto_retry_max})
+
+
+@router.post("/tasks/auto_retry")
+async def set_task_auto_retry(request: Request):
+    """Set the global failure re-queue budget for training tasks (#357)."""
+    try:
+        payload = json.loads((await request.body()).decode("utf-8") or "{}")
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return APIResponseFail(message="invalid JSON body / 请求体不是有效 JSON")
+    if not isinstance(payload, dict):
+        return APIResponseFail(message="request body must be an object / 请求体必须是对象")
+    count = payload.get("count")
+    if type(count) is not int or not 0 <= count <= 9:
+        return APIResponseFail(message="count must be an integer 0-9 / 重试次数必须是 0-9 的整数（0 表示不重试）")
+    try:
+        applied = tm.set_global_auto_retry(count)
+    except Exception as exc:
+        return APIResponseFail(message=f"设置保存失败，重启后将恢复原值: {exc}")
+    return APIResponseSuccess(data={"auto_retry_max": applied})
+
+
+@router.get("/tasks/retry/{task_id}", response_model_exclude_none=True)
+async def retry_task(task_id: str):
+    """Re-queue a finished/failed/terminated training task (stage groups are
+    rebuilt as a whole)."""
+    original = tm.tasks.get(task_id)
+    if original and original.metadata.get("backend") == "diffsynth" and original.status.name in {"FINISHED", "FAILED", "TERMINATED"} and original.lane == "compute":
+        config = task_insights.resolve_task_config(original.metadata)
+        result = dispatch_run("qwen-image-21-lora", config, RunContext(
+            timestamp=datetime.now().strftime("%Y%m%d-%H%M%S"),
+            autosave_dir=str(Path.cwd() / "config/autosave"),
+            gpu_ids=config.get("gpu_ids"), model_train_type="qwen-image-21-lora"))
+        if result.status == "success":
+            result.data["task_ids"] = [result.data["task_id"]]
+        return result
+    new_tasks = tm.retry_task(task_id)
+    if not new_tasks:
+        return APIResponseFail(message="Task cannot be retried / 任务无法重跑（仅支持已结束的训练任务）")
+    return APIResponseSuccess(data={
+        "task_id": new_tasks[-1].task_id,
+        "task_ids": [t.task_id for t in new_tasks],
+        "queued": any(t.status.name == "QUEUED" for t in new_tasks),
+    })
+
+
+def _task_train_type(task) -> Optional[str]:
+    """Recover the page-level train type for a task so its config can be
+    re-imported into the matching training page."""
+    backend = str(task.metadata.get("backend") or "standard")
+    if backend == "anima-lora-fast":
+        return ANIMA_FAST_TRAIN_TYPE
+    if backend in {"ai-toolkit", "diffsynth"}:
+        train_type = task.metadata.get("train_type")
+        return str(train_type) if train_type else None
+    if backend == "musubi":
+        train_type = task.metadata.get("train_type")
+        return str(train_type) if train_type else MUSUBI_TRAIN_TYPE
+    trainer_file = str(task.metadata.get("trainer_file") or "")
+    for train_type, path in trainer_mapping.items():
+        if path == trainer_file:
+            return train_type
+    return None
+
+
+@router.get("/tasks/{task_id}/config", response_model_exclude_none=True)
+async def task_config(task_id: str) -> APIResponse:
+    """Return the task's autosave TOML as JSON for re-import / export."""
+    task = tm.tasks.get(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Unknown task_id")
+    source_config = task.metadata.get("source_config")
+    if isinstance(source_config, dict):
+        config = dict(source_config)
+        train_type = _task_train_type(task)
+        if train_type and not config.get("model_train_type"):
+            config["model_train_type"] = train_type
+        return APIResponseSuccess(data={
+            "config": config,
+            "config_path": str(task.metadata.get("config_path") or ""),
+            "backend": str(task.metadata.get("backend") or "standard"),
+            "train_type": train_type,
+            "output_name": task.metadata.get("output_name"),
+        })
+    config_path = task.metadata.get("config_path")
+    if not config_path:
+        return APIResponseFail(message="Task has no config file / 该任务没有关联的配置文件")
+    path = Path(str(config_path))
+    if not path.is_file():
+        return APIResponseFail(message="Config file no longer exists / 配置文件已不存在（autosave 可能已被清理）")
+    try:
+        config = toml.loads(path.read_text(encoding="utf-8-sig"))
+    except Exception as exc:
+        return APIResponseFail(message=f"配置解析失败: {exc}")
+    train_type = _task_train_type(task)
+    if train_type and not config.get("model_train_type"):
+        config["model_train_type"] = train_type
+    return APIResponseSuccess(data={
+        "config": config,
+        "config_path": str(path),
+        "backend": str(task.metadata.get("backend") or "standard"),
+        "train_type": train_type,
+        "output_name": task.metadata.get("output_name"),
+    })
+
+
+@router.post("/tasks/{task_id}/move-to-front", response_model_exclude_none=True)
+async def move_task_to_front(task_id: str):
+    """Move a queued task (held included) right after the running task.
+    Stage groups jump as a whole, preserving stage order."""
+    if tm.move_to_front(task_id):
+        return APIResponseSuccess(data={"moved": True, "queue_position": tm.queue_position(task_id)})
+    return APIResponseFail(message="Task is not in the queue / 任务不在队列中")
+
+
+@router.delete("/tasks/{task_id}", response_model_exclude_none=True)
+async def delete_task(task_id: str):
+    """Delete a terminal (finished/failed/terminated) task from the list."""
+    if tm.delete_task(task_id):
+        return APIResponseSuccess(data={"deleted": True})
+    return APIResponseFail(message="Task not found or still active / 任务不存在或仍在进行中")
+
+
+@router.post("/tasks/purge", response_model_exclude_none=True)
+async def purge_tasks(request: Request):
+    """Bulk-delete terminal tasks, keeping the most recent ``keep_last``."""
+    try:
+        payload = json.loads(await request.body() or b"{}")
+    except json.JSONDecodeError:
+        return APIResponseFail(message="请求体必须是 JSON")
+    keep_last = payload.get("keep_last", 0)
+    if isinstance(keep_last, bool) or not isinstance(keep_last, int) or keep_last < 0:
+        return APIResponseFail(message="keep_last 必须是非负整数")
+    removed = tm.purge_tasks(keep_last=keep_last)
+    return APIResponseSuccess(data={"removed": removed})
+
+
+@router.get("/tasks/{task_id}/previews", response_model_exclude_none=True)
+async def task_previews(task_id: str) -> APIResponse:
+    task = tm.tasks.get(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Unknown task_id")
+    images = [
+        {
+            **item,
+            "url": f"/api/tasks/{quote(task_id)}/previews/{quote(item['name'])}",
+            "thumb_url": f"/api/tasks/{quote(task_id)}/previews/{quote(item['name'])}?thumb=1",
+        }
+        for item in task_insights.list_preview_images(task.metadata)
+    ]
+    config = task_insights.resolve_task_config(task.metadata)
+    preview_key = "sample_enabled" if task.metadata.get("backend") == "diffsynth" else "sample_prompts"
+    preview_enabled = bool(config.get(preview_key)) if config else None
+    return APIResponseSuccess(data={"images": images, "preview_enabled": preview_enabled})
+
+
+@router.get("/tasks/{task_id}/previews/{filename}")
+async def task_preview_image(task_id: str, filename: str, thumb: bool = False):
+    task = tm.tasks.get(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Unknown task_id")
+    path = task_insights.resolve_preview_image(task.metadata, filename)
+    if path is None:
+        raise HTTPException(status_code=404, detail="Unknown preview image")
+    headers = {"Cache-Control": "private, max-age=30"}
+    if thumb:
+        data = task_insights.preview_thumbnail(path)
+        if data is not None:
+            return Response(content=data, media_type="image/jpeg", headers=headers)
+    return FileResponse(path, headers=headers)
+
+
+def _pack_progress_reader(backend: str):
+    """Optional pack hook: a pack may ship ``progress.py`` exposing
+    ``read_progress(lines, metadata)``; absent packs fall back to the
+    kohya-style stdout parser."""
+    if not backend or backend == "standard":
+        return None
+    pack = registry.get_pack(backend)
+    if pack is None:
+        return None
+    try:
+        module = pack.import_module("progress")
+    except ImportError:
+        return None
+    return getattr(module, "read_progress", None)
+
+
+@router.get("/tasks/{task_id}/metrics", response_model_exclude_none=True)
+async def task_metrics(task_id: str) -> APIResponse:
+    from mikazuki.utils.training_time import build_task_timing
+
+    task = tm.tasks.get(task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Unknown task_id")
+    lines = train_log_hub.tail(task_id, 300)
+    reader = _pack_progress_reader(str(task.metadata.get("backend") or ""))
+    progress = reader(lines, task.metadata) if reader else task_insights.read_progress(lines)
+    return APIResponseSuccess(data={
+        "tags": task_insights.read_loss_scalars(task.metadata),
+        "progress": progress,
+        "timing": build_task_timing(task.metadata, task.status.name, train_log_hub.timing_snapshot(task_id)),
+    })
+
+
+@router.get("/hardware/status")
+async def hardware_status() -> APIResponse:
+    from mikazuki.utils.hardware_status import sampler
+
+    return APIResponseSuccess(data=await asyncio.to_thread(sampler.snapshot))
+
+
+@router.get("/graphic_cards")
+async def list_avaliable_cards() -> APIResponse:
+    if not printable_devices:
+        return APIResponse(status="pending")
+
+    return APIResponseSuccess(data={
+        "cards": printable_devices
+    })
+
+
+@router.get("/schemas/hashes")
+async def list_schema_hashes() -> APIResponse:
+    if os.environ.get("MIKAZUKI_SCHEMA_HOT_RELOAD", "0") == "1":
+        log.info("Hot reloading schemas")
+        await load_schemas()
+
+    return APIResponseSuccess(data={
+        "schemas": [
+            {
+                "name": schema["name"],
+                "hash": schema["hash"]
+            }
+            for schema in avaliable_schemas
+        ]
+    })
+
+
+@router.get("/schemas/all")
+async def get_all_schemas() -> APIResponse:
+    return APIResponseSuccess(data={
+        "schemas": avaliable_schemas
+    })
+
+
+@router.get("/presets")
+async def get_presets() -> APIResponse:
+    if os.environ.get("MIKAZUKI_SCHEMA_HOT_RELOAD", "0") == "1":
+        log.info("Hot reloading presets")
+        await load_presets()
+
+    return APIResponseSuccess(data={
+        "presets": avaliable_presets
+    })
+
+
+@router.get("/config/saved_params")
+async def get_saved_params() -> APIResponse:
+    saved_params = app_config["saved_params"]
+    return APIResponseSuccess(data=saved_params)
+
+
+@router.put("/config/saved_params")
+async def put_saved_params(request: Request) -> APIResponse:
+    """Persist the training parameters the user is currently filling in the frontend.
+
+    Called by the TrainingPage autosave so the agent side (host tools) can read
+    the paths the user already filled in (dataset dir, model/checkpoint, ...).
+    Body: {"page_train_type": str, "config": {<form model>}}
+    Stored per train type as {"form": <config>, "savedAt": <iso8601 utc>}.
+    """
+    try:
+        payload = json.loads(await request.body())
+    except json.JSONDecodeError:
+        return APIResponseFail(message="请求体必须是 JSON")
+
+    page_train_type = payload.get("page_train_type")
+    config = payload.get("config")
+    if not isinstance(page_train_type, str) or not page_train_type.strip():
+        return APIResponseFail(message="缺少 page_train_type")
+    if not isinstance(config, dict):
+        return APIResponseFail(message="缺少 config 对象")
+
+    saved = dict(app_config["saved_params"] or {})
+    saved[page_train_type.strip()] = {
+        "form": config,
+        "savedAt": datetime.now(timezone.utc).isoformat(),
+    }
+    app_config["saved_params"] = saved
+    app_config.save_config()
+    return APIResponseSuccess(data={"ok": True, "page_train_type": page_train_type.strip()})
+
+
+@router.get("/train/log/stream/{task_id}")
+async def train_log_stream(task_id: str):
+    """
+    Server-Sent Events: live training stdout (one JSON object per event: {text:...} or {done:true}).
+    Open in browser: /train-log?task_id=<uuid>
+    """
+    if task_id not in tm.tasks:
+        raise HTTPException(
+            status_code=404,
+            detail="Unknown task_id. It is only valid for jobs started in this server session (or the run has not been created).",
+        )
+
+    async def event_generator():
+        idx = 0
+        while True:
+            await asyncio.sleep(0.08)
+            chunk, total, done = train_log_hub.snapshot_from(task_id, idx)
+            for line in chunk:
+                yield "data: " + json.dumps({"text": line}, ensure_ascii=False) + "\n\n"
+            idx = total
+            if done:
+                yield "data: " + json.dumps({"done": True}, ensure_ascii=False) + "\n\n"
+                break
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@router.get("/train/log/tail/{task_id}")
+async def train_log_tail(task_id: str, limit: int = 240):
+    """Recent training stdout lines for the lightweight monitor page."""
+    if task_id not in tm.tasks:
+        raise HTTPException(status_code=404, detail="Unknown task_id")
+
+    limit = max(1, min(limit, 2000))
+    lines, total, done = train_log_hub.snapshot_from(task_id, 0)
+    return APIResponseSuccess(data={
+        "task_id": task_id,
+        "lines": lines[-limit:],
+        "total": total,
+        "done": done,
+    })
+
+
+@router.get("/train/tasks")
+async def list_train_tasks():
+    """Running / known training tasks (for tying UI to task_id)."""
+    return APIResponseSuccess(data={"tasks": tm.dump()})
+
+
+@router.get("/check_update")
+async def check_update(force: bool = False):
+    """Update check against GitHub Releases (stable channel only)."""
+    from mikazuki.update_check import get_cached_result, check_update as do_check
+    result = None if force else get_cached_result()
+    if result is None:
+        result = await asyncio.to_thread(do_check, force=force)
+    return APIResponseSuccess(data=result)
+
+
+@router.get("/version")
+async def get_version():
+    from mikazuki.update_check import local_version
+    return APIResponseSuccess(data={"version": local_version()})

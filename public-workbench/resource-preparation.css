@@ -1,0 +1,15 @@
+.resource-preparation { margin-block: 14px; border-top: 1px solid var(--line); padding-top: 12px; }
+.resource-preparation > summary { width: fit-content; color: var(--accent-text); cursor: pointer; font-weight: 600; }
+.resource-preparation-content { display: grid; gap: 14px; margin-top: 14px; }
+.resource-preparation-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px 18px; }
+.resource-preparation-row > div:first-child { display: flex; align-items: center; gap: 8px; }
+.resource-preparation-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.resource-preparation-source { display: flex; align-items: end; gap: 10px; }
+.resource-preparation-source label { display: grid; gap: 5px; min-width: 0; }
+.resource-preparation-source .field { margin-bottom: 0; }
+.resource-preparation-source select { max-width: 100%; }
+.resource-preparation [aria-disabled="true"] { opacity: .48; cursor: default; }
+.resource-preparation [data-preparation-feedback]:empty { display: none; }
+.companion-start:has([data-companion-preparation]) { justify-content: flex-start; overflow-y: auto; }
+.companion-start [data-companion-preparation] { width: min(100%, 700px); text-align: left; }
+.companion-start #companion-install-form { width: min(100%, 440px); }

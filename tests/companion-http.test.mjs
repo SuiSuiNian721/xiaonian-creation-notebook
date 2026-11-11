@@ -1,0 +1,52 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join,resolve,sep} from 'node:path';
+import {createWorkbench} from '../framework/server.mjs';
+import {installCharacterPackages} from './helpers/character-packages.mjs';
+
+test('完整陪伴接口只向已添加模块开放，原生模型桥要求独立令牌',async t=>{
+  const directory=await mkdtemp(join(tmpdir(),'ai-future-companion-http-'));
+  let bootstrap,hidden=0,closed=0;
+  const app=await createWorkbench({dataDir:directory,aiOptions:{codexRunner:async()=>({text:'你好，念念。'})},companionOptions:{inspect:()=>({available:true,version:'0.12.0-beta.5',installPath:'E:/AIRI'}),host:{async start(options){bootstrap=options.bootstrap;},viewport(){hidden++;},async open(){},async close(){closed++;}}}});
+  t.after(async()=>{await app.close();assert.ok(resolve(directory).startsWith(resolve(tmpdir())+sep));await rm(directory,{recursive:true,force:true});});
+  const api=async(path,value,method=value===undefined?'GET':'POST',headers={})=>fetch(app.url+path,{method,headers:{...(value===undefined?{}:{'content-type':'application/json'}),...headers},...(value===undefined?{}:{body:JSON.stringify(value)})});
+  assert.equal((await api('/api/modules/companion/state')).status,409);
+  assert.equal((await api('/api/modules/companion/start',{})).status,409);
+  await api('/api/modules/companion/enable',{});
+  assert.equal((await (await api('/api/modules/companion/resources')).json()).prerequisitesReady,true);
+  assert.equal((await api('/api/modules/companion/start',{})).status,200);
+  assert.ok(bootstrap.token);
+  const state=await api('/api/modules/companion/state');assert.equal(state.status,200);assert.equal((await state.text()).includes(bootstrap.token),false);
+  assert.equal((await api('/api/modules/companion/window',{view:'missing'})).status,400);
+  assert.equal((await api('/internal/companion/ai/v1/models',undefined,'GET',{origin:'null'})).status,403);
+  const auth={origin:'null',authorization:'Bearer '+bootstrap.token};
+  const models=await api('/internal/companion/ai/v1/models',undefined,'GET',auth);assert.equal(models.status,200);assert.equal(models.headers.get('access-control-allow-origin'),'null');
+  assert.equal((await api('/internal/companion/ai/v1/models',undefined,'GET',{authorization:auth.authorization,'sec-fetch-site':'cross-site'})).status,200);
+  assert.equal((await api('/api/state',undefined,'GET',{origin:'null'})).status,403);
+  await api('/api/ai/config',{provider:'codex',enabled:true,model:''},'PUT');
+  const response=await api('/internal/companion/ai/v1/chat/completions',{model:'workbench-shared',stream:true,messages:[{role:'user',content:'你好'}]},'POST',auth);
+  assert.equal(response.status,200);const text=await response.text();assert.match(text,/你好，念念/);assert.match(text,/\[DONE\]/);
+  await api('/api/modules/companion/disable',{});assert.ok(hidden>0);
+  assert.equal((await api('/internal/companion/ai/v1/models',undefined,'GET',auth)).status,403);
+  await app.close();assert.equal(closed,1);
+});
+
+test('保存陪伴运行组件后启动使用该实际目录，并保留其他配置',async t=>{
+  const directory=await mkdtemp(join(tmpdir(),'ai-future-companion-binding-'));
+  const inspected=[],started=[];
+  const app=await createWorkbench({dataDir:directory,companionOptions:{inspect:path=>{inspected.push(path);return {available:true,version:'0.12.0-beta.5',installPath:path};},host:{async start(options){started.push(options.install.installPath);},async close(){}}}});
+  t.after(async()=>{await app.close();assert.ok(resolve(directory).startsWith(resolve(tmpdir())+sep));await rm(directory,{recursive:true,force:true});});
+  const api=async(path,body,method='POST')=>fetch(app.url+path,{method,headers:{'content-type':'application/json'},body:JSON.stringify(body)});
+  await api('/api/modules/companion/enable',{});await installCharacterPackages(app.url,'companion');
+  const original={airiPath:'E:\\旧运行组件',modelPath:'E:\\人物\\Qwen.vrm',serviceUrl:'http://127.0.0.1:8000/v1'};
+  assert.equal((await api('/api/modules/companion/config',{values:original},'PUT')).status,200);
+  await fetch(app.url+'/api/modules/companion/state');
+  const selected='E:\\手工或扫描采用的运行组件';
+  const saved=await api('/api/modules/companion/config',{values:{airiPath:selected}},'PUT');assert.equal(saved.status,200);
+  assert.deepEqual((await saved.json()).config,{...original,airiPath:selected});
+  assert.deepEqual(started,[],'保存和检查位置不会启动运行端');
+  assert.equal((await api('/api/modules/companion/start',{})).status,200);
+  assert.deepEqual(inspected,[original.airiPath,selected]);assert.deepEqual(started,[selected]);
+});

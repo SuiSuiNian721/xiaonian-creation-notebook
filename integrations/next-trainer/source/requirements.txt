@@ -1,0 +1,42 @@
+﻿# Main GUI environment only. Training dependencies (torch, accelerate,
+# diffusers, optimizers, ...) live in each engine pack's own managed venv
+# (see mikazuki/engines/<id>/environment.py); install them from the
+# Training Engines page in the UI.
+toml==0.10.2
+huggingface-hub==0.36.2
+rich==13.7.0
+pandas
+requests
+# GUI task process management (mikazuki/tasks.py), also without training engines
+psutil
+pillow
+numpy==1.26.4
+# tagger image utils
+opencv-python==4.8.1.78
+# loss/task charts read TB event files (mikazuki/utils/task_insights.py)
+tensorboard==2.14.0
+protobuf==3.20.3
+fastapi==0.95.1
+uvicorn==0.22.0
+websockets==11.0.3
+httpx==0.24.1
+aiohttp>=3.9,<4
+# multipart form parsing for dataset uploads (fastapi request.form)
+python-multipart==0.0.18
+# tagger (WD14/CL): NVIDIA portable build uses GPU build. Linux/macOS
+# onnxruntime is handled by setup_onnxruntime() (GPU build when available,
+# CPU build otherwise), because onnxruntime-gpu has no wheels for some
+# platforms (e.g. aarch64) and a forced install here would abort startup.
+onnxruntime-gpu; sys_platform == "win32"
+# domestic Hugging Face downloads (ModelScope hub patch, mikazuki/model_assets.py)
+modelscope>=1.20.0
+# launch_utils still uses pkg_resources
+setuptools<81
+nvidia-ml-py
+psutil
+# marketplace trust-v2: Ed25519 verification for the plugin catalog and the managed-assets
+# index (mikazuki/plugin_marketplace/trust.py). Security-critical verify path: declared
+# explicitly, never relied on as a transitive dependency.
+cryptography>=41
+# managed engine installers (kohya / diffsynth / moss / musubi / ai-toolkit / anima-fast)
+uv

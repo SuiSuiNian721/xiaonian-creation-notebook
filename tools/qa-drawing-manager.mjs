@@ -1,0 +1,95 @@
+import { app, BrowserWindow } from 'electron';
+import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import { createHash } from 'node:crypto';
+import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
+import { resolve, join } from 'node:path';
+import { createWorkbench } from '../framework/server.mjs';
+import { runManaged } from '../framework/drawing-repositories.mjs';
+
+const directory = resolve(process.env.AI_FUTURE_DRAWING_MANAGER_QA_DIR || `qa/drawing-manager/gui-${Date.now()}`);
+const comfy = join(directory,'ComfyUI'); mkdirSync(join(comfy,'comfy'),{recursive:true});
+mkdirSync(join(comfy,'custom_nodes','FixturePlugin'),{recursive:true}); mkdirSync(join(comfy,'models','loras'),{recursive:true});
+for (const file of ['main.py','server.py','nodes.py']) writeFileSync(join(comfy,file),'# isolated GUI fixture\n','utf8');
+writeFileSync(join(comfy,'custom_nodes','FixturePlugin','plugin.py'),'# isolated plugin\n','utf8');
+writeFileSync(join(comfy,'models','loras','已有模型.safetensors'),'fixture','utf8');
+app.setPath('userData',join(directory,'profile')); app.commandLine.appendSwitch('disable-renderer-backgrounding');
+app.commandLine.appendSwitch('disable-background-timer-throttling');
+const delay = ms => new Promise(resolveDelay => setTimeout(resolveDelay,ms));
+const model = Buffer.alloc(1024 * 1024,7); const sha256 = createHash('sha256').update(model).digest('hex');
+const checks = [], errors = [], requests = []; let runtime, window, server, probes = 0, writes = 0;
+app.whenReady().then(async () => {
+  try {
+    server = createServer((req,res) => {
+      requests.push({path:req.url,range:req.headers.range});
+      const start = Number(req.headers.range?.match(/^bytes=(\d+)-$/)?.[1] || 0);
+      res.writeHead(start ? 206 : 200, {'content-type':'application/octet-stream','content-length':model.length - start,'etag':'"fixture-v1"',...(start ? {'content-range':`bytes ${start}-${model.length-1}/${model.length}`} : {})});
+      let offset = start; const timer = setInterval(() => { const end = Math.min(offset + 16384,model.length); res.write(model.subarray(offset,end)); offset = end; if (offset === model.length) { clearInterval(timer); res.end(); } },60);
+      res.on('close', () => clearInterval(timer));
+    }); await new Promise(done => server.listen(0,'127.0.0.1',done));
+    runtime = await createWorkbench({dataDir:join(directory,'data'),drawingOptions:{WebSocketImpl:null,runtimeOptions:{probeRunner:async (_exe,args) => { probes++; await delay(150); return {code:0,stderr:'',stdout:args.includes('check') ? 'No broken requirements found.' : JSON.stringify({python:{version:'GUI fixture'},comfy:{version:'fixture'},torch:{error:'未安装测试 Torch',cudaAvailable:false},disks:[{path:comfy,free:8*1024**3}]})}; }}},drawingManagerOptions:{isRunning:async () => false,runner:async (exe,args,options) => { if (exe === 'git') return runManaged(exe,args,options); if (args.includes('install')) writes++; return {code:0,stdout:args.includes('freeze') ? 'fixture==1\n' : 'Python fixture\n',stderr:''}; }}});
+    const api = async (path,body,method = body === undefined ? 'GET' : 'POST') => { const response = await fetch(runtime.url + path,{method,...(body === undefined ? {} : {headers:{'content-type':'application/json'},body:JSON.stringify(body)})}); assert.equal(response.status,200,path); return response.json(); };
+    const manager = () => api('/api/modules/drawing/manager/state');
+    window = new BrowserWindow({width:1420,height:960,show:false,webPreferences:{offscreen:true,backgroundThrottling:false,contextIsolation:true,nodeIntegration:false,sandbox:true}});
+    window.webContents.on('console-message',event => { if (/Uncaught|TypeError|ReferenceError/.test(event.message)) errors.push(event.message); });
+    const js = code => window.webContents.executeJavaScript(code);
+    const click = selector => js(`document.querySelector(${JSON.stringify(selector)}).click();void 0`);
+    const fill = (selector,value) => js(`(()=>{const n=document.querySelector(${JSON.stringify(selector)});n.value=${JSON.stringify(value)};n.dispatchEvent(new Event('input',{bubbles:true}));n.dispatchEvent(new Event('change',{bubbles:true}));})()`);
+    const has = selector => js(`Boolean(document.querySelector(${JSON.stringify(selector)}))`);
+    const text = selector => js(`document.querySelector(${JSON.stringify(selector)})?.textContent||''`);
+    async function wait(label,test) { for(let i=0;i<300;i++){ if(await test()) return; await delay(100); } throw new Error('等待超时：' + label); }
+    const shot = async name => { await delay(150); writeFileSync(join(directory,name + '.png'),(await window.webContents.capturePage()).toPNG()); };
+    await window.loadURL(runtime.url); await wait('首页', () => has('[data-add="drawing"]')); await click('[data-add="drawing"]'); await wait('绘图入口', () => has('[data-module-nav="drawing"]')); await click('[data-module-nav="drawing"]'); await wait('绘图页', () => has('#open-launcher'));
+    await api('/api/modules/drawing/config',{values:{comfyPath:comfy,serviceUrl:'http://127.0.0.1:1',outputPath:join(directory,'output'),workflowPath:join(directory,'workflows')}},'PUT');
+    await click('#open-launcher'); await wait('运行设置', () => has('#runtime-python')); await fill('#runtime-python',process.execPath); await fill('#runtime-vram','lowvram'); await fill('#runtime-reserve','1.5');
+    await click('#runtime-save'); await wait('保存设置', async () => (await text('#runtime-feedback')).includes('已保存'));
+    assert.equal(probes,0); assert.equal((await api('/api/modules/drawing/runtime')).launch,null); assert.ok((await text('#runtime-command')).includes('--lowvram'));
+    await js(`window.__originalFetch=window.fetch;window.fetch=(url,opts)=>url==='/api/modules/drawing/launch'?new Promise(resolve=>{window.__releaseLaunch=()=>resolve(new Response(JSON.stringify({starting:true}),{status:200,headers:{'content-type':'application/json'}}))}):window.__originalFetch(url,opts);void 0`);
+    await click('#runtime-launch'); await wait('启动响应等待', () => js('Boolean(window.__releaseLaunch)')); await fill('#runtime-reserve','2.5');
+    await js('window.__releaseLaunch();window.fetch=window.__originalFetch;void 0'); await wait('模拟启动响应结束', async () => (await text('#runtime-feedback')).includes('已请求启动')); await delay(150);
+    assert.equal(await js(`document.querySelector('#runtime-launch').disabled`),true);
+    await click('#tab-resources'); await wait('管理页', () => has('#manager-scan')); assert.equal((await manager()).inventory,null); assert.equal(requests.length,0);
+    await click('#tab-runtime'); await wait('运行草稿', () => js(`document.querySelector('#runtime-reserve')?.value==='2.5'`)); assert.equal(await js(`document.querySelector('#runtime-launch').disabled`),true);
+    await click('#runtime-diagnose'); await wait('诊断完成', () => has('#runtime-checks .drawing-check-list')); assert.equal(probes,2); assert.ok((await text('#runtime-checks')).includes('未安装测试 Torch')); await shot('runtime-light');
+    checks.push('保存不启动；运行参数命令预览、草稿恢复及显式诊断错误展示');
+    await click('#tab-resources'); await wait('管理页', () => has('#manager-scan')); await click('#manager-scan'); await wait('模型索引', async () => (await text('#manager-model-list')).includes('已有模型')); assert.equal(requests.length,0); assert.equal(writes,0); await shot('models-light');
+    await click('[data-section="downloads"]'); await fill('#model-url',`http://127.0.0.1:${server.address().port}/fixture.safetensors`); await fill('#model-category','loras'); await fill('#model-filename','下载模型.safetensors'); await fill('#model-sha',sha256);
+    await click('#model-download'); await wait('下载进度', async () => (await manager()).downloads[0]?.downloadedBytes > 0); await click('[data-download-pause]'); await wait('暂停', async () => (await manager()).downloads[0]?.status === 'paused');
+    const partial = (await manager()).downloads[0].downloadedBytes; assert.ok(partial > 0 && partial < model.length);
+    await fill('#model-filename','还在填写的草稿.safetensors'); await delay(2600); assert.equal(await js(`document.querySelector('#model-filename').value`),'还在填写的草稿.safetensors');
+    await click('[data-download-resume]');
+    await js(`(()=>{const detail=document.querySelector('#manager-download-list details');detail.open=true;detail.querySelector('summary').focus();})()`);
+    await delay(2600); assert.equal(await js(`document.querySelector('#manager-download-list details').open`),true); assert.equal(await js(`document.activeElement.tagName`),'SUMMARY');
+    await js(`document.querySelector('[data-download-pause]')?.focus();void 0`);
+    await wait('下载完成', async () => (await manager()).downloads[0]?.status === 'completed'); await wait('完成界面', async () => (await text('#manager-download-list')).includes('已匹配预期 SHA256'));
+    assert.equal(await js(`document.activeElement.tagName`),'SUMMARY');
+    assert.ok(requests.some(item => item.range === `bytes=${partial}-`)); assert.deepEqual(readFileSync(join(comfy,'models','loras','下载模型.safetensors')),model); await shot('downloads-light');
+    checks.push('真实 HTTP 下载、暂停与 Range 继续、SHA256 匹配后发布，进度轮询保留表单草稿');
+    await fill('#model-filename','错误哈希.safetensors'); await fill('#model-sha','0'.repeat(64)); await click('#model-download'); await wait('哈希失败', async () => (await manager()).downloads[0]?.status === 'failed'); await wait('哈希错误展示', async () => (await text('#manager-download-list')).includes('SHA256')); assert.equal(existsSync(join(comfy,'models','loras','错误哈希.safetensors')),false);
+    checks.push('校验失败显示原因且不发布模型');
+    await click('[data-section="plugins"]'); await click('[data-repository="plugin:FixturePlugin"]'); await click('#repository-toggle'); await wait('停用计划', () => has('#plan-apply')); assert.ok(existsSync(join(comfy,'custom_nodes','FixturePlugin'))); assert.equal((await manager()).tasks.length,0); await shot('plugin-plan');
+    await click('#plan-apply'); await wait('停用完成', async () => (await manager()).tasks[0]?.status === 'completed'); assert.ok(existsSync(join(comfy,'custom_nodes','FixturePlugin.disabled'))); const snapshot = (await manager()).snapshots[0]; assert.ok(snapshot);
+    await click('#tab-snapshots'); await wait('快照列表', () => has('[data-snapshot-restore]')); await click('[data-snapshot-restore]'); await wait('恢复计划', () => has('#plan-apply')); assert.ok((await text('#manager-plan')).includes('不能自动回退 Python')); await shot('restore-plan'); await click('#plan-apply'); await wait('恢复完成', async () => (await manager()).tasks[0]?.operation === 'restore' && (await manager()).tasks[0]?.status === 'completed'); assert.ok(existsSync(join(comfy,'custom_nodes','FixturePlugin'))); assert.ok(existsSync(join(comfy,'models','loras','下载模型.safetensors')));
+    await fill('#snapshot-name','手动验收快照'); await click('#snapshot-create'); await wait('手动快照', async () => (await text('#manager-snapshot-list')).includes('手动验收快照')); await shot('snapshots-light');
+    checks.push('计划预览不修改，显式停用插件、自动快照、恢复前差异与快照、保留新增模型、手动快照');
+    await js(`location.hash='/module/drawing';void 0`); await wait('绘图工作区', () => has('#tab-workflows')); await click('#tab-workflows'); await wait('导入表单', () => has('#workflow-file')); const graph = {'1':{class_type:'MissingTestNode',inputs:{}}};
+    await js(`(()=>{const t=new DataTransfer();t.items.add(new File([JSON.stringify(${JSON.stringify(graph)})],'缺项.json',{type:'application/json'}));const n=document.querySelector('#workflow-file');n.files=t.files;n.dispatchEvent(new Event('change',{bubbles:true}));})()`); await wait('离线预检', () => has('#inspection-import')); assert.equal(await js(`document.querySelector('#inspection-import').disabled`),true); assert.ok((await text('#workflow-inspection')).includes('未核实')); await shot('preflight-offline');
+    checks.push('离线导入展示未核实并阻止导入');
+    // Delay an old-page response and release it after navigation: it must not mutate the new page.
+    await js(`location.hash='/module/comfyui';void 0`); await wait('启动器工作区', () => has('#tab-resources')); await click('#tab-resources'); await wait('管理表单', () => has('#manager-scan'));
+    await js(`window.__originalFetch=window.fetch;window.fetch=(url,opts)=>url==='/api/modules/drawing/manager/inventory'?new Promise((resolve,reject)=>{window.__releaseManager=()=>window.__originalFetch(url,opts).then(resolve,reject)}):window.__originalFetch(url,opts);void 0`);
+    await click('#manager-scan'); await wait('请求阻塞', () => js(`Boolean(window.__releaseManager)`)); await click('#tab-config'); await wait('配置页', () => has('#module-config-form')); await js(`window.__releaseManager();window.fetch=window.__originalFetch;void 0`); await delay(700); assert.equal(await has('#module-config-form'),true); assert.equal(await has('#manager-scan'),false);
+    checks.push('切页后到达的异步结果不改写新页面');
+    await click('#tab-resources'); await wait('资源页', () => has('#manager-scan')); await click('[data-section="downloads"]'); assert.equal(await js(`document.querySelector('#model-filename').value`),'错误哈希.safetensors');
+    await click('#theme-toggle'); await wait('深色', () => js(`document.documentElement.dataset.theme==='dark'`));
+    const contrast = await js(`(()=>{const style=getComputedStyle(document.querySelector('.drawing-manager-nav [aria-pressed="true"]'));const luminance=color=>{const rgb=color.match(/[\\d.]+/g).slice(0,3).map(x=>Number(x)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722;};const values=[luminance(style.color),luminance(style.backgroundColor)].sort((a,b)=>b-a);return (values[0]+.05)/(values[1]+.05);})()`);
+    assert.ok(contrast >= 4.5, '深色选中按钮文字对比度'); await shot('downloads-dark');
+    window.webContents.setZoomFactor(1.25); await delay(200); assert.equal(await js('document.documentElement.scrollWidth<=innerWidth'),true); await shot('zoom-125'); window.webContents.setZoomFactor(1);
+    window.setMinimumSize(360,500); window.setContentSize(390,844); await delay(200); assert.equal(await js('document.documentElement.scrollWidth<=innerWidth'),true); await shot('mobile-downloads');
+    await click('[data-section="plugins"]'); await click('[data-repository="plugin:FixturePlugin"]'); await click('#repository-toggle'); await wait('小窗口计划', () => has('#plan-apply')); assert.equal(await js('document.documentElement.scrollWidth<=innerWidth'),true); await shot('mobile-plan');
+    await click('#tab-runtime'); await wait('小窗口运行设置', () => has('#runtime-save')); assert.equal(await js('document.documentElement.scrollWidth<=innerWidth'),true); await shot('mobile-runtime');
+    checks.push('浅色、深色、125% 缩放和 390px 无页面横向溢出');
+    assert.deepEqual(errors,[]); writeFileSync(join(directory,'result.json'),JSON.stringify({ok:true,checks,errors,requests,realComfyModified:false,protocolAndFilesystemFixtures:true},null,2),'utf8');
+  } catch(error) { writeFileSync(join(directory,'failure.json'),JSON.stringify({checks,errors,error:error.stack},null,2),'utf8'); if(window) writeFileSync(join(directory,'failure.png'),(await window.webContents.capturePage()).toPNG()); process.exitCode=1; }
+  finally { window?.destroy(); if(runtime) await runtime.close(); if(server){server.closeAllConnections();await new Promise(done => server.close(done));} app.exit(process.exitCode || 0); }
+});

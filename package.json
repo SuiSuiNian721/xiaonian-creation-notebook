@@ -1,0 +1,30 @@
+{
+  "name": "ai-future-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "小念的创作笔记",
+  "type": "module",
+  "main": "desktop/main.cjs",
+  "engines": { "node": ">=24.13" },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "desktop": "node tools/desktop.mjs",
+    "desktop:aurora": "node tools/desktop.mjs --aurora",
+    "test": "node --test tests/*.test.mjs",
+    "qa": "node tools/desktop.mjs --qa",
+    "qa:aurora": "node tools/desktop.mjs --aurora --qa",
+    "package": "node tools/package.mjs",
+    "package:aurora": "node tools/package.mjs --aurora",
+    "workbench": "node tools/workbench.mjs",
+    "workbench:server": "node framework/server.mjs",
+    "qa:workbench": "node tools/workbench.mjs --qa",
+    "package:workbench": "node tools/package-workbench.mjs"
+  },
+  "dependencies": {
+    "ejs": "7.0.2",
+    "json5": "2.2.3",
+    "quickjs-emscripten": "0.32.0",
+    "smol-toml": "1.9.1",
+    "yaml": "2.9.1"
+  }
+}

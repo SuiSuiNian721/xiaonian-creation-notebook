@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>训练监控 — Next Trainer</title>
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --panel: #12151c;
+      --panel-2: #161a23;
+      --border: #1e293b;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --dim: #64748b;
+      --accent: #a78bfa;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --err: #f87171;
+      --pink: #f472b6;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 14px/1.5 ui-monospace, "Cascadia Code", "Sarasa Mono SC", Consolas, monospace;
+    }
+    a { color: var(--accent); }
+    code { color: var(--pink); }
+    .container {
+      max-width: 1280px; margin: 0 auto; padding: 20px;
+      display: flex; flex-direction: column; gap: 16px; min-height: 100vh;
+    }
+
+    /* ── header ───────────────────────────────────────── */
+    header { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+    header h1 {
+      margin: 0; font-size: 18px; font-weight: 600; letter-spacing: 0.02em;
+    }
+    header .pill {
+      font-size: 12px; padding: 4px 10px; border-radius: 999px;
+      background: var(--panel-2); border: 1px solid var(--border); color: var(--muted);
+    }
+    header .pill.live::before  { content: "● "; color: var(--ok); }
+    header .pill.done::before  { content: "● "; color: var(--dim); }
+    header .pill.err::before   { content: "● "; color: var(--err); }
+    header .spacer { flex: 1; }
+    header .toggle {
+      cursor: pointer; user-select: none;
+      font-size: 12px; padding: 4px 10px; border-radius: 6px;
+      background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    }
+    header .toggle.on { border-color: var(--accent); color: var(--accent); }
+    header .copy-btn {
+      cursor: pointer; font-size: 11px; padding: 2px 8px; border-radius: 4px;
+      background: var(--panel-2); border: 1px solid var(--border); color: var(--muted);
+    }
+    header .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── stat grid ────────────────────────────────────── */
+    .stats {
+      display: grid; gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+    .card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 14px; min-height: 72px;
+    }
+    .card .label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .card .value { margin-top: 6px; font-size: 18px; font-weight: 600; word-break: break-all; }
+    .card .sub   { font-size: 11px; color: var(--dim); margin-top: 2px; }
+    .card.status .value.running  { color: var(--ok); }
+    .card.status .value.finished { color: var(--accent); }
+    .card.status .value.error    { color: var(--err); }
+    .progress { margin-top: 6px; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--pink)); transition: width 0.3s ease; }
+
+    /* ── log pane ─────────────────────────────────────── */
+    .pane {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+      display: flex; flex-direction: column; flex: 1; min-height: 320px;
+    }
+    .pane h2 {
+      margin: 0; padding: 10px 14px; font-size: 12px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pane h2 .meta { color: var(--dim); font-weight: 400; text-transform: none; letter-spacing: 0; }
+    #log {
+      margin: 0; padding: 12px 14px; flex: 1; overflow-y: auto;
+      white-space: pre-wrap; word-break: break-word; font-size: 12.5px;
+      max-height: calc(100vh - 380px); min-height: 280px;
+    }
+    .line-err { color: var(--err); }
+    .line-warn { color: var(--warn); }
+
+    /* ── outputs ─────────────────────────────────────── */
+    .outputs ul { list-style: none; margin: 0; padding: 8px 14px 12px; }
+    .outputs li {
+      padding: 6px 0; border-bottom: 1px dashed var(--border);
+      display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline;
+      font-size: 12.5px;
+    }
+    .outputs li:last-child { border-bottom: 0; }
+    .outputs .name { color: var(--text); flex: 1; min-width: 0; word-break: break-all; }
+    .outputs .size { color: var(--dim); font-size: 11px; }
+    .outputs .mtime { color: var(--muted); font-size: 11px; }
+    .outputs .empty { color: var(--dim); padding: 12px 14px; font-size: 12.5px; }
+
+    /* ── hint ─────────────────────────────────────── */
+    .hint { background: var(--panel-2); border: 1px dashed var(--border); border-radius: 8px;
+            padding: 16px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .hint code { background: rgba(167,139,250,0.08); padding: 1px 6px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>训练监控 / Train log</h1>
+      <span id="status" class="pill">等待连接…</span>
+      <span id="task-pill" class="pill" style="display:none">
+        task: <code id="tid"></code>
+        <span class="copy-btn" id="copy-tid" title="复制 task_id">copy</span>
+      </span>
+      <span class="spacer"></span>
+      <span id="autofollow" class="toggle on" title="点击切换自动滚动到底部">自动跟随 · ON</span>
+    </header>
+
+    <div id="hint" class="hint" style="display:none"></div>
+
+    <div class="stats">
+      <div class="card status"><div class="label">状态</div><div id="s-status" class="value">—</div><div id="s-status-sub" class="sub"></div></div>
+      <div class="card">      <div class="label">进度</div><div id="s-progress" class="value">—</div><div class="progress"><div id="s-progress-bar" style="width:0%"></div></div></div>
+      <div class="card">      <div class="label">Epoch</div>  <div id="s-epoch" class="value">—</div><div id="s-epoch-sub" class="sub"></div></div>
+      <div class="card">      <div class="label">预计剩余</div> <div id="s-eta" class="value">—</div><div id="s-eta-sub" class="sub"></div></div>
+      <div class="card">      <div class="label">Loss</div>   <div id="s-loss" class="value">—</div><div id="s-loss-sub" class="sub"></div></div>
+      <div class="card">      <div class="label">LR</div>     <div id="s-lr" class="value">—</div></div>
+      <div class="card">      <div class="label">速度</div>   <div id="s-speed" class="value">—</div><div class="sub">it/s</div></div>
+    </div>
+
+    <div class="pane">
+      <h2>最近训练日志 <span class="meta" id="line-count"></span></h2>
+      <pre id="log"></pre>
+    </div>
+
+    <div class="pane outputs">
+      <h2>最近输出文件 <span class="meta">./output 下按修改时间排序</span></h2>
+      <ul id="output-list"><li class="empty">加载中…</li></ul>
+    </div>
+  </div>
+
+  <script>
+    /* ─── DOM refs ─────────────────────────────────────────────── */
+    const $ = (id) => document.getElementById(id);
+    const logEl = $("log"), statEl = $("status"), tidEl = $("tid"), tpill = $("task-pill"), hintEl = $("hint");
+    const sStatus = $("s-status"), sStatusSub = $("s-status-sub");
+    const sProg = $("s-progress"), sProgBar = $("s-progress-bar");
+    const sEpoch = $("s-epoch"), sEpochSub = $("s-epoch-sub");
+    const sEta = $("s-eta"), sEtaSub = $("s-eta-sub");
+    const sLoss = $("s-loss"), sLossSub = $("s-loss-sub");
+    const sLr = $("s-lr"), sSpeed = $("s-speed");
+    const lineCountEl = $("line-count");
+    const followBtn = $("autofollow");
+    const outputList = $("output-list");
+    const copyBtn = $("copy-tid");
+
+    /* ─── sticky-bottom auto-scroll (核心修复) ─────────────────────
+     *   • 用户在底部附近 → 新日志自动滚到底（追日志体验）
+     *   • 用户上翻看历史 → 不打扰（不强制把他拉回去）
+     *   • 用户回到底部 → 重新进入跟随模式
+     *   切换通过滚动事件检测；用户也可以点 header 的 "自动跟随" 开关强制锁定 */
+    let stickToBottom = true;
+    let userOverride = false;     // 用户手动点了 "自动跟随" 开关后，忽略滚动检测
+    const NEAR_BOTTOM_PX = 24;
+    const isNearBottom = () => logEl.scrollHeight - logEl.scrollTop - logEl.clientHeight <= NEAR_BOTTOM_PX;
+    logEl.addEventListener("scroll", () => {
+      if (userOverride) return;
+      stickToBottom = isNearBottom();
+    });
+    followBtn.addEventListener("click", () => {
+      userOverride = !userOverride;
+      stickToBottom = !userOverride ? isNearBottom() : true;
+      if (userOverride) { stickToBottom = true; logEl.scrollTop = logEl.scrollHeight; }
+      followBtn.classList.toggle("on", stickToBottom || userOverride);
+      followBtn.textContent = "自动跟随 · " + ((stickToBottom || userOverride) ? "ON" : "OFF");
+    });
+
+    /* ─── kohya stdout 解析 ─────────────────────────────────────
+     *   典型行：
+     *     steps:  10%|██▏       | 100/1000 [00:11:05<01:39:11, 1.77it/s, avr_loss=0.0876]
+     *   其它感兴趣的行：
+     *     epoch 1/10  /  epoch is incremented. 1 -> 2
+     *     learning_rate / lr: ... */
+    const RX_TQDM = /steps:\s*\d+%\|[^|]*\|\s*(\d+)\s*\/\s*(\d+)\s*\[([0-9:\.]+)(?:<([0-9:?]+))?,\s*([\d.]+|\?)\s*(it\/s|s\/it)(?:[^,]*,\s*avr_loss=([\d.eE+\-]+))?/i;
+    const RX_EPOCH_FRAC = /epoch[^\n\r]*?(\d+)\s*\/\s*(\d+)/i;
+    const RX_EPOCH_INC  = /epoch is incremented\.\s*(\d+)\s*->\s*(\d+)/i;
+    const RX_LR         = /(?:^|\s)(?:lr|learning[_\s]?rate)\s*[:=]\s*([\d.eE+\-]+)/i;
+    const fmt = (v, n=4) => (typeof v === "number" && isFinite(v)) ? v.toFixed(n).replace(/\.?0+$/,"") || v.toFixed(n) : "—";
+    let lastLoss = null, lastIts = null, lastLr = null, totalEpochs = null;
+    function parseLine(line) {
+      const m = line.match(RX_TQDM);
+      if (m) {
+        const cur = +m[1], total = +m[2];
+        const elapsed = m[3], eta = m[4] && m[4] !== "?" ? m[4] : "估算中…";
+        const rate = +m[5];
+        const its = rate > 0 ? (m[6] === "s/it" ? 1 / rate : rate) : null;
+        const loss = m[7] !== undefined ? +m[7] : null;
+        const pct = total > 0 ? (cur / total * 100) : 0;
+        sProg.textContent = `${cur} / ${total}  (${pct.toFixed(1)}%)`;
+        sProgBar.style.width = Math.min(100, pct).toFixed(2) + "%";
+        sEta.textContent = eta;
+        sEtaSub.textContent = "已用 " + elapsed;
+        sSpeed.textContent = its !== null && isFinite(its) ? its.toFixed(2) : "—";
+        lastIts = its;
+        if (loss !== null) {
+          sLoss.textContent = fmt(loss, 4);
+          if (lastLoss !== null) {
+            const d = loss - lastLoss;
+            sLossSub.textContent = (d >= 0 ? "+" : "") + d.toFixed(4) + " vs prev";
+          }
+          lastLoss = loss;
+        }
+      }
+      const me = line.match(RX_EPOCH_FRAC);
+      if (me) {
+        const cur = +me[1], total = +me[2];
+        sEpoch.textContent = cur;
+        sEpochSub.textContent = "/ " + total;
+        totalEpochs = total;
+      } else {
+        const minc = line.match(RX_EPOCH_INC);
+        if (minc) {
+          sEpoch.textContent = minc[2];
+          if (totalEpochs) sEpochSub.textContent = "/ " + totalEpochs;
+        }
+      }
+      const mlr = line.match(RX_LR);
+      if (mlr) {
+        const lr = +mlr[1];
+        if (isFinite(lr)) { sLr.textContent = lr.toExponential(2); lastLr = lr; }
+      }
+    }
+
+    function setStatus(text, cls) {
+      statEl.textContent = text;
+      statEl.className = "pill " + (cls || "");
+      if (cls === "live") {
+        sStatus.textContent = "训练中"; sStatus.className = "value running";
+      } else if (cls === "done") {
+        sStatus.textContent = "已完成"; sStatus.className = "value finished";
+      } else if (cls === "err") {
+        sStatus.textContent = "异常";   sStatus.className = "value error";
+      }
+    }
+
+    /* ─── log append (DOM-friendly, 不会触发整页重渲染) ──────────────── */
+    let lineCount = 0;
+    function appendLine(text) {
+      lineCount++;
+      const node = document.createElement("span");
+      const lower = text.toLowerCase();
+      if (/error|traceback|exception|cuda out of memory/i.test(lower)) node.className = "line-err";
+      else if (/warn|warning/i.test(lower)) node.className = "line-warn";
+      node.textContent = text + "\n";
+      logEl.appendChild(node);
+      lineCountEl.textContent = lineCount + " 行";
+      if (stickToBottom || userOverride) logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    /* ─── 最近输出文件 (./output 下 safetensors，按 mtime 倒序前 10) ── */
+    async function refreshOutputs() {
+      try {
+        const r = await fetch("/api/get_files?pick_type=model-saved-file");
+        const j = await r.json();
+        if (j.status !== "success") throw new Error(j.message || "API failed");
+        const files = (j.data && j.data.files) || [];
+        files.sort((a, b) => (b.mtime || 0) - (a.mtime || 0));
+        const top = files.slice(0, 10);
+        if (!top.length) {
+          outputList.innerHTML = '<li class="empty">暂无文件</li>';
+          return;
+        }
+        outputList.innerHTML = "";
+        const now = Math.floor(Date.now() / 1000);
+        for (const f of top) {
+          const li = document.createElement("li");
+          const ago = humanAgo(now - (f.mtime || 0));
+          const sizeMb = f.size_bytes ? (f.size_bytes / (1024*1024)).toFixed(1) + " MB" : (f.size || "");
+          li.innerHTML = `<span class="name">${escapeHtml(f.name)}</span>
+                          <span class="size">${sizeMb}</span>
+                          <span class="mtime">${ago}</span>`;
+          outputList.appendChild(li);
+        }
+      } catch (e) {
+        outputList.innerHTML = `<li class="empty">读取失败：${escapeHtml(e.message || String(e))}</li>`;
+      }
+    }
+    function humanAgo(sec) {
+      if (sec < 60) return sec + "s ago";
+      if (sec < 3600) return Math.floor(sec/60) + "m ago";
+      if (sec < 86400) return Math.floor(sec/3600) + "h ago";
+      return Math.floor(sec/86400) + "d ago";
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    /* ─── task_id 解析 ───────────────────────────────────────────
+     *   1) URL ?task_id=...  最优先
+     *   2) 否则 GET /api/train/tasks 拿当前 RUNNING 的最新一个
+     *   3) 都没有 → 显示用法提示 */
+    async function resolveTaskId() {
+      const u = new URLSearchParams(location.search).get("task_id");
+      if (u) return u;
+      try {
+        const r = await fetch("/api/train/tasks");
+        const j = await r.json();
+        const tasks = (j.data && j.data.tasks) || [];
+        const running = tasks.filter(t => t.status === "RUNNING");
+        if (running.length) return running[running.length - 1].id;
+        if (tasks.length) return tasks[tasks.length - 1].id;
+      } catch (_) {}
+      return null;
+    }
+
+    function showHint() {
+      hintEl.style.display = "block";
+      hintEl.innerHTML = `
+        <strong>用法：</strong>当前 URL 没有 <code>?task_id=…</code>，且后端也没有进行中的任务。<br>
+        启动一个训练后再回到这个页面即可，或在 URL 后加 <code>?task_id=&lt;uuid&gt;</code>（uuid 是 <code>POST /api/run</code> 的返回值）。<br>
+        本页订阅的是 <code>GET /api/train/log/stream/{task_id}</code> SSE 流，最近输出文件来自 <code>GET /api/get_files?pick_type=model-saved-file</code>。`;
+      setStatus("无 task", "");
+    }
+
+    /* ─── main ─────────────────────────────────────────────────── */
+    (async () => {
+      const taskId = await resolveTaskId();
+      if (!taskId) { showHint(); refreshOutputs(); return; }
+
+      tidEl.textContent = taskId;
+      tpill.style.display = "";
+      copyBtn.addEventListener("click", () => navigator.clipboard.writeText(taskId).then(() => {
+        copyBtn.textContent = "copied";
+        setTimeout(() => copyBtn.textContent = "copy", 1500);
+      }));
+
+      setStatus("连接中…", "live");
+
+      let es;
+      try { es = new EventSource(`/api/train/log/stream/${encodeURIComponent(taskId)}`); }
+      catch (e) { setStatus("无法创建 SSE", "err"); appendLine(String(e)); return; }
+
+      es.onopen = () => setStatus("已连接", "live");
+      es.onmessage = (ev) => {
+        try {
+          const j = JSON.parse(ev.data);
+          if (j.done) { setStatus("已完成", "done"); es.close(); return; }
+          if (j.error) { setStatus(j.error, "err"); return; }
+          if (j.text !== undefined) {
+            parseLine(j.text);
+            appendLine(j.text);
+          }
+        } catch (_) {
+          appendLine(ev.data);
+        }
+      };
+      es.onerror = () => {
+        if (statEl.textContent.indexOf("已完成") === -1) setStatus("连接中断（训练结束可刷新）", "done");
+        es.close();
+      };
+
+      refreshOutputs();
+      setInterval(refreshOutputs, 5000);
+    })();
+  </script>
+</body>
+</html>

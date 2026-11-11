@@ -1,0 +1,48 @@
+{
+  "sourceCommit": "89ec1e953f2e3b6f529d1f387d19bf5678ec6814",
+  "changes": [
+    "Expose cognitive lifecycle handles to the workbench IPC adapter.",
+    "Expose the existing stop-and-clear operation for an explicit workbench pause.",
+    "Limit sandbox filesystem reads to this isolated npm dependency directory.",
+    "Use minecraft-data 3.119.0 to match the installed protocol libraries and declare the runtime TypeScript dependency.",
+    "Inherit the runtime working directory when Windows rejects a sandbox cwd of 260 or more characters; retain absolute entry paths and the existing filesystem permission roots.",
+    "Spell out the same sandbox-source and npm dependency subtrees in filesystem read permissions to avoid Windows MAX_PATH directory auto-detection failures, without granting parent or sibling directories.",
+    "Expose placeBlockAt for exact-coordinate building using native world objects, exact inventory matching, occupied-target protection, and verified placement results.",
+    "Exclude dynamically registered workbench peer bots from cognitive chat and pause control while retaining visible chat history and human or explicit workbench instructions."
+  ],
+  "files": [
+    {
+      "path": "upstream/src/cognitive/index.ts",
+      "originalSha256": "18ac082b8b8c815342ec23d3e817550d53da69fd9759d07edc15fe29d418a6eb",
+      "adaptedSha256": "0afaf71f62135539194f29a3d7093dcd2c73e892d8c93cf3de75bb12f007baa9"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/brain.ts",
+      "originalSha256": "f4f16cffed1312e9da5488eeb0d5de970a84d97224bd472507ae9b980dd2766b",
+      "adaptedSha256": "c35845e362a5509e33e249130c51214633a684e9ca80ec73cd4758595629ac04"
+    },
+    {
+      "path": "upstream/src/cognitive/conscious/js-planner-sandbox-runner.ts",
+      "originalSha256": "224ef1ade84b2f1f5e32c54c8cd752e9154c50c7876d6fc660a1c50b175d5f2e",
+      "adaptedSha256": "ea85d4f840103b52f107d0e7fdda0a8a875c83c4ee3e6b85e714c5cb9c2d3b67"
+    },
+    {
+      "path": "upstream/src/cognitive/types/index.ts",
+      "originalSha256": "81d96efa3703d43b1fb20af2e6b8bcc4569620b64741ca89ce9d2f281ae65f84",
+      "adaptedSha256": "92e2b2f21289c2ced125b87e37bc3020677b0a928c8856e0840a97296727424d"
+    },
+    {
+      "path": "upstream/src/cognitive/action/llm-actions.ts",
+      "originalSha256": "2c3122a07a86095df5d0c8eb3c500aba4444b2d716a5bae37ad68efdc11a7d78",
+      "adaptedSha256": "8ff49bc3c49ac170a2517fa99de52d2110aef1c919d9f3418bc58342b474c62a"
+    },
+    {
+      "path": "upstream/src/skills/actions/world-interactions.ts",
+      "originalSha256": "757d09060dc7c2d5a5995565926efb431b401ccd7691684407f1882234926991",
+      "adaptedSha256": "a7e5cba0d26ba767f6132032841e982a4e46b7e356df9e95d7247831fe6705df"
+    }
+  ],
+  "nodeVersion": "v24.13.0",
+  "nodeSha256": "d14ba95cdce1ef7dc9ad3ac74949ca5db38b27378ee30f30a23cf26f9e875a11",
+  "lockSha256": "2e1553326d29beb76ed5c2b5cc2ec3447f77204d1201b9d9481c9d1c5ae65e9c"
+}

@@ -1,0 +1,19 @@
+{
+  "sourceArchive": "DS鲸鱼娘.zip",
+  "sourceSha256": "937fe1eef62a22cd32417700e9b073373878d74b6f617ea518a97a5d29035b38",
+  "variant": "DS鼠控版.zip",
+  "variantSha256": "ffde1a63a68206e34ed9707a6d29f5a3bd802e88478c319793e103b9d3a3506f",
+  "adaptedSha256": "63d5cc75917d5b8851396caa72777f2ccd0d523ad9d0341981b2918ff869c589",
+  "changes": [
+    "c_0120.model3.json: register existing expressions and motions",
+    "include supplied attribution and key guide"
+  ],
+  "expressions": 44,
+  "motionGroups": 8,
+  "modelAuthor": "氵六青 (Bilibili 11272072)",
+  "characterCopyright": [
+    "上善无形",
+    "ZipZipPin"
+  ],
+  "license": "CC BY-NC-SA 4.0"
+}
